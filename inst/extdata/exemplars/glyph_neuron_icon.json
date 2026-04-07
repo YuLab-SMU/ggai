@@ -1,0 +1,13 @@
+{
+  "instruction": "paper-style neuron icon",
+  "output": {
+    "prompt": "paper-style neuron icon",
+    "style": "scientific illustration",
+    "negative_prompt": "photorealistic, cluttered background",
+    "width": 256,
+    "height": 256,
+    "transparent_background": true,
+    "seed": null,
+    "asset_role": "point_mark"
+  }
+}

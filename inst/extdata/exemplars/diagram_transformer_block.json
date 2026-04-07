@@ -1,0 +1,126 @@
+{
+  "instruction": "画一个 transformer block，左边输入 token，经过 embedding、attention、mlp，右边输出 logits",
+  "output": {
+    "canvas": {
+      "width": 12,
+      "height": 7,
+      "background": "#FCFCF8",
+      "theme": "paper",
+      "coordinate_system": "cartesian",
+      "layout": {
+        "engine": "constraint",
+        "direction": "horizontal"
+      }
+    },
+    "nodes": [
+      {
+        "id": "input",
+        "kind": "box",
+        "label": "Tokens",
+        "style": {
+          "fill": "#E8F3FF"
+        },
+        "layout": {
+          "stage": 1,
+          "lane": "main",
+          "order": 1
+        }
+      },
+      {
+        "id": "embed",
+        "kind": "rounded_box",
+        "label": "Embedding",
+        "style": {
+          "fill": "#EEF7E7"
+        },
+        "layout": {
+          "after": "input",
+          "lane": "main",
+          "order": 2
+        }
+      },
+      {
+        "id": "attn",
+        "kind": "rounded_box",
+        "label": "Attention",
+        "style": {
+          "fill": "#FFF1D6"
+        },
+        "layout": {
+          "after": "embed",
+          "lane": "main",
+          "order": 3
+        }
+      },
+      {
+        "id": "mlp",
+        "kind": "rounded_box",
+        "label": "MLP",
+        "style": {
+          "fill": "#FDEBEC"
+        },
+        "layout": {
+          "after": "attn",
+          "lane": "main",
+          "order": 4
+        }
+      },
+      {
+        "id": "output",
+        "kind": "box",
+        "label": "Logits",
+        "style": {
+          "fill": "#E8F3FF"
+        },
+        "layout": {
+          "after": "mlp",
+          "lane": "main",
+          "order": 5
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": "input",
+        "to": "embed",
+        "label": null,
+        "arrow": true,
+        "style": {
+          "colour": "#334455"
+        },
+        "route": "straight"
+      },
+      {
+        "from": "embed",
+        "to": "attn",
+        "label": null,
+        "arrow": true,
+        "style": {
+          "colour": "#334455"
+        },
+        "route": "straight"
+      },
+      {
+        "from": "attn",
+        "to": "mlp",
+        "label": null,
+        "arrow": true,
+        "style": {
+          "colour": "#334455"
+        },
+        "route": "straight"
+      },
+      {
+        "from": "mlp",
+        "to": "output",
+        "label": null,
+        "arrow": true,
+        "style": {
+          "colour": "#334455"
+        },
+        "route": "straight"
+      }
+    ],
+    "annotations": []
+  }
+}

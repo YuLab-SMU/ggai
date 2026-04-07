@@ -1,0 +1,118 @@
+{
+  "instruction": "show three processing stages evenly distributed from left to right, with a monitoring node centered below the final stage",
+  "output": {
+    "canvas": {
+      "width": 12,
+      "height": 6,
+      "background": "white",
+      "coordinate_system": "cartesian",
+      "layout": {
+        "engine": "constraint",
+        "direction": "horizontal",
+        "distribute": {
+          "axis": "x",
+          "within": "lane",
+          "by": "order"
+        }
+      }
+    },
+    "nodes": [
+      {
+        "id": "ingest",
+        "kind": "box",
+        "label": "Ingest",
+        "style": {
+          "fill": "#E8F3FF"
+        },
+        "layout": {
+          "stage": 1,
+          "lane": "main",
+          "order": 1
+        }
+      },
+      {
+        "id": "process",
+        "kind": "rounded_box",
+        "label": "Process",
+        "style": {
+          "fill": "#EEF7E7"
+        },
+        "layout": {
+          "after": "ingest",
+          "lane": "main",
+          "order": 2,
+          "align": {
+            "with": "ingest",
+            "axis": "y"
+          }
+        }
+      },
+      {
+        "id": "serve",
+        "kind": "rounded_box",
+        "label": "Serve",
+        "style": {
+          "fill": "#FFF1D6"
+        },
+        "layout": {
+          "after": "process",
+          "lane": "main",
+          "order": 3,
+          "align": {
+            "with": "process",
+            "axis": "y"
+          }
+        }
+      },
+      {
+        "id": "monitor",
+        "kind": "box",
+        "label": "Monitor",
+        "style": {
+          "fill": "#F7F7F7"
+        },
+        "layout": {
+          "lane": "support",
+          "order": 4,
+          "center_on": {
+            "with": "serve",
+            "axis": "x"
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": "ingest",
+        "to": "process",
+        "label": null,
+        "arrow": true,
+        "style": {
+          "colour": "#334455"
+        },
+        "route": "straight"
+      },
+      {
+        "from": "process",
+        "to": "serve",
+        "label": null,
+        "arrow": true,
+        "style": {
+          "colour": "#334455"
+        },
+        "route": "straight"
+      },
+      {
+        "from": "monitor",
+        "to": "serve",
+        "label": null,
+        "arrow": true,
+        "style": {
+          "colour": "#334455"
+        },
+        "route": "elbow"
+      }
+    ],
+    "annotations": []
+  }
+}

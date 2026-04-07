@@ -1,0 +1,126 @@
+{
+  "instruction": "show a retrieval system where query goes into retriever, then reranker, then answer synthesis, with memory below synthesis",
+  "output": {
+    "canvas": {
+      "width": 12,
+      "height": 6,
+      "background": "white",
+      "coordinate_system": "cartesian",
+      "layout": {
+        "engine": "constraint",
+        "direction": "horizontal"
+      }
+    },
+    "nodes": [
+      {
+        "id": "query",
+        "kind": "box",
+        "label": "Query",
+        "style": {
+          "fill": "#E8F3FF"
+        },
+        "layout": {
+          "stage": 1,
+          "lane": "main",
+          "order": 1
+        }
+      },
+      {
+        "id": "retriever",
+        "kind": "rounded_box",
+        "label": "Retriever",
+        "style": {
+          "fill": "#EEF7E7"
+        },
+        "layout": {
+          "after": "query",
+          "lane": "main",
+          "order": 2
+        }
+      },
+      {
+        "id": "reranker",
+        "kind": "rounded_box",
+        "label": "Reranker",
+        "style": {
+          "fill": "#FFF1D6"
+        },
+        "layout": {
+          "after": "retriever",
+          "lane": "main",
+          "order": 3
+        }
+      },
+      {
+        "id": "synthesis",
+        "kind": "rounded_box",
+        "label": "Answer Synthesis",
+        "style": {
+          "fill": "#FDEBEC"
+        },
+        "layout": {
+          "after": "reranker",
+          "lane": "main",
+          "order": 4
+        }
+      },
+      {
+        "id": "memory",
+        "kind": "box",
+        "label": "Memory",
+        "style": {
+          "fill": "#F7F7F7"
+        },
+        "layout": {
+          "after": "reranker",
+          "lane": "support",
+          "group": "memory",
+          "order": 5
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": "query",
+        "to": "retriever",
+        "label": null,
+        "arrow": true,
+        "style": {
+          "colour": "#334455"
+        },
+        "route": "straight"
+      },
+      {
+        "from": "retriever",
+        "to": "reranker",
+        "label": null,
+        "arrow": true,
+        "style": {
+          "colour": "#334455"
+        },
+        "route": "straight"
+      },
+      {
+        "from": "reranker",
+        "to": "synthesis",
+        "label": null,
+        "arrow": true,
+        "style": {
+          "colour": "#334455"
+        },
+        "route": "straight"
+      },
+      {
+        "from": "memory",
+        "to": "synthesis",
+        "label": null,
+        "arrow": true,
+        "style": {
+          "colour": "#334455"
+        },
+        "route": "elbow"
+      }
+    ],
+    "annotations": []
+  }
+}

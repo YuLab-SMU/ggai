@@ -1,0 +1,8 @@
+^docs$
+^paperbanana$
+^How_.*\\.md$
+^\\.env\\.gemini$
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.positai$
+^\.claude$

@@ -1,0 +1,26 @@
+{
+  "instruction": "highlight the dense cluster with a translucent rectangle",
+  "output": {
+    "intent": "annotate",
+    "action": "highlight_region",
+    "target_layer": "plot",
+    "layers": [
+      {
+        "geom": "rect",
+        "stat": "identity",
+        "mapping": {},
+        "params": {
+          "xmin": 2,
+          "xmax": 3.5,
+          "ymin": 15,
+          "ymax": 25,
+          "alpha": 0.15,
+          "fill": "#FDB863"
+        },
+        "inherit_aes": false
+      }
+    ],
+    "annotations": [],
+    "warnings": []
+  }
+}

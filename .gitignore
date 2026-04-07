@@ -1,0 +1,78 @@
+# OS and editor
+.DS_Store
+Thumbs.db
+.Rproj.user/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# R session and local state
+.Rhistory
+.RData
+.Ruserdata
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+.Renviron
+.Renviron.*
+.Rprofile
+.Rprofile.site
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.csr
+*.der
+*.kdbx
+*.ovpn
+*.mobileconfig
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+credentials
+credentials.*
+secrets.*
+token
+token.*
+
+# Local configs that may contain credentials
+.claude/
+.cursor/
+.anthropic/
+.gemini/
+.google/
+.openai/
+.ollama/
+.mcp/
+.mcp.yaml
+.mcp.yml
+.mcp.json
+.mcp.yaml.lock
+
+# Generated outputs and nested repo
+demo/
+demo_outputs/
+ggai.Rcheck/
+paperbanana/
+
+# Build artifacts and archives
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.gz
+
+# Common local data files
+*.sqlite
+*.sqlite3
+*.db
+*.rds
+*.rda

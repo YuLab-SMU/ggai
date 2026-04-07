@@ -1,0 +1,25 @@
+{
+  "instruction": "圈出右上角的异常点，并给最突出的点加文字标签",
+  "output": {
+    "intent": "annotate",
+    "action": "label_outliers",
+    "target_layer": "plot",
+    "layers": [
+      {
+        "geom": "text",
+        "stat": "identity",
+        "mapping": {
+          "x": "wt",
+          "y": "mpg",
+          "label": "carb"
+        },
+        "params": {
+          "colour": "red"
+        },
+        "inherit_aes": false
+      }
+    ],
+    "annotations": [],
+    "warnings": []
+  }
+}
