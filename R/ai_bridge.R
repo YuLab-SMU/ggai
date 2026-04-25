@@ -159,7 +159,7 @@ ggai_default_models <- function() {
       type = "language"
     ),
     image = normalize_model_id(
-      getOption("ggai.image_model", Sys.getenv("GGAI_IMAGE_MODEL", "openai:gpt-image-1.5")),
+      getOption("ggai.image_model", Sys.getenv("GGAI_IMAGE_MODEL", "openai:gpt-image-2")),
       type = "image"
     )
   )
@@ -204,19 +204,33 @@ ggai_image_model <- function(model = NULL, resolve = FALSE, registry = NULL) {
 #' @param instruction Natural-language visualization instruction.
 #' @param target Compilation target. Defaults to `"layer"`.
 #' @param context Optional list carrying plot context.
+#' @param plot Optional ggplot object used to derive runtime context.
+#' @param session Optional `ggai_session` used to carry edit history and context.
+#' @param model Optional model override for runtime compilation.
 #'
 #' @return A request list with class `ggai_layer_request`.
 #' @export
-new_layer_ai_request <- function(instruction, target = "layer", context = list()) {
+new_layer_ai_request <- function(instruction, target = "layer", context = list(), plot = NULL, session = NULL, model = NULL) {
   if (!is.character(instruction) || length(instruction) != 1 || !nzchar(instruction)) {
     rlang::abort("`instruction` must be a non-empty string.")
   }
+
+  runtime_request <- new_ggai_runtime_request(
+    instruction = instruction,
+    target = target,
+    plot = plot,
+    session = session,
+    context = context,
+    model = model
+  )
 
   structure(
     list(
       instruction = instruction,
       target = target,
-      context = context
+      context = runtime_request$context,
+      model = model,
+      runtime_request = runtime_request
     ),
     class = "ggai_layer_request"
   )

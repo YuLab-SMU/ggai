@@ -2,28 +2,32 @@ new_session_entry <- function(instruction,
                               compiled_spec,
                               plot,
                               code,
-                              edit_mode = "compile") {
-  list(
+                              edit_mode = "compile",
+                              parent_turn = NULL,
+                              turn_context = list()) {
+  new_ggai_turn(
     instruction = instruction,
     compiled_spec = compiled_spec,
     plot = plot,
     code = code,
-    timestamp = format(Sys.time(), tz = "UTC", usetz = TRUE),
-    kind = compiled_spec$kind %||% "layer",
-    edit_mode = edit_mode
+    edit_mode = edit_mode,
+    parent_turn = parent_turn,
+    turn_context = turn_context
   )
 }
 
 new_ggai_session <- function(base_plot,
                              history = list(),
                              history_index = 0L,
-                             meta = list()) {
+                             meta = list(),
+                             state = NULL) {
   structure(
     list(
       base_plot = base_plot,
       history = history,
       history_index = as.integer(history_index),
-      meta = meta
+      meta = meta,
+      state = utils::modifyList(ggai_session_defaults(), state %||% list())
     ),
     class = "ggai_session"
   )
@@ -119,12 +123,27 @@ merge_layer_compiled_specs <- function(current, new, instruction = NULL, edit_mo
       target_layer = current$spec$target_layer %||% new$spec$target_layer %||% "plot",
       layers = c(current$spec$layers %||% list(), new$spec$layers %||% list()),
       annotations = c(current$spec$annotations %||% list(), new$spec$annotations %||% list()),
+      plot_ops = c(current$spec$plot_ops %||% list(), new$spec$plot_ops %||% list()),
       warnings = c(current$spec$warnings %||% list(), new$spec$warnings %||% list())
     ),
     kind = "layer",
     instruction = instruction %||% new$instruction %||% current$instruction,
     context = current$context %||% new$context,
     meta = list(edit_mode = edit_mode)
+  )
+}
+
+ensure_layer_compiled_spec <- function(x, instruction = NULL, context = list(), model = NULL) {
+  if (inherits(x, "ggai_compiled_spec")) {
+    return(x)
+  }
+
+  new_compiled_spec(
+    spec = x,
+    kind = "layer",
+    instruction = instruction,
+    context = context,
+    meta = list(model = model)
   )
 }
 
@@ -318,30 +337,75 @@ deterministic_patch_spec <- function(compiled, instruction) {
 #' @param session A `ggai_session`.
 #' @param instruction Natural-language edit instruction.
 #' @param model Optional model override for fallback additive compilation.
+#' @param mode Either `"session"` for structured ggplot edits or `"polish"` to
+#'   switch the current session state into the whole-image redraw path.
+#' @param image_model Optional image model override used when
+#'   `mode = "polish"`.
+#' @param ... Passed through to [polish_figure()] when `mode = "polish"`.
 #'
-#' @return An updated `ggai_session`.
+#' @return Either an updated `ggai_session` or a
+#'   `ggai_polished_figure_result`.
 #' @export
-chat_edit <- function(session, instruction, model = NULL) {
+gg_edit <- function(session,
+                    instruction,
+                    model = NULL,
+                    mode = c("session", "polish"),
+                    image_model = NULL,
+                    ...) {
+  mode <- match.arg(mode)
   if (!inherits(session, "ggai_session")) {
     rlang::abort("`session` must be a ggai_session.")
+  }
+
+  if (identical(mode, "polish")) {
+    return(polish_figure(
+      session,
+      instruction = instruction,
+      image_model = image_model,
+      ...
+    ))
   }
 
   current_compiled <- session_current_compiled(session)
   current_plot <- session_current_plot(session)
 
   compiled <- if (is.null(current_compiled)) {
-    req <- geom_ai(instruction, model = model, data = current_plot$data)
-    compiled <- compile_ggai_request(req, plot = current_plot, model = model)
+    style_only <- deterministic_style_spec(instruction, context = build_plot_context(current_plot))
+    if (!is.null(style_only)) {
+      style_only
+    } else {
+    req <- new_layer_ai_request(
+      instruction,
+      plot = current_plot,
+      session = session,
+      context = list(data_columns = names(current_plot$data %||% NULL)),
+      model = model
+    )
+    compiled <- compile_layer_spec(req, plot = current_plot, session = session, model = model)
+    compiled <- ensure_layer_compiled_spec(compiled, instruction = instruction, context = build_plot_context(current_plot), model = model)
     compiled$meta <- utils::modifyList(compiled$meta %||% list(), list(edit_mode = "initial_compile"))
     compiled
+    }
   } else {
     patched <- deterministic_patch_spec(current_compiled, instruction)
     if (!is.null(patched)) {
       patched
     } else {
-      req <- geom_ai(instruction, model = model, data = current_plot$data)
-      additive <- compile_ggai_request(req, plot = current_plot, model = model)
+      style_only <- deterministic_style_spec(instruction, context = build_plot_context(current_plot))
+      if (!is.null(style_only)) {
+        merge_layer_compiled_specs(current_compiled, style_only, instruction = instruction, edit_mode = "deterministic_style")
+      } else {
+      req <- new_layer_ai_request(
+        instruction,
+        plot = current_plot,
+        session = session,
+        context = list(data_columns = names(current_plot$data %||% NULL)),
+        model = model
+      )
+      additive <- compile_layer_spec(req, plot = current_plot, session = session, model = model)
+      additive <- ensure_layer_compiled_spec(additive, instruction = instruction, context = build_plot_context(current_plot), model = model)
       merge_layer_compiled_specs(current_compiled, additive, instruction = instruction, edit_mode = "append_compile")
+      }
     }
   }
 
@@ -351,9 +415,26 @@ chat_edit <- function(session, instruction, model = NULL) {
     compiled_spec = compiled,
     plot = rendered,
     code = as_code(compiled),
-    edit_mode = compiled$meta$edit_mode %||% "compile"
+    edit_mode = compiled$meta$edit_mode %||% "compile",
+    parent_turn = session$history_index %||% 0L,
+    turn_context = list(
+      mode = if (is.null(current_compiled)) "initial" else "followup",
+      context = session_context_snapshot(session)
+    )
   )
-  session_append_entry(session, entry)
+  session <- session_append_entry(session, entry)
+  session <- session_record_turn_note(
+    session,
+    type = "edit",
+    value = list(
+      instruction = instruction,
+      edit_mode = compiled$meta$edit_mode %||% "compile",
+      kind = compiled$kind %||% "layer"
+    )
+  )
+  session <- session_touch_state(session, instruction = instruction)
+  session <- session_set_plot_summary(session, plot = rendered)
+  session
 }
 
 #' Undo the last session edit
@@ -370,5 +451,5 @@ undo <- function(session) {
     return(session)
   }
   session$history_index <- session$history_index - 1L
-  session
+  session_touch_state(session)
 }

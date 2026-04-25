@@ -4,7 +4,14 @@
 \alias{new_layer_ai_request}
 \title{Build a new layer AI request}
 \usage{
-new_layer_ai_request(instruction, target = "layer", context = list())
+new_layer_ai_request(
+  instruction,
+  target = "layer",
+  context = list(),
+  plot = NULL,
+  session = NULL,
+  model = NULL
+)
 }
 \arguments{
 \item{instruction}{Natural-language visualization instruction.}
@@ -12,6 +19,12 @@ new_layer_ai_request(instruction, target = "layer", context = list())
 \item{target}{Compilation target. Defaults to \code{"layer"}.}
 
 \item{context}{Optional list carrying plot context.}
+
+\item{plot}{Optional ggplot object used to derive runtime context.}
+
+\item{session}{Optional \code{ggai_session} used to carry edit history and context.}
+
+\item{model}{Optional model override for runtime compilation.}
 }
 \value{
 A request list with class \code{ggai_layer_request}.

@@ -4,5 +4,6 @@
 #' instructions into structured visualization specs that can later be compiled
 #' into ggplot2 layers, diagram scenes, and generated glyph assets.
 #'
+#' @import aisdk
 #' @keywords internal
 "_PACKAGE"

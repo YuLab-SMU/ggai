@@ -124,8 +124,32 @@ copy_image_to_cache <- function(source_path, cache_path) {
   cache_path
 }
 
+#' Generate an image through the configured `aisdk` image backend
+#'
+#' Thin ggai wrapper around `aisdk::generate_image()`. This is useful for
+#' examples that create final communication graphics directly from a prompt
+#' while still using ggai model resolution helpers.
+#'
+#' @param ... Passed through to `aisdk::generate_image()`.
+#'
+#' @return An `aisdk` image generation result.
+#' @export
 ggai_generate_image <- function(...) {
   ggai_aisdk("generate_image")(...)
+}
+
+#' Edit or extend an image through the configured `aisdk` image backend
+#'
+#' Thin ggai wrapper around `aisdk::edit_image()`. Use this for communication
+#' layers that keep a statistical figure as a reference image, such as
+#' plot-reader explainers, infographic boards, and story pages.
+#'
+#' @param ... Passed through to `aisdk::edit_image()`.
+#'
+#' @return An `aisdk` image editing result.
+#' @export
+ggai_edit_image <- function(...) {
+  ggai_aisdk("edit_image")(...)
 }
 
 glyph_generate_asset <- function(prompt,

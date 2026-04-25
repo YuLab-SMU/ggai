@@ -13,6 +13,7 @@ normalize_layer_spec_body <- function(spec) {
   spec$target_layer <- spec$target_layer %||% "plot"
   spec$layers <- lapply(spec$layers %||% list(), normalize_layer_item)
   spec$annotations <- spec$annotations %||% list()
+  spec$plot_ops <- spec$plot_ops %||% list()
   spec$warnings <- spec$warnings %||% list()
   spec
 }
@@ -45,8 +46,8 @@ normalize_diagram_spec_body <- function(spec) {
 
 validate_layer_spec_body <- function(spec) {
   issues <- character(0)
-  if (!length(spec$layers %||% list())) {
-    issues <- c(issues, "spec must contain at least one layer")
+  if (!length(spec$layers %||% list()) && !length(spec$plot_ops %||% list())) {
+    issues <- c(issues, "spec must contain at least one layer or plot operation")
   }
   for (i in seq_along(spec$layers %||% list())) {
     layer <- spec$layers[[i]]

@@ -73,16 +73,23 @@ compile_ggai_request <- function(x, plot = NULL, model = NULL) {
   }
 
   plot_context <- if (inherits(plot, "ggplot")) build_plot_context(plot) else list()
+  if (inherits(x, "ggai_layer_request") && identical(x$target, "layer")) {
+    deterministic <- deterministic_style_spec(x$instruction, context = plot_context)
+    if (!is.null(deterministic)) {
+      return(deterministic)
+    }
+  }
   spec <- compile_layer_spec(
     instruction = x,
     plot_context = plot_context,
+    plot = plot,
     model = model %||% x$model
   )
-  new_compiled_spec(
-    spec = spec,
-    kind = "layer",
+  ensure_layer_compiled_spec(
+    spec,
     instruction = x$instruction,
-    context = plot_context
+    context = plot_context,
+    model = model %||% x$model
   )
 }
 
@@ -330,6 +337,25 @@ spec_history.default <- function(plot, ...) {
   rlang::abort("`spec_history()` is only available for ggplot objects with ggai history or ggai sessions.")
 }
 
+#' Inspect current session context snapshot
+#'
+#' @param x A `ggai_session`.
+#' @param ... Unused.
+#'
+#' @return A list snapshot of current session context.
+#' @export
+session_context <- function(x, ...) {
+  if (inherits(x, "ggai_session")) {
+    return(session_context_snapshot(x))
+  }
+  UseMethod("session_context")
+}
+
+#' @export
+session_context.default <- function(x, ...) {
+  rlang::abort("`session_context()` is only available for `ggai_session` objects.")
+}
+
 #' @export
 spec_history.ggplot <- function(plot, ...) {
   history <- plot_compiled_specs(plot)
@@ -384,6 +410,7 @@ render_spec_compiled <- function(compiled, plot = NULL, data = NULL) {
   for (layer in layers) {
     out <- out + layer
   }
+  out <- apply_plot_ops(out, compiled$spec)
   record_compiled_spec(out, compiled)
 }
 

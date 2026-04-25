@@ -46,6 +46,19 @@ ggai_annotation_item_schema <- function() {
   )
 }
 
+ggai_plot_op_item_schema <- function() {
+  z <- ggai_schema_funs()
+
+  z$z_object(
+    op = z$z_enum(
+      values = c("theme", "theme_preset", "labels", "scale_colour", "scale_fill", "scale_x", "scale_y", "guides"),
+      description = "Plot-level operation to apply"
+    ),
+    params = z$z_any_object(description = "Operation parameters"),
+    .required = c("op", "params")
+  )
+}
+
 #' Schema for a layer request
 #'
 #' @return A `z_schema` object.
@@ -84,10 +97,14 @@ z_ggai_layer_spec <- function() {
       ggai_annotation_item_schema(),
       description = "Non-layer annotations or side effects"
     ),
+    plot_ops = z$z_array(
+      ggai_plot_op_item_schema(),
+      description = "Plot-level theme, scale, legend, and axis operations"
+    ),
     warnings = z$z_array(
       z$z_string(description = "Compilation warnings"),
       description = "Warnings returned by the compiler"
     ),
-    .required = c("intent", "action", "target_layer", "layers", "annotations", "warnings")
+    .required = c("intent", "action", "target_layer", "layers", "annotations", "plot_ops", "warnings")
   )
 }

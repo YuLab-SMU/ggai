@@ -61,7 +61,10 @@ token.*
 demo/
 demo_outputs/
 ggai.Rcheck/
+..Rcheck/
 paperbanana/
+.baoyu-skills/
+tests/testthat/Rplots.pdf
 
 # Build artifacts and archives
 *.tar
@@ -76,3 +79,4 @@ paperbanana/
 *.db
 *.rds
 *.rda
+.positai

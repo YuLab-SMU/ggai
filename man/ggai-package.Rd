@@ -2,7 +2,6 @@
 % Please edit documentation in R/ggai-package.R
 \docType{package}
 \name{ggai-package}
-\alias{ggai}
 \alias{ggai-package}
 \title{ggai: Compiler-First AI Visualizations for ggplot2}
 \description{

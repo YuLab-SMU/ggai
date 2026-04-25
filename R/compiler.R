@@ -3,6 +3,12 @@ build_layer_compiler_prompt <- function(request, plot_context = list()) {
     request <- new_layer_ai_request(as.character(request)[1])
   }
 
+  effective_plot_context <- request_plot_context(request$runtime_request %||% NULL)
+  if (!length(effective_plot_context)) {
+    effective_plot_context <- plot_context
+  }
+  session_context <- request_session_context(request$runtime_request %||% NULL)
+
   exemplars <- retrieve_local_exemplars("layer", request$instruction, n = 2)
   exemplar_text <- format_exemplars_for_prompt(exemplars)
 
@@ -13,7 +19,10 @@ build_layer_compiler_prompt <- function(request, plot_context = list()) {
       request$instruction,
       "",
       "Plot context:",
-      jsonlite::toJSON(plot_context, auto_unbox = TRUE, null = "null", pretty = TRUE),
+      jsonlite::toJSON(effective_plot_context, auto_unbox = TRUE, null = "null", pretty = TRUE),
+      "",
+      "Session context:",
+      jsonlite::toJSON(session_context, auto_unbox = TRUE, null = "null", pretty = TRUE),
       if (!is.null(exemplar_text)) paste("\nExamples:\n", exemplar_text) else ""
     )
   )
@@ -217,6 +226,8 @@ compile_with_kind <- function(kind,
 
 compile_layer_spec <- function(instruction,
                                plot_context = list(),
+                               plot = NULL,
+                               session = NULL,
                                model = NULL,
                                registry = NULL,
                                system = NULL,
@@ -224,11 +235,15 @@ compile_layer_spec <- function(instruction,
   request <- if (inherits(instruction, "ggai_layer_request")) {
     instruction
   } else {
-    new_layer_ai_request(instruction)
+    new_layer_ai_request(instruction, plot = plot, session = session, model = model)
+  }
+
+  if (!length(plot_context)) {
+    plot_context <- request_plot_context(request$runtime_request %||% NULL)
   }
 
   prompt <- build_layer_compiler_prompt(request, plot_context = plot_context)
-  compile_with_kind(
+  spec <- compile_with_kind(
     kind = "layer",
     instruction = request$instruction,
     prompt = prompt,
@@ -236,6 +251,17 @@ compile_layer_spec <- function(instruction,
     registry = registry,
     system = system,
     review = review
+  )
+
+  new_compiled_spec(
+    spec = spec,
+    kind = "layer",
+    instruction = request$instruction,
+    context = plot_context,
+    meta = list(
+      model = model %||% request$model %||% NULL,
+      session_turn = request_session_context(request$runtime_request %||% NULL)$current_turn %||% NULL
+    )
   )
 }
 
