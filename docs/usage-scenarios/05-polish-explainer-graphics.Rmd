@@ -1,0 +1,156 @@
+---
+title: "Case 5: Final polish and explainer graphics"
+subtitle: "最终润色与解释图"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+params:
+  run_live: false
+  output_dir: "outputs"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 7.5, fig.height = 5)
+
+pkg_root <- normalizePath(file.path(getwd(), "..", ".."), mustWork = FALSE)
+if (!file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  pkg_root <- normalizePath(getwd(), mustWork = FALSE)
+}
+if (requireNamespace("pkgload", quietly = TRUE) && file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  aisdk_path <- Sys.getenv("GGAI_AISDK_PATH", "/Users/xiayh/Projects/aisdk")
+  if (dir.exists(aisdk_path)) {
+    try(pkgload::load_all(aisdk_path, export_all = FALSE, helpers = FALSE, quiet = TRUE), silent = TRUE)
+  }
+  pkgload::load_all(pkg_root, export_all = FALSE, helpers = FALSE, quiet = TRUE)
+}
+
+library(ggplot2)
+library(ggai)
+
+dir.create(params$output_dir, recursive = TRUE, showWarnings = FALSE)
+run_live <- isTRUE(params$run_live)
+```
+
+## Scenario
+
+Use polish mode when the analytical chart is structurally correct and the next
+need is communication finish: publication-style redraw, plot-reader callouts,
+infographic board, or story figure.
+
+This case creates the reference bundle offline. The live image-edit call is
+optional because it uses an image model.
+
+```{r base-plot}
+car_data <- transform(mtcars, cylinders = factor(cyl), car = rownames(mtcars))
+
+base_plot <- ggplot(car_data, aes(wt, mpg, colour = cylinders)) +
+  geom_point(size = 3.2, alpha = 0.9) +
+  scale_colour_brewer(palette = "Set2") +
+  labs(
+    title = "Fuel efficiency vs weight",
+    subtitle = "Grounded chart before image-level polish",
+    x = "Weight",
+    y = "Miles per gallon",
+    colour = "Cylinders"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom")
+
+s <- start_ggai_session(base_plot)
+plot(s)
+```
+
+## Offline polish bundle
+
+`prepare_polish_bundle()` writes the base plot, geometry overlay, layout
+overlay, layered redraw manifest, and prompt. This lets you inspect the
+contract before any image model is called.
+
+```{r polish-bundle}
+bundle <- prepare_polish_bundle(
+  s,
+  instruction = paste(
+    "Redraw this as a polished scientific explainer.",
+    "Keep the data relationship faithful, improve typography and hierarchy,",
+    "and add light plot-reader callouts."
+  ),
+  output_dir = params$output_dir,
+  prefix = "case05_polish",
+  width = 1400,
+  height = 900
+)
+
+bundle$base_plot_path
+bundle$geometry_overlay_path
+bundle$layout_overlay_path
+bundle$manifest_path
+bundle$prompt_path
+```
+
+## Layer contract
+
+The image mode now records a ggplot-native layer contract. It uses the same
+mental model ggplot users already understand: theme surface, data geoms/stats,
+scales and guides, labels and annotations, then communication polish.
+
+```{r layer-contract}
+bundle$manifest$layer_mode
+bundle$manifest$layer_manifest$ordering
+
+source_layers <- data.frame(
+  order = vapply(bundle$manifest$layer_manifest$ggplot_reference_layers, `[[`, integer(1), "order"),
+  role = vapply(bundle$manifest$layer_manifest$ggplot_reference_layers, `[[`, character(1), "role"),
+  file = basename(vapply(bundle$manifest$layer_manifest$ggplot_reference_layers, `[[`, character(1), "file"))
+)
+source_layers
+
+target_roles <- data.frame(
+  order = vapply(bundle$manifest$layer_manifest$ggplot_output_roles, `[[`, integer(1), "order"),
+  role = vapply(bundle$manifest$layer_manifest$ggplot_output_roles, `[[`, character(1), "role"),
+  name = vapply(bundle$manifest$layer_manifest$ggplot_output_roles, `[[`, character(1), "name")
+)
+target_roles
+```
+
+```{r show-bundle-image, out.width='100%'}
+knitr::include_graphics(bundle$base_plot_path)
+```
+
+## Live ggai image polish
+
+```{r live-polish, eval=params$run_live}
+image_model <- paste0("openai:", Sys.getenv("OPENAI_IMAGE_MODEL", "gpt-image-2"))
+
+res <- gg_edit(
+  s,
+  "Redraw this as a polished scientific explainer with cleaner hierarchy and light numbered callouts.",
+  mode = "polish",
+  image_model = image_model,
+  output_dir = params$output_dir,
+  prefix = "case05_live_polish",
+  width = 1400,
+  height = 900,
+  total_timeout_seconds = 900,
+  first_byte_timeout_seconds = 180,
+  connect_timeout_seconds = 15,
+  idle_timeout_seconds = 300
+)
+
+res$best$path
+plot(res)
+artifacts(res$session)
+```
+
+## Expected checks
+
+```{r checks}
+stopifnot(inherits(bundle, "ggai_figure_polish_bundle"))
+stopifnot(file.exists(bundle$manifest_path))
+stopifnot(file.exists(bundle$prompt_path))
+manifest_check <- jsonlite::read_json(bundle$manifest_path, simplifyVector = FALSE)
+stopifnot(identical(manifest_check$layer_manifest$ordering, "bottom_to_top"))
+if (run_live) {
+  stopifnot(inherits(res, "ggai_polished_figure_result"))
+}
+```

@@ -1,0 +1,40 @@
+Package: ggai
+Title: Grammar-Guided AI Visualizations for Ggplot2
+Version: 0.1.0
+Authors@R:
+    person(given = "Xiayh",
+           family = "User",
+           role = c("aut", "cre"),
+           email = "xiayh@example.com")
+Description: Compiler-first tools for turning natural-language visualization
+    instructions into reproducible ggplot2 layers, diagram scene specs, and
+    generated glyph assets.
+License: MIT + file LICENSE
+URL: https://yulab-smu.github.io/ggai/pkgdown/,
+    https://github.com/YuLab-SMU/ggai
+BugReports: https://github.com/YuLab-SMU/ggai/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    aisdk (>= 1.1.2),
+    cli,
+    digest,
+    ggplotify,
+    ggplot2,
+    grid,
+    jsonlite,
+    magick,
+    rlang
+Suggests:
+    ggh4x,
+    jpeg,
+    pkgdown,
+    pkgload,
+    png,
+    testthat (>= 3.0.0),
+    vdiffr,
+    withr
+Remotes:
+    YuLab-SMU/aisdk
+Config/testthat/edition: 3

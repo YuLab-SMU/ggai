@@ -1,0 +1,106 @@
+destination: docs/pkgdown
+url: https://yulab-smu.github.io/ggai/pkgdown/
+
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left: [intro, reference]
+    right: [search]
+
+reference:
+  - title: Main entry points
+    contents:
+      - ggai
+      - gg_edit
+      - start_ggai_session
+      - plot.ggai_session
+      - as_code
+      - inspect_spec
+      - spec_history
+      - session_context
+      - artifacts
+      - latest_artifact
+  - title: Ggplot layers and specs
+    contents:
+      - geom_ai
+      - geom_point_ai
+      - ggplot_add.ggai_layer_request
+      - glyph_ai
+      - z_ggai_glyph_spec
+      - update_spec
+      - edit_spec
+      - render_spec
+  - title: Polish and image generation
+    contents:
+      - polish_figure
+      - prepare_polish_bundle
+      - ggai_generate_image
+      - ggai_edit_image
+      - ggai_image_model
+      - bio_asset_spec
+      - generate_bio_asset
+      - plot.ggai_polished_figure_result
+      - print.ggai_polished_figure_result
+  - title: Agent runtime
+    contents:
+      - create_ggai_agent
+      - create_ggai_agent_tools
+      - ggai_agent_run
+      - ggai_acquisition_tool
+      - new_ggai_task
+      - validate_ggai_task
+      - new_ggai_agent_trace
+      - validate_ggai_agent_trace
+      - serialize_ggai_contract
+      - deserialize_ggai_contract
+  - title: Diagram and layout
+    contents:
+      - ggdiagram
+      - add_diagram_spec
+      - prepare_hybrid_diagram_spec
+      - render_layout
+      - z_ggai_diagram_spec
+  - title: Data, inspection, and helpers
+    contents:
+      - ggai_language_model
+      - ggai_get_model
+      - ggai_set_model
+      - ggai_default_models
+      - ggai_default_aisdk_path
+      - ggai_load_env
+      - ggai_check_package
+      - ggai_install_cran_package
+      - ggai_skill_prompt_section
+      - ggai_inspect_examples
+      - ggai_inspect_help
+      - ggai_inspect_github_url
+      - ggai_list_local_files
+      - ggai_read_local_file
+      - ggai_detect_source_urls
+      - ggai_summarize_sources
+      - ggai_select_stat_method
+      - ggai_stat_profile
+      - ggai_vignette_index
+  - title: Figure prompts and validation
+    contents:
+      - new_visual_brief
+      - validate_visual_brief
+      - new_analysis_brief
+      - validate_analysis_brief
+      - compile_figure_prompt
+      - evaluate_figure_candidate
+      - generate_final_figure
+      - save_fixed_plot
+      - compose_plots
+      - ggai_validate_and_repair
+      - ggai_validate_session_artifact
+      - z_ggai_figure_prompt_spec
+  - title: Internal generics
+    contents:
+      - print.ggai_session
+      - undo
+  - title: Data
+    contents:
+      - GSE207092_BrainDev_RNAseq_TPM_anno

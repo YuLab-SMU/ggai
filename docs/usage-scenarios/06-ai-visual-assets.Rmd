@@ -1,0 +1,138 @@
+---
+title: "Case 6: AI visual assets"
+subtitle: "图形资产生成"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+params:
+  run_live: false
+  output_dir: "outputs"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 7.5, fig.height = 5)
+
+pkg_root <- normalizePath(file.path(getwd(), "..", ".."), mustWork = FALSE)
+if (!file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  pkg_root <- normalizePath(getwd(), mustWork = FALSE)
+}
+if (requireNamespace("pkgload", quietly = TRUE) && file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  aisdk_path <- Sys.getenv("GGAI_AISDK_PATH", "/Users/xiayh/Projects/aisdk")
+  if (dir.exists(aisdk_path)) {
+    try(pkgload::load_all(aisdk_path, export_all = FALSE, helpers = FALSE, quiet = TRUE), silent = TRUE)
+  }
+  pkgload::load_all(pkg_root, export_all = FALSE, helpers = FALSE, quiet = TRUE)
+}
+
+library(ggplot2)
+library(ggai)
+
+dir.create(params$output_dir, recursive = TRUE, showWarnings = FALSE)
+run_live <- isTRUE(params$run_live)
+```
+
+## Scenario
+
+Use the asset path when the goal is not only a data chart. `ggai` can support
+diagram scenes, generated glyphs, and direct image edits.
+
+This case gives an offline diagram reference and optional live glyph/image
+generation calls.
+
+## Offline diagram reference
+
+```{r offline-diagram}
+diagram_data <- data.frame(
+  x = c(1, 3.2, 5.4, 7.6),
+  y = c(3, 3, 3, 3),
+  label = c("Prompt", "Spec", "Render", "Artifact")
+)
+
+p_diagram_reference <- ggplot(diagram_data, aes(x, y)) +
+  geom_segment(
+    data = data.frame(x = c(1.5, 3.7, 5.9), xend = c(2.8, 5.0, 7.2), y = 3, yend = 3),
+    aes(x = x, xend = xend, y = y, yend = yend),
+    inherit.aes = FALSE,
+    arrow = arrow(length = unit(0.14, "in")),
+    colour = "#6B7280"
+  ) +
+  geom_label(
+    aes(label = label),
+    size = 4,
+    label.size = 0.3,
+    fill = "white",
+    colour = "#111827"
+  ) +
+  coord_cartesian(xlim = c(0.3, 8.3), ylim = c(2.2, 3.8), expand = FALSE) +
+  theme_void() +
+  labs(title = "Offline reference: asset-generation mental model") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+
+p_diagram_reference
+```
+
+## Live diagram case
+
+```{r live-diagram, eval=params$run_live}
+d <- ggdiagram(width = 12, height = 7, background = "#FCFCF8", theme = "paper") +
+  geom_ai(
+    "Draw a compact ggai asset pipeline with prompt, structured spec, renderer, and final artifact. Use simple boxes and arrows."
+  )
+
+d
+inspect_spec(d)
+as_code(d)
+```
+
+## Live glyph case
+
+```{r live-glyph, eval=params$run_live}
+glyph <- glyph_ai(
+  "minimal pen-line icon for a scientific chart glyph",
+  style = "clean black line art, transparent background",
+  cache = TRUE
+)
+
+glyph
+
+p_glyph <- ggplot(mtcars, aes(wt, mpg)) +
+  geom_point_ai(
+    prompt = "minimal pen-line icon for a scientific chart glyph",
+    style = "clean black line art, transparent background",
+    size = 8
+  ) +
+  theme_minimal(base_size = 12) +
+  labs(title = "Generated glyph used as a ggplot point mark")
+
+p_glyph
+```
+
+## Live image-edit case
+
+```{r live-image-edit, eval=params$run_live}
+base_path <- file.path(params$output_dir, "case06_reference_diagram.png")
+ggplot2::ggsave(base_path, p_diagram_reference, width = 8, height = 4.5, bg = "white")
+
+image_model <- paste0("openai:", Sys.getenv("OPENAI_IMAGE_MODEL", "gpt-image-2"))
+
+edited <- ggai_edit_image(
+  model = ggai_image_model(image_model),
+  image = base_path,
+  prompt = "Turn this simple diagram into a clean hand-drawn whiteboard explainer while preserving the same four stages.",
+  output_dir = params$output_dir,
+  size = "1536x1024"
+)
+
+edited$images[[1]]$path
+```
+
+## Expected checks
+
+```{r checks}
+stopifnot(inherits(p_diagram_reference, "ggplot"))
+if (run_live) {
+  stopifnot(inherits(d, "ggplot"))
+  stopifnot(is.list(glyph))
+}
+```

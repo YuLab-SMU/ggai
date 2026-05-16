@@ -1,0 +1,101 @@
+---
+title: "Case 1: Natural-language plotting"
+subtitle: "自然语言作图"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+params:
+  run_live: false
+  output_dir: "outputs"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 7.5,
+  fig.height = 5
+)
+
+pkg_root <- normalizePath(file.path(getwd(), "..", ".."), mustWork = FALSE)
+if (!file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  pkg_root <- normalizePath(getwd(), mustWork = FALSE)
+}
+if (requireNamespace("pkgload", quietly = TRUE) && file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  aisdk_path <- Sys.getenv("GGAI_AISDK_PATH", "/Users/xiayh/Projects/aisdk")
+  if (dir.exists(aisdk_path)) {
+    try(pkgload::load_all(aisdk_path, export_all = FALSE, helpers = FALSE, quiet = TRUE), silent = TRUE)
+  }
+  pkgload::load_all(pkg_root, export_all = FALSE, helpers = FALSE, quiet = TRUE)
+}
+
+library(ggplot2)
+library(ggai)
+
+dir.create(params$output_dir, recursive = TRUE, showWarnings = FALSE)
+run_live <- isTRUE(params$run_live)
+```
+
+## Scenario
+
+Use `ggai()` as a natural-language entry point: the user names a data object in
+the prompt and asks for a chart in plain language.
+
+This scenario is useful when the chart should remain an editable `ggplot`
+session, but the first draft can be described conversationally.
+
+```{r data}
+car_data <- transform(
+  mtcars,
+  cylinders = factor(cyl),
+  car = rownames(mtcars)
+)
+
+str(car_data[, c("mpg", "wt", "cylinders", "hp")])
+```
+
+## Offline reference
+
+This is the chart the live prompt should be able to produce.
+
+```{r offline-reference}
+p_reference <- ggplot(car_data, aes(wt, mpg, colour = cylinders)) +
+  geom_point(size = 3, alpha = 0.9) +
+  scale_colour_brewer(palette = "Set2") +
+  labs(
+    title = "Fuel efficiency falls as vehicle weight increases",
+    subtitle = "Reference chart grounded in mtcars",
+    x = "Weight",
+    y = "Miles per gallon",
+    colour = "Cylinders"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+
+p_reference
+```
+
+## Live ggai case
+
+Set `params$run_live` to `true` to exercise the model-backed path.
+
+```{r live-ggai, eval=params$run_live}
+s <- ggai(
+  "@car_data show fuel efficiency vs weight, color by cylinders. Keep it as an editable session."
+)
+
+plot(s)
+session_context(s)
+spec_history(s)
+```
+
+## Expected checks
+
+```{r checks}
+stopifnot(inherits(p_reference, "ggplot"))
+if (run_live) {
+  stopifnot(inherits(s, "ggai_session"))
+}
+```

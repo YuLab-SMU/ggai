@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' data-engine-version='2.0' width='720.00pt' height='576.00pt' viewBox='0 0 720.00 576.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA='>
+    <rect x='0.00' y='0.00' width='720.00' height='576.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+<rect x='0.00' y='0.00' width='720.00' height='576.00' style='stroke-width: 0.00; stroke: #FFFFFF; fill: #FFFFFF;' />
+<rect x='0.00' y='17.30' width='720.00' height='558.70' style='stroke-width: 0.00; stroke: #FFFFFF; fill: #FFFFFF;' />
+<line x1='208.80' y1='296.65' x2='280.80' y2='296.65' style='stroke-width: 0.90; stroke: #334455;' />
+<polygon points='273.32,300.97 280.80,296.65 273.32,292.33 ' style='stroke-width: 0.90; stroke: #334455; fill: #FFFFFF;' />
+<rect x='79.20' y='259.41' width='129.60' height='74.49' style='stroke-width: 0.83; stroke: #334E68; fill: #E8F3FF;' />
+<text x='144.00' y='300.78' text-anchor='middle' style='font-size: 12.00px; fill: #102A43; font-family: sans;' textLength='26.69px' lengthAdjust='spacingAndGlyphs'>Input</text>
+<polygon points='288.25,343.21 431.75,343.21 431.45,343.20 432.65,343.16 433.82,342.92 434.94,342.49 435.98,341.89 436.91,341.13 437.71,340.24 438.35,339.22 438.82,338.12 439.10,336.96 439.20,335.76 439.20,335.76 439.20,257.54 439.20,257.54 439.10,256.35 438.82,255.18 438.35,254.08 437.71,253.07 436.91,252.17 435.98,251.41 434.94,250.81 433.82,250.39 432.65,250.15 431.75,250.09 288.25,250.09 289.15,250.15 287.95,250.10 286.76,250.24 285.61,250.58 284.52,251.09 283.54,251.77 282.67,252.60 281.95,253.56 281.40,254.62 281.02,255.76 280.82,256.94 280.80,257.54 280.80,335.76 280.82,335.16 280.82,336.36 281.02,337.54 281.40,338.68 281.95,339.74 282.67,340.70 283.54,341.53 284.52,342.21 285.61,342.73 286.76,343.06 287.95,343.20 ' style='stroke-width: 0.83; stroke: #7C4D12; fill: #FFF1D6;' />
+<text x='360.00' y='300.78' text-anchor='middle' style='font-size: 12.00px; fill: #3E2723; font-family: sans;' textLength='32.69px' lengthAdjust='spacingAndGlyphs'>Model</text>
+<text x='0.00' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='122.55px' lengthAdjust='spacingAndGlyphs'>basic-diagram-scene</text>
+</g>
+</svg>

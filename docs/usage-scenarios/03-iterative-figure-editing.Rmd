@@ -1,0 +1,110 @@
+---
+title: "Case 3: Iterative figure editing"
+subtitle: "多轮改图"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+params:
+  run_live: false
+  output_dir: "outputs"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 7.5, fig.height = 5)
+
+pkg_root <- normalizePath(file.path(getwd(), "..", ".."), mustWork = FALSE)
+if (!file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  pkg_root <- normalizePath(getwd(), mustWork = FALSE)
+}
+if (requireNamespace("pkgload", quietly = TRUE) && file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  aisdk_path <- Sys.getenv("GGAI_AISDK_PATH", "/Users/xiayh/Projects/aisdk")
+  if (dir.exists(aisdk_path)) {
+    try(pkgload::load_all(aisdk_path, export_all = FALSE, helpers = FALSE, quiet = TRUE), silent = TRUE)
+  }
+  pkgload::load_all(pkg_root, export_all = FALSE, helpers = FALSE, quiet = TRUE)
+}
+
+library(ggplot2)
+library(ggai)
+
+dir.create(params$output_dir, recursive = TRUE, showWarnings = FALSE)
+run_live <- isTRUE(params$run_live)
+```
+
+## Scenario
+
+Use `gg_edit()` when the figure needs multiple natural-language revisions while
+remaining an inspectable `ggplot` session.
+
+This case exercises figure edits such as legend placement, title, labels, and
+session history.
+
+```{r base-session}
+car_data <- transform(mtcars, cylinders = factor(cyl), car = rownames(mtcars))
+
+base_plot <- ggplot(car_data, aes(wt, mpg, colour = cylinders)) +
+  geom_point(size = 3, alpha = 0.9) +
+  scale_colour_brewer(palette = "Set2") +
+  labs(x = "Weight", y = "Miles per gallon", colour = "Cylinders") +
+  theme_minimal(base_size = 12)
+
+offline_session <- start_ggai_session(base_plot)
+offline_session
+plot(offline_session)
+```
+
+## Offline reference
+
+This reference mimics the target result of a multi-turn edit.
+
+```{r offline-reference}
+label_row <- car_data[which.min(car_data$mpg), ]
+
+p_reference <- base_plot +
+  labs(
+    title = "Fuel efficiency vs weight",
+    subtitle = "Reference output for a multi-turn editing session"
+  ) +
+  annotate(
+    "label",
+    x = label_row$wt,
+    y = label_row$mpg,
+    label = label_row$car,
+    hjust = 1.05,
+    size = 3,
+    fill = "white",
+    colour = "#374151",
+    label.size = 0.25
+  ) +
+  theme(legend.position = "bottom")
+
+p_reference
+```
+
+## Live ggai case
+
+```{r live-editing, eval=params$run_live}
+s <- ggai(
+  "@car_data show fuel efficiency vs weight, color by cylinders. Keep it as an editable session."
+)
+
+s <- gg_edit(s, "move legend to bottom")
+s <- gg_edit(s, "set title to Fuel efficiency vs weight")
+s <- gg_edit(s, "label the car with the lowest miles per gallon")
+
+plot(s)
+spec_history(s)
+session_context(s)
+as_code(s)
+```
+
+## Expected checks
+
+```{r checks}
+stopifnot(inherits(offline_session, "ggai_session"))
+stopifnot(inherits(p_reference, "ggplot"))
+if (run_live) {
+  stopifnot(inherits(s, "ggai_session"))
+}
+```

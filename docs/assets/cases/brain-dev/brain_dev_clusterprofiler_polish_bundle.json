@@ -1,0 +1,195 @@
+{
+  "version": 1,
+  "mode": "whole_image_redraw",
+  "instruction": "redraw this clusterProfiler enrichment figure as a polished developmental neurobiology explainer. Keep the GO term ranking, dot positions, relative sizes, and statistical meaning faithful. Use subtle neurodevelopmental visual context so the figure reads like a scientific editorial panel rather than a generic dotplot. The biological story is neuronal maturation: synapse assembly, postsynaptic organization, synaptic vesicle cycle, and neurotransmitter transport.",
+  "source": {
+    "input_class": "ggai_session",
+    "source_kind": "ggai_session",
+    "session_context": {
+      "current_turn": 0,
+      "active_instruction": null,
+      "user_preferences": [],
+      "active_constraints": [],
+      "plot_summary": null,
+      "recent_notes": [],
+      "recent_tool_results": [],
+      "recent_artifacts": []
+    },
+    "spec_history": [],
+    "current_spec": null
+  },
+  "render": {
+    "width_px": 2048,
+    "height_px": 1365,
+    "dpi": 300
+  },
+  "references": {
+    "base_plot": "/Users/xiayh/Projects/ggai/demo_outputs/brain_dev_clusterprofiler_polish_base_plot.png",
+    "geometry_overlay": "/Users/xiayh/Projects/ggai/demo_outputs/brain_dev_clusterprofiler_polish_geometry_overlay.png",
+    "layout_overlay": "/Users/xiayh/Projects/ggai/demo_outputs/brain_dev_clusterprofiler_polish_layout_overlay.png"
+  },
+  "plot_context": {
+    "mapped_aes": ["shape", "x", "y", "size", "fill"],
+    "geoms": "point",
+    "labels": {
+      "size": "Count",
+      "fill": "p.adjust",
+      "x": "GeneRatio",
+      "title": "NSC vs neuron: GO enrichment of genes elevated in neurons",
+      "subtitle": "Mouse brain development dataset GSE207092",
+      "shape": "I(enrichplot_point_shape)"
+    },
+    "facet": "FacetNull",
+    "coord": "CoordCartesian"
+  },
+  "data_contract": {
+    "rows": 12,
+    "columns": ["character", "factor", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "character", "integer", "numeric"],
+    "mappings": {
+      "shape": "I(enrichplot_point_shape)",
+      "x": "GeneRatio",
+      "y": "Description",
+      "size": "Count",
+      "fill": "p.adjust"
+    },
+    "mapped_columns": {
+      "x": {
+        "column": "GeneRatio",
+        "summary": {
+          "type": "numeric",
+          "n": 12,
+          "min": 0.0355,
+          "max": 0.0676
+        }
+      },
+      "y": {
+        "column": "Description",
+        "summary": {
+          "type": "factor",
+          "n": 12,
+          "levels": ["regulation of synapse structure or activity", "regulation of synapse organization", "synapse assembly", "vesicle-mediated transport in synapse", "synaptic vesicle cycle", "cognition", "learning or memory", "postsynapse organization", "regulation of postsynaptic membrane potential", "neurotransmitter transport", "potassium ion transport", "dendrite development"]
+        }
+      },
+      "size": {
+        "column": "Count",
+        "summary": {
+          "type": "integer",
+          "n": 12,
+          "min": 96,
+          "max": 183
+        }
+      },
+      "fill": {
+        "column": "p.adjust",
+        "summary": {
+          "type": "numeric",
+          "n": 12,
+          "min": 1.7955e-77,
+          "max": 2.7036e-48
+        }
+      }
+    }
+  },
+  "layer_summaries": [
+    {
+      "index": 1,
+      "geom": "point",
+      "rows": 12,
+      "columns": ["x", "y", "size", "fill", "PANEL", "group", "shape", "colour", "alpha", "stroke"],
+      "panel_count": 1,
+      "group_count": 12,
+      "spatial_bounds": {
+        "x": {
+          "min": 0.0355,
+          "max": 0.0676
+        },
+        "y": {
+          "min": 1,
+          "max": 12
+        }
+      }
+    }
+  ],
+  "layout_regions": {
+    "title": {
+      "label": "title",
+      "xmin": 0.6176,
+      "xmax": 0.6176,
+      "ymin": 0.6755,
+      "ymax": 0.9227,
+      "x": 0.6176,
+      "y": 0.7991,
+      "width": 0,
+      "height": 0.2472
+    },
+    "subtitle": {
+      "label": "subtitle",
+      "xmin": 0.6176,
+      "xmax": 0.6176,
+      "ymin": 0.4525,
+      "ymax": 0.6755,
+      "x": 0.6176,
+      "y": 0.564,
+      "width": 0,
+      "height": 0.2229
+    },
+    "caption": {
+      "label": "caption",
+      "xmin": 0.6176,
+      "xmax": 0.6176,
+      "ymin": 0.0773,
+      "ymax": 0.0773,
+      "x": 0.6176,
+      "y": 0.0773,
+      "width": 0,
+      "height": 0
+    },
+    "data_panel": {
+      "label": "data_panel",
+      "xmin": 0.6176,
+      "xmax": 0.6176,
+      "ymin": 0.4525,
+      "ymax": 0.4525,
+      "x": 0.6176,
+      "y": 0.4525,
+      "width": 0,
+      "height": 0
+    },
+    "legend": {
+      "label": "legend",
+      "xmin": 0.0281,
+      "xmax": 0.9719,
+      "ymin": 0.0773,
+      "ymax": 0.4525,
+      "x": 0.5,
+      "y": 0.2649,
+      "width": 0.9437,
+      "height": 0.3752
+    },
+    "x_axis": {
+      "label": "x_axis",
+      "xmin": 0.6176,
+      "xmax": 0.6176,
+      "ymin": 0.0773,
+      "ymax": 0.4525,
+      "x": 0.6176,
+      "y": 0.2649,
+      "width": 0,
+      "height": 0.3752
+    },
+    "y_axis": {
+      "label": "y_axis",
+      "xmin": 0.0281,
+      "xmax": 0.6176,
+      "ymin": 0.4525,
+      "ymax": 0.4525,
+      "x": 0.3229,
+      "y": 0.4525,
+      "width": 0.5894,
+      "height": 0
+    }
+  },
+  "semantic_constraints": ["Preserve axis direction, scale logic, and the relative positions of all major marks.", "Do not invent, remove, or merge visible data groups, categories, clusters, or standout outliers.", "Keep all visible text logically attached to the same chart regions even if the styling is redrawn.", "Preserve point-cloud shape, relative density, and any isolated outlier points.", "Honor this requested polish direction without breaking the data semantics: redraw this clusterProfiler enrichment figure as a polished developmental neurobiology explainer. Keep the GO term ranking, dot positions, relative sizes, and statistical meaning faithful. Use subtle neurodevelopmental visual context so the figure reads like a scientific editorial panel rather than a generic dotplot. The biological story is neuronal maturation: synapse assembly, postsynaptic organization, synaptic vesicle cycle, and neurotransmitter transport."],
+  "allow_redraw": ["Redraw the full figure from scratch rather than tracing the original pixels.", "Improve typography, spacing, annotation styling, color treatment, shading, and surface finish.", "Use richer illustration treatment, cleaner composition, and more intentional visual hierarchy.", "You may restyle legends, labels, icons, and decorative surfaces as long as the figure remains semantically faithful."],
+  "prompt_path": "/Users/xiayh/Projects/ggai/demo_outputs/brain_dev_clusterprofiler_polish_prompt.txt"
+}

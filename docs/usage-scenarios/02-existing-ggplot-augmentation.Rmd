@@ -1,0 +1,127 @@
+---
+title: "Case 2: Existing ggplot augmentation"
+subtitle: "增强已有 ggplot"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+params:
+  run_live: false
+  output_dir: "outputs"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 7.5, fig.height = 5)
+
+pkg_root <- normalizePath(file.path(getwd(), "..", ".."), mustWork = FALSE)
+if (!file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  pkg_root <- normalizePath(getwd(), mustWork = FALSE)
+}
+if (requireNamespace("pkgload", quietly = TRUE) && file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  aisdk_path <- Sys.getenv("GGAI_AISDK_PATH", "/Users/xiayh/Projects/aisdk")
+  if (dir.exists(aisdk_path)) {
+    try(pkgload::load_all(aisdk_path, export_all = FALSE, helpers = FALSE, quiet = TRUE), silent = TRUE)
+  }
+  pkgload::load_all(pkg_root, export_all = FALSE, helpers = FALSE, quiet = TRUE)
+}
+
+library(ggplot2)
+library(ggai)
+
+dir.create(params$output_dir, recursive = TRUE, showWarnings = FALSE)
+run_live <- isTRUE(params$run_live)
+```
+
+## Scenario
+
+Use `geom_ai()` when the analyst already has a correct `ggplot`, and only wants
+AI-compiled communication layers: callouts, emphasis, labels, or additive
+annotations.
+
+The important boundary is that `ggplot` remains the statistical graphics
+engine.
+
+```{r base-plot}
+car_data <- transform(mtcars, cylinders = factor(cyl), car = rownames(mtcars))
+
+base_plot <- ggplot(car_data, aes(wt, mpg, colour = cylinders)) +
+  geom_point(size = 3, alpha = 0.9) +
+  scale_colour_brewer(palette = "Set2") +
+  labs(
+    title = "Fuel efficiency vs vehicle weight",
+    x = "Weight",
+    y = "Miles per gallon",
+    colour = "Cylinders"
+  ) +
+  theme_minimal(base_size = 12)
+
+base_plot
+```
+
+## Offline reference
+
+This hand-written reference shows the intended augmentation style.
+
+```{r offline-reference}
+outlier <- car_data[which.max(car_data$wt - car_data$mpg / 10), ]
+efficient <- car_data[which.max(car_data$mpg), ]
+
+p_reference <- base_plot +
+  annotate(
+    "label",
+    x = outlier$wt,
+    y = outlier$mpg,
+    label = "heavy / low MPG",
+    hjust = 1.05,
+    vjust = -0.4,
+    size = 3.3,
+    colour = "#4B5563",
+    fill = "white",
+    label.size = 0.25
+  ) +
+  annotate(
+    "curve",
+    x = outlier$wt - 0.6,
+    y = outlier$mpg + 4,
+    xend = outlier$wt,
+    yend = outlier$mpg,
+    curvature = -0.2,
+    arrow = arrow(length = unit(0.12, "in")),
+    colour = "#4B5563"
+  ) +
+  annotate(
+    "text",
+    x = efficient$wt + 0.35,
+    y = efficient$mpg,
+    label = "light efficient cluster",
+    hjust = 0,
+    size = 3.4,
+    colour = "#0F766E"
+  )
+
+p_reference
+```
+
+## Live ggai case
+
+```{r live-geom-ai, eval=params$run_live}
+augmented <- base_plot +
+  geom_ai(
+    "Highlight the heavy low-MPG outlier, annotate the light high-efficiency cluster, and keep the result additive."
+  )
+
+augmented
+inspect_spec(augmented)
+as_code(augmented)
+spec_history(augmented)
+```
+
+## Expected checks
+
+```{r checks}
+stopifnot(inherits(base_plot, "ggplot"))
+stopifnot(inherits(p_reference, "ggplot"))
+if (run_live) {
+  stopifnot(inherits(augmented, "ggplot"))
+}
+```

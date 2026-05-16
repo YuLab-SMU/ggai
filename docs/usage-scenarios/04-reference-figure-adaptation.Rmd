@@ -1,0 +1,119 @@
+---
+title: "Case 4: Reference figure adaptation"
+subtitle: "参考图适配"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+params:
+  run_live: false
+  output_dir: "outputs"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 8, fig.height = 4.8)
+
+pkg_root <- normalizePath(file.path(getwd(), "..", ".."), mustWork = FALSE)
+if (!file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  pkg_root <- normalizePath(getwd(), mustWork = FALSE)
+}
+if (requireNamespace("pkgload", quietly = TRUE) && file.exists(file.path(pkg_root, "DESCRIPTION"))) {
+  aisdk_path <- Sys.getenv("GGAI_AISDK_PATH", "/Users/xiayh/Projects/aisdk")
+  if (dir.exists(aisdk_path)) {
+    try(pkgload::load_all(aisdk_path, export_all = FALSE, helpers = FALSE, quiet = TRUE), silent = TRUE)
+  }
+  pkgload::load_all(pkg_root, export_all = FALSE, helpers = FALSE, quiet = TRUE)
+}
+
+library(ggplot2)
+library(ggai)
+
+dir.create(params$output_dir, recursive = TRUE, showWarnings = FALSE)
+run_live <- isTRUE(params$run_live)
+```
+
+## Scenario
+
+Use reference adaptation when a user says: "make a plot like this paper figure"
+or "use this screenshot's structure with my data."
+
+The reference can supply structure or style, but the plotted values should come
+from the user's data.
+
+```{r data}
+car_data <- transform(
+  mtcars,
+  cylinders = factor(cyl),
+  transmission = factor(am, labels = c("Automatic", "Manual")),
+  car = rownames(mtcars)
+)
+
+head(car_data[, c("mpg", "wt", "hp", "cylinders", "transmission")])
+```
+
+## Reference brief
+
+For this runnable case, the "reference figure" is a short brief rather than an
+external image:
+
+- two panels split by transmission;
+- scatter plot with direct trend lines;
+- restrained palette;
+- short callout for the highest-efficiency car.
+
+```{r offline-reference-adaptation}
+top_efficiency <- car_data[which.max(car_data$mpg), ]
+
+p_reference_adapted <- ggplot(car_data, aes(wt, mpg, colour = cylinders)) +
+  geom_point(size = 2.8, alpha = 0.85) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.7) +
+  facet_wrap(~transmission) +
+  scale_colour_brewer(palette = "Set2") +
+  annotate(
+    "label",
+    x = top_efficiency$wt,
+    y = top_efficiency$mpg,
+    label = "highest MPG",
+    size = 3,
+    fill = "white",
+    colour = "#374151",
+    label.size = 0.25
+  ) +
+  labs(
+    title = "Reference-style adaptation using user data",
+    subtitle = "Structure and style are borrowed; values remain mtcars",
+    x = "Weight",
+    y = "Miles per gallon",
+    colour = "Cylinders",
+    caption = "Reference role: structure + style, not extracted source values."
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+
+p_reference_adapted
+```
+
+## Live ggai case
+
+```{r live-reference-adaptation, eval=params$run_live}
+s <- ggai(
+  paste(
+    "@car_data make a reference-style two-panel figure.",
+    "Borrow this structure: split by transmission, scatter mpg vs weight,",
+    "add trend lines, use a restrained palette, and label the highest-efficiency car.",
+    "Use mtcars values only and add a source note."
+  )
+)
+
+plot(s)
+session_context(s)
+```
+
+## Expected checks
+
+```{r checks}
+stopifnot(inherits(p_reference_adapted, "ggplot"))
+if (run_live) {
+  stopifnot(inherits(s, "ggai_session"))
+}
+```
