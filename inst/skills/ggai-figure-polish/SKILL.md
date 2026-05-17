@@ -41,7 +41,7 @@ Polish can be achieved two ways. Pick based on three signals — **user intent**
 
 **Decision tree** (apply in order):
 
-1. **Capability check.** Call `ggai_capability_status()`. If `image_available` is `FALSE`, code polish is the only option. Note this briefly in your final reply.
+1. **Capability check.** Before reaching for image-model polish, call `ggai_capability_status(probe = TRUE)`. This sends a lightweight POST to the image endpoint to confirm the route is reachable — some OpenAI-compatible proxies serve `chat/completions` but not `images/generations`. If `image_available` is `FALSE`, code polish is the only option. Note this briefly in your final reply. (For code polish, no probe is needed.)
 2. **Explicit user intent wins.** If the user said "in ggplot" / "rewrite the theme" / named ggplot-internal concepts → code polish. If the user said "cover" / "magazine" / "integrated illustration" / explicitly named the image model → image-model polish. Honor it.
 3. **No explicit cue — judge by task fit.** Default to code polish (cheaper, reproducible, vector). Reach for image-model polish only when the polish needs visual elements ggplot can't draw.
 4. **"Make it look like a Nature paper" is ambiguous.** Default to code polish — restrained palette, classic typography, generous whitespace are all reachable in ggplot. Reach for image-model polish only if the user adds "with publication-quality texture" or similar visual-surface cues.

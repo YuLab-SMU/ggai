@@ -22,7 +22,8 @@ _(none — see `plan/2026-05-17-agentic-refactor-overview.md` for active phase w
 
 ### Capability probe enhancements (from P4.b, 2026-05-17)
 
-- [ ] **Optional live reachability probe.** `ggai_capability_status()` is currently config-only. The user's custom OpenAI-compatible proxy (`jarodfund.xyz/openai/v1`) serves `/v1/chat/completions` but returns 404 on `/v1/images/generations`. Add `ggai_capability_status(probe = TRUE)` that does a tiny HEAD / sentinel call per endpoint, with a short cache so subsequent calls within ~30s reuse the result.
+- [x] **Optional live reachability probe** — completed in P5.b. `ggai_capability_status(probe = TRUE)` sends POST `{}` against the route; correctly diagnoses the user's `jarodfund.xyz` proxy (language reachable / image 404). 60s in-process cache.
+- [ ] **Gemini / Bailian probe routes.** Currently fall through to `reachable = NA` because their API shape differs from OpenAI's `/chat/completions` pattern. Add per-provider route resolution when demand surfaces.
 - [ ] **Local-inference providers (Ollama etc.).** Currently report `available = FALSE` because they don't have an env-key map. Add provider→reachability rules that don't require keys for providers that don't take keys.
 
 ### Skills to author (post-refactor)

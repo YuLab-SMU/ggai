@@ -341,22 +341,40 @@ env_var_set <- function(env) {
 #' **code mode** (write ggplot / grid R via `ggai_execute_r`) and **image-model
 #' mode** (call `ggai_generate_image()` / `polish_figure()`).
 #'
-#' Does NOT make any live API call. Only checks model identifiers resolved by
-#' [`ggai_default_models()`] plus the presence of the provider's API-key env
-#' var. A model is reported `available = TRUE` when both the identifier
-#' resolves and the key env is set.
+#' With `probe = FALSE` (the default), the check is config-only — fast,
+#' offline, and based on `ggai_default_models()` plus the presence of the
+#' provider's API-key env var. A capability is `available = TRUE` when the
+#' identifier resolves and the key env is set.
+#'
+#' With `probe = TRUE`, each configured capability is verified by issuing a
+#' lightweight `HEAD` request against the provider's endpoint. A `404` means
+#' the route is missing (the configured proxy doesn't serve that capability);
+#' any other response (`200`, `401`, `405`, ...) means the route exists and
+#' the capability is reachable. Probe results are cached in-process for `ttl`
+#' seconds so repeated calls within the same turn don't pay the round-trip.
+#' Use `refresh = TRUE` to bust the cache.
 #'
 #' Fields:
 #' \itemize{
 #'   \item `language_model`, `language_provider`, `language_available`
 #'   \item `image_model`, `image_provider`, `image_available`
+#'   \item `probed` — `TRUE` when at least one probe ran this call.
+#'   \item `probe_results` — per-capability `list(status, reachable, route, cached, error)` when `probe = TRUE`.
 #'   \item `summary` — short human-readable text snippet suitable for the agent to log or reason over.
 #' }
 #'
-#' Edge cases: providers that do not require an API key (e.g. local Ollama)
-#' currently report `available = FALSE`. This is a known limitation; the agent
-#' should treat `image_available = FALSE` as "code mode is the only safe
-#' default" rather than "image generation is impossible".
+#' Edge cases:
+#' \itemize{
+#'   \item Providers that do not require an API key (e.g. local Ollama) currently report `available = FALSE`.
+#'   \item Providers without a known route mapping (`anthropic` for images, `gemini`, `bailian`) are skipped under `probe = TRUE`; the config-only result is used.
+#'   \item Network errors or timeouts during probe collapse to `reachable = FALSE`.
+#' }
+#'
+#' @param probe If `TRUE`, perform a live HEAD reachability check per
+#'   configured capability. Default `FALSE` (config-only, no network).
+#' @param refresh If `TRUE`, bust the probe cache and re-probe.
+#' @param ttl Probe cache time-to-live in seconds. Default `60`.
+#' @param timeout Per-probe request timeout in seconds. Default `5`.
 #'
 #' @return A named list as described above.
 #' @export
@@ -364,11 +382,16 @@ env_var_set <- function(env) {
 #' @examples
 #' \dontrun{
 #' status <- ggai_capability_status()
-#' if (!status$image_available) {
-#'   message("Image model not configured; using code mode only.")
+#' if (!status$image_available) message("Image model not configured.")
+#'
+#' # Verify the endpoint actually serves the image route:
+#' status <- ggai_capability_status(probe = TRUE)
+#' if (!status$image_available) message("Image route unreachable; using code mode.")
 #' }
-#' }
-ggai_capability_status <- function() {
+ggai_capability_status <- function(probe = FALSE,
+                                   refresh = FALSE,
+                                   ttl = 60L,
+                                   timeout = 5L) {
   models <- ggai_default_models()
   lang <- models$language
   img <- models$image
@@ -387,22 +410,59 @@ ggai_capability_status <- function() {
   lang_key_env <- provider_env_key(lang_provider)
   img_key_env <- provider_env_key(img_provider)
 
-  lang_available <- isTRUE(env_var_set(lang_key_env))
-  img_available <- isTRUE(env_var_set(img_key_env))
+  lang_config <- isTRUE(env_var_set(lang_key_env))
+  img_config <- isTRUE(env_var_set(img_key_env))
 
-  describe <- function(label, model, available, key_env) {
+  lang_available <- lang_config
+  img_available <- img_config
+  probe_results <- list()
+  probed_any <- FALSE
+
+  if (isTRUE(probe)) {
+    if (lang_config) {
+      probe_results$language <- probe_capability(
+        provider = lang_provider, type = "language",
+        refresh = refresh, ttl = ttl, timeout = timeout
+      )
+      if (!is.na(probe_results$language$reachable)) {
+        lang_available <- isTRUE(probe_results$language$reachable)
+      }
+      probed_any <- TRUE
+    }
+    if (img_config) {
+      probe_results$image <- probe_capability(
+        provider = img_provider, type = "image",
+        refresh = refresh, ttl = ttl, timeout = timeout
+      )
+      if (!is.na(probe_results$image$reachable)) {
+        img_available <- isTRUE(probe_results$image$reachable)
+      }
+      probed_any <- TRUE
+    }
+  }
+
+  describe <- function(label, model, config_ok, available, key_env, pres) {
     if (is.null(model) || !nzchar(model)) {
       return(paste0("- ", label, ": (not configured)"))
     }
-    status <- if (isTRUE(available)) "configured" else {
+    status <- if (!isTRUE(config_ok)) {
       if (is.na(key_env)) "no key env mapped" else paste0("key env ", key_env, " not set")
+    } else if (is.null(pres)) {
+      "configured"
+    } else if (is.na(pres$reachable)) {
+      paste0("configured; probe skipped (", pres$error %||% "no route mapped", ")")
+    } else if (isTRUE(pres$reachable)) {
+      paste0("configured; reachable (HTTP ", pres$status %||% "?", ")")
+    } else {
+      paste0("configured; UNREACHABLE (HTTP ", pres$status %||% "?",
+             ifelse(!is.null(pres$error), paste0("; ", pres$error), ""), ")")
     }
     paste0("- ", label, ": ", model, " [", status, "]")
   }
 
   summary <- paste(
-    describe("language", lang, lang_available, lang_key_env),
-    describe("image",    img,  img_available,  img_key_env),
+    describe("language", lang, lang_config, lang_available, lang_key_env, probe_results$language),
+    describe("image",    img,  img_config,  img_available,  img_key_env,  probe_results$image),
     sep = "\n"
   )
 
@@ -413,7 +473,168 @@ ggai_capability_status <- function() {
     image_model = img,
     image_provider = img_provider,
     image_available = img_available,
+    probed = probed_any,
+    probe_results = probe_results,
     summary = summary
   )
+}
+
+# ---- live probe helpers --------------------------------------------------
+
+# Package-local in-process cache for probe results. Keyed by
+# "provider|base_url|type"; entries carry the `cached_at` Sys.time() so the
+# TTL check can drop stale rows.
+ggai_probe_cache <- new.env(parent = emptyenv())
+
+ggai_probe_cache_key <- function(provider, base_url, type) {
+  paste(provider %||% "?", base_url %||% "", type, sep = "|")
+}
+
+ggai_probe_cache_get <- function(key, ttl) {
+  entry <- ggai_probe_cache[[key]]
+  if (is.null(entry)) {
+    return(NULL)
+  }
+  age <- as.numeric(difftime(Sys.time(), entry$cached_at, units = "secs"))
+  if (age > ttl) {
+    rm(list = key, envir = ggai_probe_cache)
+    return(NULL)
+  }
+  entry$cached <- TRUE
+  entry$age_seconds <- age
+  entry
+}
+
+ggai_probe_cache_set <- function(key, value) {
+  value$cached_at <- Sys.time()
+  assign(key, value, envir = ggai_probe_cache)
+  invisible(value)
+}
+
+#' @keywords internal
+ggai_probe_cache_clear <- function() {
+  rm(list = ls(envir = ggai_probe_cache), envir = ggai_probe_cache)
+  invisible()
+}
+
+# Provider+capability -> base URL + route suffix. Only providers whose API is
+# OpenAI-compatible (or has a known route) get a non-NULL return; other
+# providers cause the probe to skip with `reachable = NA`.
+provider_route <- function(provider, type) {
+  if (is.null(provider) || !nzchar(provider)) {
+    return(NULL)
+  }
+  base <- switch(
+    provider,
+    openai    = Sys.getenv("OPENAI_BASE_URL",   "https://api.openai.com/v1"),
+    deepseek  = Sys.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1"),
+    aihubmix  = Sys.getenv("AIHUBMIX_BASE_URL", "https://aihubmix.com/v1"),
+    anthropic = Sys.getenv("ANTHROPIC_BASE_URL", "https://api.anthropic.com/v1"),
+    NULL
+  )
+  if (is.null(base) || !nzchar(base)) {
+    return(NULL)
+  }
+  base <- sub("/+$", "", base)
+
+  suffix <- switch(
+    paste(provider, type, sep = "/"),
+    `openai/language`    = "/chat/completions",
+    `openai/image`       = "/images/generations",
+    `deepseek/language`  = "/chat/completions",
+    `aihubmix/language`  = "/chat/completions",
+    `aihubmix/image`     = "/images/generations",
+    `anthropic/language` = "/messages",
+    # anthropic has no image-generation API; gemini/bailian use non-REST routes
+    NULL
+  )
+  if (is.null(suffix)) {
+    return(NULL)
+  }
+
+  list(base_url = base, route = paste0(base, suffix))
+}
+
+# Probe an endpoint by sending a deliberately minimal `POST {}` (no auth).
+# Returns list(status, reachable, route, error).
+#
+# Why POST instead of HEAD: many OpenAI-compatible proxies (including some
+# Cloudflare/nginx-fronted ones) return 404 on HEAD even when POST works on
+# the same route. POST with `{}` body and no Authorization header costs
+# essentially nothing — the server short-circuits with 400/401/422 before
+# touching the model — but reliably differentiates "route exists" from "route
+# missing":
+#
+#   - 200 / 2xx       — route exists (rare without auth, but possible)
+#   - 400 / 422       — route exists, body was rejected (most common)
+#   - 401 / 403       — route exists, auth required (also common)
+#   - 405             — route exists, method differs (defensive)
+#   - 404             — route MISSING (the case we care about)
+#   - network error   — unreachable
+#
+# `reachable = TRUE` when the response is anything other than 404. `NA` only
+# when the probe could not run at all (httr2 missing).
+probe_http_route <- function(route, timeout = 5L, max_tries = 2L) {
+  if (!requireNamespace("httr2", quietly = TRUE)) {
+    return(list(status = NA_integer_, reachable = NA, route = route,
+                error = "httr2 not available"))
+  }
+  result <- tryCatch(
+    {
+      req <- httr2::request(route)
+      req <- httr2::req_method(req, "POST")
+      req <- httr2::req_headers(req, "Content-Type" = "application/json")
+      req <- httr2::req_body_raw(req, charToRaw("{}"))
+      req <- httr2::req_timeout(req, timeout)
+      # Transient errors (SSL handshake glitches, fresh connection pool) are
+      # common on first try against custom proxies. Retry once with a short
+      # backoff before giving up.
+      req <- httr2::req_retry(req,
+        max_tries = max(1L, as.integer(max_tries)),
+        backoff = function(n) 0.5
+      )
+      req <- httr2::req_error(req, is_error = function(resp) FALSE)
+      resp <- httr2::req_perform(req)
+      list(status = httr2::resp_status(resp), reachable = NA, route = route, error = NULL)
+    },
+    error = function(e) {
+      list(status = NA_integer_, reachable = FALSE, route = route,
+           error = conditionMessage(e))
+    }
+  )
+  if (is.na(result$status)) {
+    result$reachable <- FALSE
+  } else if (identical(result$status, 404L)) {
+    result$reachable <- FALSE
+  } else {
+    result$reachable <- TRUE
+  }
+  result
+}
+
+# High-level: probe a (provider, type) capability, with caching.
+probe_capability <- function(provider, type, refresh = FALSE,
+                             ttl = 60L, timeout = 5L) {
+  route_info <- provider_route(provider, type)
+  if (is.null(route_info)) {
+    return(list(
+      status = NA_integer_, reachable = NA, route = NA_character_,
+      error = paste0("no route mapped for ", provider %||% "?", "/", type),
+      cached = FALSE
+    ))
+  }
+
+  key <- ggai_probe_cache_key(provider, route_info$base_url, type)
+  if (!isTRUE(refresh)) {
+    cached <- ggai_probe_cache_get(key, ttl = ttl)
+    if (!is.null(cached)) {
+      return(cached)
+    }
+  }
+
+  result <- probe_http_route(route_info$route, timeout = timeout)
+  result$cached <- FALSE
+  ggai_probe_cache_set(key, result)
+  result
 }
 

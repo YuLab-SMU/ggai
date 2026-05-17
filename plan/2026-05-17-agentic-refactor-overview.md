@@ -252,8 +252,42 @@
 - The agent's fallback behavior on B1 was clean: no retry storm, no silent code-mode swap, explicit disclosure in the final reply.
 
 **Follow-ups (filed in TODO)**
-- The `ggai_capability_status()` check is config-only, not live. Cannot distinguish "configured but endpoint missing" (like the user's `jarodfund.xyz` proxy with no images route) from "configured and working". A future enhancement could add an optional `probe = TRUE` argument that makes a lightweight HEAD or 1×1 ping call.
+- ~~The `ggai_capability_status()` check is config-only, not live.~~ — **resolved 2026-05-17 by P5.b live probe**. See below.
 - Providers without API keys (local Ollama, sandbox endpoints) currently report `available = FALSE`. Acceptable as a defensive default; revisit when local-inference becomes a real use case.
+
+---
+
+### Phase P5.b: Live capability probe (follow-up to P4.b)
+
+**Status:** `[x]` — completed 2026-05-17
+
+**Files**
+- Modify: `R/ai_bridge.R` — extended `ggai_capability_status()` with `probe / refresh / ttl / timeout` parameters; added internal helpers `probe_http_route()`, `probe_capability()`, `provider_route()`, and an in-process probe cache (`ggai_probe_cache`).
+- Modify: `inst/skills/ggai-direct-figure/SKILL.md`, `inst/skills/ggai-figure-polish/SKILL.md` — capability-check step in each Modes decision tree now recommends `probe = TRUE` before reaching for image-model mode.
+- Modify: `tests/testthat/test-capability-status.R` — added 7 tests with `local_mocked_bindings` covering: probe-marks-reachable, probe-flips-on-404, cache reuse within TTL, refresh busts cache, providers without route mapping, network errors collapse to FALSE, default `probe = FALSE` behavior preserved.
+
+**Intent**
+- Close the config-vs-reachability gap surfaced by P4.b's B1 case (image endpoint configured-but-404 on the user's custom OpenAI-compatible proxy).
+- Keep the live probe **optional** — config-only stays the default so most calls remain network-free and fast.
+- Pay the network roundtrip only when the agent is about to commit to the image-model path.
+
+**Checklist**
+- [x] `probe_http_route()` sends a `POST {}` (no auth) with `req_retry(max_tries = 2, backoff = 0.5s)`. HEAD was tried first but the user's proxy returns 404 on HEAD for routes that POST works fine on; POST with empty body is the reliable signal because 4xx-other-than-404 means the route exists. Single retry recovers transient SSL handshake errors observed in practice.
+- [x] `provider_route()` maps known OpenAI-compatible providers (openai / deepseek / aihubmix) to their `chat/completions` and `images/generations` routes; `anthropic/language` → `/messages`. Other providers return NULL → `reachable = NA` (probe skipped, config-only result preserved).
+- [x] In-process cache keyed by `(provider, base_url, type)` with default TTL = 60s. `refresh = TRUE` busts the cache; `ggai_probe_cache_clear()` for tests.
+- [x] Result schema extended: added `probed` boolean + `probe_results` list of `(status, reachable, route, error, cached)`; existing `*_available` semantics tighten when probe runs (FALSE if probe says unreachable; preserved otherwise).
+- [x] Tests cover the seven branches above; mocked HTTP keeps the suite offline. `withr::with_envvar` exercises the no-key-mapped fallback. Full suite: **0 FAIL / 1 SKIP / 358 PASS** (+15 from new probe tests).
+
+**Verification — against the user's actual endpoint**
+- `ggai_capability_status()` (config-only): both language and image report `[configured]`.
+- `ggai_capability_status(probe = TRUE)` (live): language reports `[configured; reachable (HTTP 401)]`, image reports `[configured; UNREACHABLE (HTTP 404)]`. **Correctly diagnoses the proxy's missing images route.**
+
+**End-to-end LLM smoke**
+Re-ran the P4.b B1 case ("Use the image model to render a BioRender-style illustration..."):
+- **Before P5.b**: agent tried `ggai_generate_image()` → 404 → fell back to grid.
+- **After P5.b**: agent called `ggai_capability_status(probe = TRUE)` first, saw image unreachable, skipped the `ggai_generate_image()` attempt entirely, went straight to grid mode. Final reply: *"The image-model route was requested, but the configured image endpoint was not available after probing, so I produced a BioRender-inspired fallback schematic in R/grid instead."*
+
+One less wasted network call, cleaner reply text. The Modes decision tree now operates on accurate capability information.
 
 ---
 

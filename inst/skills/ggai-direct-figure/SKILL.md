@@ -38,7 +38,7 @@ Direct figures can be produced two ways. Pick based on three signals — **user 
 
 **Decision tree** (apply in order):
 
-1. **Capability check.** Call `ggai_capability_status()`. If `image_available` is `FALSE`, code mode is the only option. Note this briefly in your final reply.
+1. **Capability check.** Before reaching for image-model mode, call `ggai_capability_status(probe = TRUE)`. This sends a lightweight POST to the configured image endpoint to confirm the route actually exists — config-only checks can wrongly report "configured" when a custom OpenAI-compatible proxy doesn't serve `/v1/images/generations`. If `image_available` is `FALSE`, code mode is the only option. Note this briefly in your final reply. (For code mode, no probe is needed — saves a roundtrip.)
 2. **Explicit user intent wins.** If the goal says "in R" / "ggplot" / "vector" / "reproducible code" → code mode. If the goal says "BioRender" / "realistic" / "cover figure" / names a visual texture → image-model mode. Honor it.
 3. **No explicit cue — judge by task fit.** Default to code mode for editable, schematic, or labeled-diagram outputs. Choose image-model only when the user clearly wants naturalistic illustration or a surface texture R cannot draw.
 4. **When unsure, prefer code mode.** It is cheaper, deterministic, vector-friendly, and the user can always ask for an image-model pass on top.
