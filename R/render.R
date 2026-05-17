@@ -89,13 +89,15 @@ render_to_file <- function(object, engine, path, format,
 
   switch(
     engine,
-    ggplot    = render_ggplot(object, path, format, width, height, dpi),
-    composite = render_ggplot(object, path, format, width, height, dpi),
-    grid      = render_grid(object, path, format, width, height, dpi),
-    base      = render_base(object, path, format, width, height, dpi),
+    ggplot          = render_ggplot(object, path, format, width, height, dpi),
+    composite       = render_ggplot(object, path, format, width, height, dpi),
+    grid            = render_grid(object, path, format, width, height, dpi),
+    base            = render_base(object, path, format, width, height, dpi),
+    complex_heatmap = render_complex_heatmap(object, path, format, width, height, dpi),
+    circlize        = render_base(object, path, format, width, height, dpi),
     rlang::abort(paste0(
       "Rendering not implemented for engine `", engine, "`. ",
-      "Supported in P1: ggplot, composite, grid, base."
+      "Supported: ggplot, composite, grid, base, complex_heatmap, circlize."
     ))
   )
 }
@@ -124,6 +126,26 @@ render_base <- function(recorded, path, format, width, height, dpi) {
   open_device(path, format, width, height, dpi)
   on.exit(grDevices::dev.off(), add = TRUE)
   grDevices::replayPlot(recorded)
+  invisible(path)
+}
+
+# ComplexHeatmap requires its own `draw()` to render. The Heatmap / HeatmapList
+# object is not a grob, not a ggplot; `print()` would print to console.
+render_complex_heatmap <- function(ht, path, format, width, height, dpi) {
+  if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
+    rlang::abort(
+      "ComplexHeatmap package required for engine = 'complex_heatmap'. Install with BiocManager::install('ComplexHeatmap')."
+    )
+  }
+  if (is.null(ht) || !inherits(ht, c("Heatmap", "HeatmapList"))) {
+    rlang::abort(paste0(
+      "complex_heatmap render expects a Heatmap or HeatmapList object; got ",
+      paste(class(ht), collapse = "/")
+    ))
+  }
+  open_device(path, format, width, height, dpi)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  ComplexHeatmap::draw(ht)
   invisible(path)
 }
 

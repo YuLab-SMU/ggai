@@ -26,6 +26,8 @@ Imports:
     magick,
     rlang
 Suggests:
+    ComplexHeatmap,
+    circlize,
     ggh4x,
     jpeg,
     pkgdown,

@@ -20,7 +20,9 @@ test_that("the canonical ggai skill set is present", {
     "ggai-engine-selection",
     "ggai-data-plot",
     "ggai-figure-polish",
-    "ggai-direct-figure"
+    "ggai-direct-figure",
+    "ggai-complex-heatmap",
+    "ggai-circlize-genome"
   )
   reg <- aisdk::create_skill_registry(skills_path())
   available <- reg$list_skills()$name

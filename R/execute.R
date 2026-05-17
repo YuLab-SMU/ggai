@@ -126,10 +126,12 @@ ggai_execute_and_capture <- function(code,
 
   rendered_object <- switch(
     engine,
-    ggplot    = last_value,
-    composite = last_value,
-    grid      = last_value,
-    base      = recorded,
+    ggplot          = last_value,
+    composite       = last_value,
+    grid            = last_value,
+    complex_heatmap = last_value,
+    base            = recorded,
+    circlize        = recorded,
     last_value
   )
 

@@ -89,3 +89,76 @@ test_that("ggai_render_artifact re-executes when object cache is missing", {
   expect_true(!is.null(a$object))
   expect_true("png" %in% names(a$rendered))
 })
+
+# ---- ComplexHeatmap engine ------------------------------------------------
+
+test_that("ComplexHeatmap artifact: detect / render / inspect / validate", {
+  skip_if_not_installed("ComplexHeatmap")
+  out <- local_temp_outdir()
+  code <- 'suppressMessages(library(ComplexHeatmap))
+set.seed(1)
+m <- matrix(rnorm(50), 10, 5)
+rownames(m) <- paste0("gene", 1:10)
+colnames(m) <- paste0("sample", 1:5)
+Heatmap(m, name = "expr")'
+  a <- ggai_execute_and_capture(code, output_dir = out)
+
+  expect_identical(a$engine, "complex_heatmap")
+  expect_true("png" %in% names(a$rendered))
+  expect_true(file.exists(a$rendered$png))
+
+  info <- ggai_inspect_artifact(a)
+  expect_identical(info$engine, "complex_heatmap")
+  expect_identical(info$n_heatmaps, 1L)
+  expect_identical(info$heatmaps[[1L]]$name, "expr")
+  expect_identical(info$heatmaps[[1L]]$nrow, 10L)
+  expect_identical(info$heatmaps[[1L]]$ncol, 5L)
+
+  v <- ggai_validate_artifact(a)
+  expect_identical(v$status, "ok")
+})
+
+test_that("ComplexHeatmap HeatmapList path is supported", {
+  skip_if_not_installed("ComplexHeatmap")
+  out <- local_temp_outdir()
+  code <- 'suppressMessages(library(ComplexHeatmap))
+set.seed(2)
+m1 <- matrix(rnorm(40), 8, 5); rownames(m1) <- paste0("g", 1:8); colnames(m1) <- paste0("s", 1:5)
+m2 <- m1 + 1
+Heatmap(m1, name = "A") + Heatmap(m2, name = "B")'
+  a <- ggai_execute_and_capture(code, output_dir = out)
+
+  expect_identical(a$engine, "complex_heatmap")
+  info <- ggai_inspect_artifact(a)
+  expect_identical(info$n_heatmaps, 2L)
+  expect_identical(info$heatmaps[[1L]]$name, "A")
+  expect_identical(info$heatmaps[[2L]]$name, "B")
+})
+
+# ---- circlize engine ------------------------------------------------------
+
+test_that("circlize artifact: explicit engine_hint, render, inspect, validate", {
+  skip_if_not_installed("circlize")
+  out <- local_temp_outdir()
+  code <- 'suppressMessages(library(circlize))
+circos.clear()
+circos.par("track.height" = 0.1)
+circos.initialize(letters[1:5], xlim = c(0, 10))
+circos.track(ylim = c(0, 1),
+             panel.fun = function(x, y) circos.rect(0, 0, 10, 1, col = "#cbd5e1"))
+circos.clear()
+invisible(NULL)'
+  a <- ggai_execute_and_capture(code, output_dir = out, engine_hint = "circlize")
+
+  expect_identical(a$engine, "circlize")
+  expect_true("png" %in% names(a$rendered))
+  expect_true(file.exists(a$rendered$png))
+
+  info <- ggai_inspect_artifact(a)
+  expect_identical(info$engine, "circlize")
+  expect_identical(info$engine_kind, "circlize")
+  expect_gt(info$n_operations, 0L)
+
+  v <- ggai_validate_artifact(a)
+  expect_identical(v$status, "ok")
+})

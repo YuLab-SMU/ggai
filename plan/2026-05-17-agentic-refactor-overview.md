@@ -36,7 +36,7 @@
 - [x] Phase P2: Drop the in-tree agent layer; rewrite `ggai()` as an aisdk thin wrapper — completed 2026-05-17
 - [x] Phase P3: Author the first 5 skills (`orchestration`, `engine-selection`, `data-plot`, `figure-polish`, `direct-figure`) — completed 2026-05-17
 - [x] Phase P4: Smoke test via existing demos — completed 2026-05-17
-- [ ] Phase P5: ComplexHeatmap + circlize adapters
+- [x] Phase P5: ComplexHeatmap + circlize adapters — completed 2026-05-17
 - [ ] Phase P6: Composite / htmlwidget adapters
 
 ---
@@ -259,20 +259,46 @@
 
 ### Phase P5: ComplexHeatmap + circlize adapters
 
-**Status:** `[ ]`
+**Status:** `[x]` — completed 2026-05-17
 
 **Files**
-- Modify: `R/render.R`, `R/inspect.R` — add `render_complex_heatmap`, `inspect_ch`, `render_circlize`, `inspect_circlize`.
-- Create: `inst/skills/ggai-complex-heatmap/SKILL.md`, `inst/skills/ggai-circlize-genome/SKILL.md`.
-- Test: `tests/testthat/test-engine-adapters.R` extended.
+- Modify: `R/execute.R` — extended the `rendered_object` switch to include `complex_heatmap = last_value` and `circlize = recorded`.
+- Modify: `R/render.R` — added `render_complex_heatmap()` (calls `ComplexHeatmap::draw()` to device); `circlize` reuses `render_base()` since circlize draws via base-graphics-style side effects and the artifact's object is a `recordedplot`.
+- Modify: `R/inspect.R` — added `inspect_ch()` (surfaces matrix shape, names, dendrogram flags, annotation slot occupants per heatmap; handles both `Heatmap` and `HeatmapList`) and `inspect_circlize()` (thin overlay on `inspect_recorded` with a `circlize`-flavored summary line).
+- Modify: `R/validate.R` — added `validate_ch()` (dry-runs `ComplexHeatmap::draw()` on a null device); `circlize` reuses `validate_recorded`.
+- Modify: `DESCRIPTION` — `ComplexHeatmap`, `circlize` added to `Suggests`.
+- Create: `inst/skills/ggai-complex-heatmap/SKILL.md` — when-to-use, code conventions, three reference snippets (basic, HeatmapList, oncoPrint), anti-patterns, escalation triggers.
+- Create: `inst/skills/ggai-circlize-genome/SKILL.md` — explicit `engine_hint = "circlize"` requirement, two snippets (chord, genome track), anti-patterns about `circos.clear()` discipline and species/assembly specificity.
+- Modify: `inst/skills/ggai-engine-selection/SKILL.md` — references both new skills explicitly so the engine-selection skill can hand off cleanly.
+- Test: `tests/testthat/test-engine-adapters.R` extended with three new tests covering ComplexHeatmap single / HeatmapList paths and the circlize `engine_hint` flow.
+- Modify: `tests/testthat/test-skills.R` — required set now includes the two new skills.
 
 **Intent**
-- Unlock the two most common non-ggplot bioinformatics engines.
+- Unlock the two most common non-ggplot bioinformatics engines without changing the rest of the system.
 
 **Checklist**
-- [ ] Adapter implementations.
-- [ ] Skills authored with concrete editorial guidance.
-- [ ] Smoke test demos added: one heatmap, one circular genome plot.
+- [x] `ComplexHeatmap::Heatmap` and `HeatmapList` are auto-detected and rendered via `ComplexHeatmap::draw()` to the target device.
+- [x] `circlize` figures are produced via `engine_hint = "circlize"`. Detection cannot auto-classify because `circos.*` returns NULL; the cached object is the captured `recordedplot`, rendered by `replayPlot`.
+- [x] Inspect / validate dispatchers return engine-specific structured info that downstream skills can consume.
+- [x] `tests/testthat/test-engine-adapters.R` now covers six engines (ggplot, composite, grid, base, complex_heatmap, circlize). Full suite green: 0 FAIL / 1 SKIP / 343 PASS.
+- [x] Skills authored and registered. `aisdk::create_skill_registry(inst/skills)` now reports 11 skills.
+- [x] L2 smoke (both engines, no LLM): both render to PNG, validate `ok`.
+- [x] End-to-end LLM smoke (both engines): agent self-routes to the right skill, writes correct code, produces publication-grade output.
+
+**Verification**
+- L2 smoke (no LLM): `ggai_execute_and_capture(...)` returns `engine = "complex_heatmap"` for `Heatmap(matrix)` code and `engine = "circlize"` (with `engine_hint`) for `circos.*` code. Both render PNG; both `ggai_validate_artifact()$status == "ok"`.
+- End-to-end LLM smoke:
+  - **ComplexHeatmap**: `ggai("@expr Make a ComplexHeatmap of Z-scores with top annotation by @sample_meta$group and @sample_meta$batch ...")` produced a clean annotated heatmap in **44.8 s** (4 tool calls: `load_skill[ggai-complex-heatmap]` → `ggai_execute_r[engine_hint=complex_heatmap]` → `ggai_validate_artifact` → `ggai_save_artifact`). The generated code is defensively written (existence checks, column-alignment fallback, robust Z-score limits, `use_raster` threshold).
+  - **circlize**: `ggai("@overlap_mat Draw a circlize chord diagram ...")` produced a clean chord diagram in **43.1 s** (same tool sequence). Agent passed `engine_hint = "circlize"` correctly per skill guidance.
+
+**Smoke outputs (preserved under `demo_outputs/`, gitignored)**
+- `p5_ch/ch1.{R,png,json}` — annotated ComplexHeatmap with row dendrogram + group/batch top tracks
+- `p5_circ/chord1.{R,png,json}` — chord diagram over 5 gene modules with transparent chords
+
+**Notes**
+- ComplexHeatmap inspection surfaces per-heatmap slot occupancy flags (`has_top_annotation`, `has_row_dendrogram`, etc.). Useful when chaining into a downstream polish or composite step.
+- circlize cannot be auto-detected; the engine_hint is a hard requirement. The skill calls this out as the "Engine note" section so the agent doesn't omit it.
+- Both new engines route polish through code mode by default (no `polish_figure()` path defined for them yet). The complex-heatmap skill notes the workaround via `ggplotify::as.ggplot(grid.grabExpr(draw(ht)))` for users who insist on image-model polish.
 
 ---
 

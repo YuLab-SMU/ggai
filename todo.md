@@ -27,8 +27,8 @@ _(none — see `plan/2026-05-17-agentic-refactor-overview.md` for active phase w
 
 ### Skills to author (post-refactor)
 
-- [ ] `ggai-complex-heatmap` — `ComplexHeatmap::Heatmap` + annotation editorial style.
-- [ ] `ggai-circlize-genome` — chromosome coordinates, multi-track design.
+- [x] `ggai-complex-heatmap` — `ComplexHeatmap::Heatmap` + annotation editorial style — completed in P5.
+- [x] `ggai-circlize-genome` — chromosome coordinates, multi-track design — completed in P5.
 - [ ] `ggai-base-graphics` — `par()` / `layout()` / `recordPlot` patterns.
 - [ ] `ggai-grid-composition` — direct grob manipulation; glyph placement on canvas.
 - [ ] `ggai-patchwork-layout` — multi-panel composition (`patchwork` / `cowplot` / `aplot`).

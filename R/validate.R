@@ -34,10 +34,12 @@ ggai_validate_artifact <- function(artifact) {
 
   res <- switch(
     artifact$engine,
-    ggplot    = validate_ggplot(artifact$object),
-    composite = validate_ggplot(artifact$object),
-    grid      = validate_grob(artifact$object),
-    base      = validate_recorded(artifact$object),
+    ggplot          = validate_ggplot(artifact$object),
+    composite       = validate_ggplot(artifact$object),
+    grid            = validate_grob(artifact$object),
+    base            = validate_recorded(artifact$object),
+    complex_heatmap = validate_ch(artifact$object),
+    circlize        = validate_recorded(artifact$object),
     list(
       status = "warning",
       messages = paste0("No validator implemented for engine `", artifact$engine, "`."),
@@ -132,6 +134,58 @@ validate_grob <- function(grob) {
         on.exit(grDevices::dev.off(), add = TRUE)
         grid::grid.newpage()
         grid::grid.draw(grob)
+        TRUE
+      },
+      warning = function(w) {
+        warnings <<- c(warnings, conditionMessage(w))
+        invokeRestart("muffleWarning")
+      }
+    ),
+    error = function(e) e
+  )
+
+  if (inherits(res, "error")) {
+    return(list(
+      status = "error",
+      error = conditionMessage(res),
+      warnings = warnings
+    ))
+  }
+
+  list(
+    status = if (length(warnings)) "warning" else "ok",
+    warnings = warnings
+  )
+}
+
+validate_ch <- function(ht) {
+  if (is.null(ht)) {
+    return(list(
+      status = "error",
+      error = "ComplexHeatmap object cache is NULL; cannot validate."
+    ))
+  }
+  if (!inherits(ht, c("Heatmap", "HeatmapList"))) {
+    return(list(
+      status = "error",
+      error = paste0("Expected Heatmap or HeatmapList, got ",
+                     paste(class(ht), collapse = "/"))
+    ))
+  }
+  if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
+    return(list(
+      status = "warning",
+      messages = "ComplexHeatmap package not available; cannot dry-run draw."
+    ))
+  }
+
+  warnings <- character()
+  res <- tryCatch(
+    withCallingHandlers(
+      {
+        grDevices::pdf(NULL)
+        on.exit(grDevices::dev.off(), add = TRUE)
+        ComplexHeatmap::draw(ht)
         TRUE
       },
       warning = function(w) {

@@ -21,8 +21,8 @@ ggai supports multiple R graphics engines through one `ggai_artifact` type. Your
 | Intent | Engine | Why |
 |--------|--------|-----|
 | Tabular EDA, statistical visualization, faceted comparisons | `ggplot` | Grammar of graphics; richest tooling; default. |
-| Annotated heatmap with row/column annotation tracks (genomics, expression, oncoPrint) | `complex_heatmap` | ComplexHeatmap's annotation model is the only one that scales cleanly here; ggplot+geom_tile gets ugly fast. |
-| Circular / genomic-coordinate plot, chord diagram, multi-track circle | `circlize` | Native circular layout + track API. |
+| Annotated heatmap with row/column annotation tracks (genomics, expression, oncoPrint) | `complex_heatmap` | ComplexHeatmap's annotation model is the only one that scales cleanly here; ggplot+geom_tile gets ugly fast. After choosing this engine, load `ggai-complex-heatmap` for editorial style. |
+| Circular / genomic-coordinate plot, chord diagram, multi-track circle | `circlize` | Native circular layout + track API. Pass `engine_hint = "circlize"` because `circos.*` returns NULL and auto-detection would otherwise tag the artifact as `base`. After choosing this engine, load `ggai-circlize-genome` for snippets and editorial style. |
 | Network / graph / phylogeny with ggplot-style aesthetics | `ggplot` via `ggraph` or `ggtree` | Same artifact engine as ggplot. |
 | Phylogenetic tree, dendrogram via classic Bioc APIs | `base` (via `recordPlot`) | `plot.phylo`, `plot.hclust` produce base output; capture via the recording device. |
 | Custom grobs, manual layout, glyph composition over a chart | `grid` | Direct grob manipulation; viewport math. |
