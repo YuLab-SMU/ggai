@@ -29,6 +29,7 @@ Don't write a log for: routine `devtools::document()` runs, typo fixes, comment 
 
 Newest first.
 
+- [2026-05-17 — P4: Smoke test through real LLM calls](2026-05-17-p4-smoke-test.md)
 - [2026-05-17 — P3: First five skills landed](2026-05-17-p3-first-five-skills.md)
 - [2026-05-17 — P2: Drop the in-tree agent layer](2026-05-17-p2-drop-agent-layer.md)
 - [2026-05-17 — P1: Layer 2 primitives landed](2026-05-17-p1-layer2-primitives.md)

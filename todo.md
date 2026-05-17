@@ -13,6 +13,13 @@ _(none — see `plan/2026-05-17-agentic-refactor-overview.md` for active phase w
 - [ ] Decide whether `ggai_quick_plot()` (non-agentic shortcut for power users) is worth keeping. See ADR-0001.
 - [ ] Token-usage tracing surface — observe agent loops for a week post-refactor before promising defaults.
 
+### Skill refinement (from P4 smoke findings, 2026-05-17)
+
+- [ ] **`ggai-direct-figure`** — add explicit "Modes" section distinguishing code-path (grid/ggplot) vs image-model-path. Agent observed to prefer the cheap deterministic code path; the skill should legitimize both and articulate when each is preferred.
+- [ ] **`ggai-figure-polish`** — same: add a "Modes" section. Agent preferred ggplot code edits over `polish_figure()`. Both are valid; document when each applies.
+- [ ] **Grid render — title overflow.** Wrap `grid.draw` in a viewport with margin allowance, or update direct-figure skill snippets to anchor titles further inside the canvas and wrap long titles. Surfaced in P4 smoke 4.
+- [ ] **`ggai_system_prompt()` — mention `list_available_skills`** as the canonical discovery entry-point. Currently lists only 4 of the 7 aisdk skill tools. Soft mismatch; LLM figures it out, but tightening the prompt would shorten the first ReAct step on cold goals.
+
 ### Skills to author (post-refactor)
 
 - [ ] `ggai-complex-heatmap` — `ComplexHeatmap::Heatmap` + annotation editorial style.

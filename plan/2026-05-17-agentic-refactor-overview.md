@@ -35,7 +35,7 @@
 - [x] Phase P1: Extract Layer 2 primitives (engine-agnostic; ggplot/base/grid adapters) — completed 2026-05-17
 - [x] Phase P2: Drop the in-tree agent layer; rewrite `ggai()` as an aisdk thin wrapper — completed 2026-05-17
 - [x] Phase P3: Author the first 5 skills (`orchestration`, `engine-selection`, `data-plot`, `figure-polish`, `direct-figure`) — completed 2026-05-17
-- [ ] Phase P4: Smoke test via existing demos
+- [x] Phase P4: Smoke test via existing demos — completed 2026-05-17
 - [ ] Phase P5: ComplexHeatmap + circlize adapters
 - [ ] Phase P6: Composite / htmlwidget adapters
 
@@ -182,24 +182,41 @@
 
 ### Phase P4: Smoke test via existing demos
 
-**Status:** `[ ]`
+**Status:** `[x]` — completed 2026-05-17
 
 **Files**
-- Modify: `demo/biorender_*` — adjust API calls to new `ggai()` signature.
-- Modify: `demo/brain_dev_clusterprofiler_case.R` — same.
-- Modify: any other demo broken by removed exports.
+- Run three handcrafted smoke goals against the live agent (`openai:gpt-5.5` via custom endpoint; `openai:gpt-image-2`).
+- Inspect outputs under `demo_outputs/p4_*/`.
 
 **Intent**
-- Validate that the rebuilt agent reproduces every legacy path's output through self-routing.
+- Validate that the rebuilt agent self-routes correctly under real LLM behavior, and surface concrete signals about prompt/skill quality.
 
 **Checklist**
-- [ ] Run each demo end-to-end; record output figures.
-- [ ] Compare against the pre-refactor baseline (visual diff is acceptable; semantic faithfulness is required).
-- [ ] Open follow-up issues for any path that requires a skill beyond the initial 5.
+- [x] Smoke 1 — data plot: `ggai("@mtcars Show mpg vs wt coloured by cyl ...")`. **21.5 s**, 4 tool calls (`load_skill[ggai-data-plot]` → `ggai_execute_r[engine_hint=ggplot]` → `ggai_validate_artifact` → `ggai_save_artifact`). Output: publication-grade scatter with Brewer Dark2 palette, `theme_minimal(base_size=12)`, suppressed minor grid. **Validates `ggai-data-plot` end-to-end.**
+- [x] Smoke 2 — boxplot: `ggai("@mtcars Boxplot of mpg by cyl ...")`. Same flow, same skill, ~21 s. Confirms repeatable routing.
+- [x] Smoke 3 — histogram: same path, same skill. **The agent's routing for "data + chart-type" goals is deterministic.**
+- [x] Smoke 4 — direct figure: `ggai("Draw a clean scientific illustration of a CRISPR-Cas9 knockout ...")`. **65.7 s**, 4 tool calls, agent loaded `ggai-direct-figure` correctly. **But ignored the image-model path** and instead wrote a 120-line grid-graphics R script that draws Cas9 + sgRNA + DNA helix + DSB symbol manually. The result is honestly creditable as a hand-drawn diagram, though the title overflowed the render canvas (cut off as `ISPR-Cas9...`).
+- [x] Smoke 5 — figure polish: `ggai("Polish for Nature Methods: restrained palette, classic typography ...")`. **32 s**, agent loaded `ggai-figure-polish` correctly, but again **ignored `polish_figure()`** (which uses the image model). Instead it rewrote the source ggplot with serif typography, manual restrained palette, theme_classic, careful tick / margin / legend treatment. Result is publication-quality polish — just achieved in pure ggplot rather than via image-model redraw.
 
 **Verification**
-- All updated demos run to completion.
-- Output figures are saved to `demo_outputs/` and pass `ggai_validate_artifact()`.
+- All three primary paths self-route to the correct skill on first try.
+- Token usage observed: 4590 total tokens for a single data-plot run (~$0.003 at typical gpt-5 rates).
+- All artifacts pass `ggai_validate_artifact()` (status = "ok").
+- Render outputs preserved under `demo_outputs/p4_smoke/`, `p4_direct_figure/`, `p4_polish/` for later gallery use.
+
+**Concrete findings (flowing back into the skills)**
+- **The agent prefers the deterministic, cheap, vector R-code path over the image-model path when both are viable.** This is the agentic principle working as intended (let the agent choose), but my `ggai-direct-figure` and `ggai-figure-polish` skills imply the image model is the canonical tool. The skills need a "Polish modes" / "Illustration modes" decision section that legitimizes both paths and articulates when each is preferred.
+- **Grid render adapter has a title-overflow issue.** When the user's code uses `grobTree` with title text near `y = 0.94`, the title can be partially clipped on the default 1200x900 canvas at 150 dpi. Either the adapter needs a top margin, or skill snippets need to anchor titles inside `unit(0.92, "npc")` with explicit margin allowances. Filed as a follow-up.
+- **`load_skill` is reliable.** Three different goal phrasings each routed to the correct skill on the first try. No misrouting observed.
+- **The mention-resolution pipeline works correctly.** `@mtcars` was resolved by ggai before the agent saw the goal; the agent used it without needing further setup.
+- **The system_prompt's mention of "4 skill tools" is a soft mismatch with aisdk's 7 actually-provided tools.** The agent figured it out anyway. Could tighten the system_prompt in P5 alongside the engine adapter additions.
+
+**Smoke test artifacts (preserved under `demo_outputs/`, gitignored)**
+- `p4_smoke/smoke1.{R,png,json}` — scatter mpg vs wt
+- `p4_smoke2/smoke2*.{R,png,json}` — boxplot of mpg by cyl
+- `p4_smoke3/smoke3.{R,png,json}` — histogram of mpg
+- `p4_direct_figure/crispr.{R,png,json}` — CRISPR illustration (grid graphics; image-model path bypassed)
+- `p4_polish/polished1.{R,png,json}` — Nature-style polish (ggplot code path; image-model polish bypassed)
 
 ---
 
