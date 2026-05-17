@@ -452,7 +452,10 @@ ggai_capability_status <- function(probe = FALSE,
     } else if (is.na(pres$reachable)) {
       paste0("configured; probe skipped (", pres$error %||% "no route mapped", ")")
     } else if (isTRUE(pres$reachable)) {
-      paste0("configured; reachable (HTTP ", pres$status %||% "?", ")")
+      via <- pres$via %||% "classic"
+      paste0("configured; reachable (HTTP ", pres$status %||% "?",
+             if (!identical(via, "classic")) paste0("; via ", via) else "",
+             ")")
     } else {
       paste0("configured; UNREACHABLE (HTTP ", pres$status %||% "?",
              ifelse(!is.null(pres$error), paste0("; ", pres$error), ""), ")")
@@ -613,6 +616,12 @@ probe_http_route <- function(route, timeout = 5L, max_tries = 2L) {
 }
 
 # High-level: probe a (provider, type) capability, with caching.
+# For openai/image, also tries the newer `/v1/responses` route as a fallback
+# when the classic `/v1/images/generations` is unreachable — some
+# OpenAI-compatible proxies only serve image generation via the Responses
+# API + `image_generation` tool. `ggai_generate_image()` mirrors this with
+# an automatic fallback in the actual call path, so capability_status must
+# agree on reachability.
 probe_capability <- function(provider, type, refresh = FALSE,
                              ttl = 60L, timeout = 5L) {
   route_info <- provider_route(provider, type)
@@ -634,6 +643,27 @@ probe_capability <- function(provider, type, refresh = FALSE,
 
   result <- probe_http_route(route_info$route, timeout = timeout)
   result$cached <- FALSE
+  result$via <- "classic"
+
+  # Fallback probe: when image classic is unreachable on openai-compatible,
+  # try the Responses API route. ggai_generate_image() falls back the same way.
+  if (identical(type, "image") &&
+      identical(provider, "openai") &&
+      !isTRUE(result$reachable)) {
+    responses_route <- paste0(route_info$base_url, "/responses")
+    fallback <- probe_http_route(responses_route, timeout = timeout)
+    if (isTRUE(fallback$reachable)) {
+      result <- list(
+        status = fallback$status,
+        reachable = TRUE,
+        route = responses_route,
+        error = NULL,
+        cached = FALSE,
+        via = "responses_api"
+      )
+    }
+  }
+
   ggai_probe_cache_set(key, result)
   result
 }

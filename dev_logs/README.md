@@ -29,6 +29,7 @@ Don't write a log for: routine `devtools::document()` runs, typo fixes, comment 
 
 Newest first.
 
+- [2026-05-17 — P7: Image-model path via Responses API](2026-05-17-p7-image-model-via-responses.md)
 - [2026-05-17 — P6.b: Polish loose ends](2026-05-17-p6b-polish.md)
 - [2026-05-17 — P6: Composite + htmlwidget engine adapters](2026-05-17-p6-composite-htmlwidget.md)
 - [2026-05-17 — P5.b: Live capability probe](2026-05-17-p5b-live-probe.md)

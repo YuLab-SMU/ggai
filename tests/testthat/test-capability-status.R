@@ -68,10 +68,13 @@ test_that("probe = TRUE marks routes reachable when probe returns non-404", {
   expect_match(cap$summary, "reachable")
 })
 
-test_that("probe = TRUE flips image_available to FALSE on 404", {
+test_that("classic 404 + Responses-API 401 falls back to responses_api (image available)", {
   ggai:::ggai_probe_cache_clear()
   local_mocked_bindings(
     probe_http_route = function(route, timeout = 5L, max_tries = 2L) {
+      # Mimic a proxy that drops /v1/images/generations (404) but serves
+      # /v1/responses (401 without auth, which the probe interprets as
+      # "route exists"). ggai_generate_image() has the same fallback.
       status <- if (grepl("images/generations", route)) 404L else 401L
       list(status = status, reachable = status != 404L, route = route, error = NULL)
     },
@@ -79,9 +82,27 @@ test_that("probe = TRUE flips image_available to FALSE on 404", {
   )
   cap <- ggai_capability_status(probe = TRUE)
   expect_true(cap$language_available)
+  expect_true(cap$image_available)
+  expect_identical(cap$probe_results$image$via, "responses_api")
+  expect_match(cap$summary, "via responses_api", fixed = TRUE)
+})
+
+test_that("both classic AND Responses unreachable → image_available = FALSE", {
+  ggai:::ggai_probe_cache_clear()
+  local_mocked_bindings(
+    probe_http_route = function(route, timeout = 5L, max_tries = 2L) {
+      # Language route works (401 = exists, auth needed); image routes all 404.
+      if (grepl("chat/completions", route, fixed = TRUE)) {
+        return(list(status = 401L, reachable = TRUE, route = route, error = NULL))
+      }
+      list(status = 404L, reachable = FALSE, route = route, error = NULL)
+    },
+    .package = "ggai"
+  )
+  cap <- ggai_capability_status(probe = TRUE)
+  expect_true(cap$language_available)
   expect_false(cap$image_available)
   expect_match(cap$summary, "UNREACHABLE")
-  expect_identical(cap$probe_results$image$status, 404L)
 })
 
 test_that("probe cache reuses results within TTL", {
