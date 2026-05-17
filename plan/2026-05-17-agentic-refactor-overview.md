@@ -34,7 +34,7 @@
 - [x] Phase P0: Build the doc suite (this file, ADRs, dev_docs, dev_logs, AGENTS.md, CHANGELOG.md, TODO.md, .Rbuildignore)
 - [x] Phase P1: Extract Layer 2 primitives (engine-agnostic; ggplot/base/grid adapters) — completed 2026-05-17
 - [x] Phase P2: Drop the in-tree agent layer; rewrite `ggai()` as an aisdk thin wrapper — completed 2026-05-17
-- [ ] Phase P3: Author the first 5 skills (`orchestration`, `engine-selection`, `data-plot`, `figure-polish`, `direct-figure`)
+- [x] Phase P3: Author the first 5 skills (`orchestration`, `engine-selection`, `data-plot`, `figure-polish`, `direct-figure`) — completed 2026-05-17
 - [ ] Phase P4: Smoke test via existing demos
 - [ ] Phase P5: ComplexHeatmap + circlize adapters
 - [ ] Phase P6: Composite / htmlwidget adapters
@@ -143,7 +143,7 @@
 
 ### Phase P3: Author the first 5 skills
 
-**Status:** `[ ]`
+**Status:** `[x]` — completed 2026-05-17
 
 **Files**
 - Create: `inst/skills/ggai-orchestration/SKILL.md` — meta-skill, always loaded first. Intent classification → which task skill to load.
@@ -156,14 +156,27 @@
 - Provide enough skill coverage for the agent to handle the three legacy paths plus genuine free composition (e.g. "data plot + polish").
 
 **Checklist**
-- [ ] Write each SKILL.md with YAML frontmatter (`name`, `description`, `aliases`, `when_to_use`, `paths`).
-- [ ] Where useful, add `scripts/*.R` that the agent invokes via `execute_skill_script`.
-- [ ] Where useful, add `references/*.md` for style guidance.
-- [ ] Smoke-load each skill: `aisdk::SkillRegistry$new()$discover(system.file("skills", package = "ggai"))` lists all 5.
+- [x] Authored `inst/skills/ggai-orchestration/SKILL.md` — meta-router with intent-classification table and routing examples.
+- [x] Authored `inst/skills/ggai-engine-selection/SKILL.md` — decision table for ggplot / grid / base / ComplexHeatmap / circlize / htmlwidget / composite + calling conventions per engine.
+- [x] Authored `inst/skills/ggai-data-plot/SKILL.md` — flow, code conventions, reference snippets, anti-patterns, escalation triggers.
+- [x] Authored `inst/skills/ggai-figure-polish/SKILL.md` — when polish applies, what it preserves vs may change, snippets for `polish_figure()` and `prepare_polish_bundle()`.
+- [x] Authored `inst/skills/ggai-direct-figure/SKILL.md` — structured-prompt recipe, single-and-multi-candidate snippets, prompt-writing heuristics.
+- [x] Deleted 3 obsolete skills that referenced the deleted agent runtime: `ggai-goal-agent`, `ggai-plot-agent`, `ggai-acquisition-agent`.
+- [x] Edited `ggai-core-persona/SKILL.md` to drop references to deleted helpers (`gg_edit`, `as_code`, `spec_history`, `session_context`).
+- [x] Confirmed `ggai-r-fonts`, `ggai-reference-figure`, `ggai-single-cell-spatial` are tool-agnostic and safe to keep.
+- [x] Added `tests/testthat/test-skills.R` (4 tests, 14 assertions): canonical set present, every SKILL.md parses, agent can load each via `load_skill`, verb + skill tools both surface on the built agent.
+- [x] End-to-end smoke: `ggai_create_agent()` exposes 10 tools (3 ggai verbs + 7 aisdk skill tools). `aisdk::create_skill_registry(inst/skills)` discovers all 9 skills cleanly.
 
 **Verification**
-- Agent run with `goal = "make a scatter of @mtcars mpg vs wt"` loads `ggai-data-plot` and produces a ggplot artifact.
-- Agent run with `goal = "draw a CRISPR knockout cartoon"` loads `ggai-direct-figure` and produces a generated image.
+- `aisdk::create_skill_registry(system.file('skills', package = 'ggai'))$list_skills()` returns 9 rows.
+- `agent$tools` includes both ggai verb tools and `load_skill` / `list_skill_resources` / `read_skill_resource` / `execute_skill_script` from aisdk.
+- `load_skill$run(list(skill_name = "ggai-orchestration"))` returns the body (with aisdk's reply-language guard prepended).
+- All testthat tests pass (~310 PASS, 0 FAIL, 1 SKIP — the pre-existing on-CRAN guard).
+
+**Notes**
+- `system.file("skills", package = "ggai")` works correctly under `devtools::load_all()` — no special handling needed.
+- The aisdk `Agent` does not surface `skills` as a public attribute; skills are accessible only through the agent's `load_skill` tool. `attr(agent, "ggai_state")` carries the verb-tool state separately.
+- YAML frontmatter pitfall: a `when_to_use:` value containing the substring `Examples:` triggers a scanner error. Use em-dash or comma to avoid mid-value colons in unquoted scalars. Worth flagging in `AGENTS.md` if more skills are authored.
 
 ---
 

@@ -154,8 +154,9 @@ Before committing a ggplot, check:
   limited redundant encodings?
 - Does the plot validate through ggplot build/grob checks?
 - Are assumptions, source limitations, or illustrative data disclosed?
-- Can the user continue from this session using `plot()`, `gg_edit()`,
-  `as_code()`, `spec_history()`, or `session_context()`?
+- Can the user continue from the saved artifact: is the reproducer code
+  complete, does the rendered file open cleanly, and is the manifest
+  enough to re-execute later?
 
 ## Failure And Boundary Standard
 
