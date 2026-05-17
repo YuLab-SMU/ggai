@@ -373,13 +373,56 @@ Edited `ggai-patchwork-layout` to:
 Re-smoke (`comp3`): agent now passes `engine_hint = "composite"`, artifact is correctly tagged, A/B/C labels visible in the output. Confirms the smoke→iterate→re-smoke loop established in P4.b is reliable.
 
 **Notes**
-- Patchwork stores N–1 panels in `$patches$plots`; the patchwork object itself carries the first panel's ggplot identity. Total panel count is `1 + length($patches$plots)`. Nested patchworks (`p1 | (p2 / p3)`) report as `kind = "nested_patchwork"` without full recursion — top-level counting only for now. Filed for later if multi-level inspection becomes useful.
-- Patchwork in `ggplot2 4.0+` (S7 prototype) does not propagate `$layers` reliably on stored patches. Per-panel `n_layers` may understate complex constituent plots; this is a patchwork/S7 quirk, not a ggai bug. Filed as TODO.
+- ~~Patchwork in `ggplot2 4.0+` (S7 prototype) does not propagate `$layers` reliably on stored patches.~~ — **revised in P6.b**: the apparent quirk was a mis-reading of patchwork's storage order (self = last-added, not first). Direct `$layers` access works correctly when you know the visual order is `patches[1..N-1], self`. Inspector rewritten.
+- ~~Nested patchworks report as `kind = "nested_patchwork"` without full recursion.~~ — **revised in P6.b**: `inspect_composite` now walks nested patchworks recursively with full sub-panel info.
 - htmlwidget rendering without webshot2 cleanly degrades to HTML output. The "PNG requested → HTML written" path emits a single `warning()` and the manifest reflects the actual format. Skills are written to set user expectations honestly.
 
 **Smoke outputs (preserved under `demo_outputs/`, gitignored)**
 - `p6_comp/comp2.{R,png,json}` — patchwork composite without engine_hint sharpening (mis-tagged as ggplot, missing A/B/C labels).
 - `p6_comp2/comp3.{R,png,json}` — patchwork composite after skill sharpening (correctly tagged as composite, A/B/C labels visible, clean Dark2 palette across panels).
+
+---
+
+### Phase P6.b: Polish loose ends (follow-up to P6)
+
+**Status:** `[x]` — completed 2026-05-17
+
+**Files**
+- Modify: `R/inspect.R` — `inspect_composite()` rewritten with: (1) correct visual ordering (patches first, self last); (2) container-vs-`+`-built detection via `length(pw$layers) == 0`; (3) recursive descent into nested patchworks; (4) total leaf-layer count across the tree; (5) `count_layers_safe()` helper that prefers direct `$layers` access and falls back to `ggplot_build()`.
+- Modify: `tests/testthat/test-engine-adapters.R` — three composite tests covering `+`-built (ordering + per-panel counts), container (`p1 | (p2 + p3)`), and a webshot2 PNG path test (skip when chromote/webshot2 unavailable).
+- Install: `webshot2` 0.1.2 + `chromote` 0.5.1 in the local R library, validated against the user's Chrome.
+
+**Intent**
+- Close the three TODO items left from P6: patchwork `$layers` quirk, nested recursion, webshot2 real smoke.
+
+**Checklist — patchwork S7 `$layers`**
+- [x] Investigated the perceived quirk. Found the issue was actually patchwork's storage convention, not S7 access: in `pw = p1 + p2 + p3`, `pw` itself carries p3's identity (`$layers` matches p3), and `$patches$plots` holds `[p1, p2]` in order. My earlier inspector put `self` at index 1 but visually it is at index N — fixed.
+- [x] Direct `length(p$layers)` access works correctly for both the patchwork itself and its patches; no need to fall back to `ggplot_build()` for the common case (`count_layers_safe` keeps it as a fallback for malformed inputs).
+- [x] Confirmed against a test with distinct per-panel layer counts: `p1 (1) + p2 (2) + p3 (3)` → patches[1] = 1, patches[2] = 2, self = 3.
+
+**Checklist — nested patchwork recursion**
+- [x] `inspect_composite` now recurses when `kind = "nested_patchwork"`: nested entry carries its own `n_panels` + `panels` sublist (built via the same `inspect_composite` call).
+- [x] Container patchworks (`p1 | (p2 + p3)`, where one operand is itself a patchwork) detected via `length(pw$layers) == 0` — they have no `self` panel; all visible panels are in `$patches$plots`.
+- [x] `total_leaf_layers` traverses the tree to sum layers across all leaf ggplots.
+- [x] Test: `p1 | (p2 / p3)` → outer is container, 2 top-level panels; nested entry has 2 sub-panels; total leaf layers = 1 (p1) + 1 (p2) + 2 (p3) = 4. **Verified.**
+
+**Checklist — webshot2 smoke**
+- [x] Installed `webshot2` (0.1.2) and `chromote` (0.5.1).
+- [x] `chromote::find_chrome()` resolves to `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`.
+- [x] L2 smoke: `ggai_execute_and_capture(plotly_code, format = "png")` produces `artifact_*.png` (rasterized via `webshot2::webshot`). File size ~50 KB, scatter visible with cylinder color coding.
+- [x] Agent end-to-end smoke: `ggai("@mtcars interactive plotly scatter ... Save as PNG")` self-routed to `ggai-htmlwidget`, passed `engine_hint = "htmlwidget"`, the renderer used webshot2 transparently. **39.7 s, clean PNG output.**
+- [x] New test `htmlwidget PNG path via webshot2 (when installed)` in `test-engine-adapters.R` — gated by `skip_if_not_installed("webshot2") + skip_if_not_installed("chromote") + chromote::find_chrome()` so the test stays portable.
+
+**Verification**
+- Full suite green: **0 FAIL / 1 SKIP / 384 PASS** (+4 from the new composite-flavor + webshot2 tests).
+- The new htmlwidget PNG test passes on this environment; will be skipped on environments without webshot2/chromote/Chrome — no false failures.
+
+**Cosmetic note**
+The agent's plotly PNG includes the plotly modebar icons in the top-right because the generated code didn't call `config(displayModeBar = FALSE)`. The `ggai-htmlwidget` skill mentions both ways but doesn't make the toolbar-hiding default — could be a tighter snippet next iteration. Not a blocker.
+
+**Smoke outputs (under `demo_outputs/`, gitignored)**
+- `p6b_webshot/plotly_png.png` — L2 plotly→PNG via webshot2 (no agent).
+- `p6b_agent_hw/hw1.{R,png,json}` — agent-driven plotly→PNG end-to-end.
 
 ---
 

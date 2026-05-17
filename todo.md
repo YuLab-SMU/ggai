@@ -22,9 +22,10 @@ _(none — see `plan/2026-05-17-agentic-refactor-overview.md` for active phase w
 
 ### Composite + htmlwidget polish (from P6, 2026-05-17)
 
-- [ ] **Patchwork S7 `$layers` quirk.** Per-panel `n_layers` in `inspect_composite` may understate complex constituent plots because patchwork's S7-based storage doesn't expose layers via the standard `$layers` accessor. Revisit when patchwork stabilizes on S7. Panel count and render are correct; only the per-panel layer count is fuzzy.
-- [ ] **Nested patchwork recursion.** `inspect_composite` reports a nested patchwork (e.g. `p1 | (p2 / p3)`) as `kind = "nested_patchwork"` with `nested_panels = N` but doesn't recurse into it. Add full recursive walk if downstream skills need it.
-- [ ] **Webshot2 integration test.** Once `webshot2` + `chromote` + headless Chrome are available, exercise the PNG path end-to-end. Code is already there; only env is missing.
+- [x] **Patchwork S7 `$layers` quirk** — **resolved 2026-05-17 in P6.b**. The "quirk" was actually a misreading of patchwork's storage order (self = last-added, not first). Direct `$layers` access works correctly. Inspector rewritten with right visual ordering.
+- [x] **Nested patchwork recursion** — **resolved 2026-05-17 in P6.b**. `inspect_composite` now descends into nested patchworks; total leaf-layer count walks the full tree.
+- [x] **Webshot2 integration test** — **resolved 2026-05-17 in P6.b**. webshot2 + chromote installed; L2 + agent-level htmlwidget→PNG smoke runs cleanly. New gated test in `test-engine-adapters.R`.
+- [ ] **Plotly modebar default-off** — htmlwidget skill mentions `config(displayModeBar = FALSE)` but doesn't make it the default for PNG export. Agent's first smoke retained the toolbar icons in the rasterized PNG. Tighten the skill's PNG-mode snippet next iteration.
 
 ### Capability probe enhancements (from P4.b, 2026-05-17)
 

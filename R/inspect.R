@@ -205,69 +205,138 @@ inspect_ch <- function(ht) {
   )
 }
 
-# A patchwork composite object is itself a ggplot, plus a `$patches$plots`
-# list of the additional panels added via `+` or `wrap_plots()`. The total
-# panel count is `1 + length($patches$plots)` because the patchwork carries
-# the first panel as its own ggplot identity.
+# A patchwork object is built from one of two operator families:
 #
-# This inspector returns one entry per panel under `panels`, each entry
-# carrying the per-panel ggplot inspection (via `inspect_ggplot`). Nested
-# patchworks (a patchwork inside another) are detected and reported by class
-# rather than fully recursed; deep recursion is filed for later if needed.
+#  - `pw1 + pw2`: the result inherits `pw2`'s ggplot identity (`$layers` =
+#    `pw2$layers`) and earlier plots go into `$patches$plots` in original
+#    order. Visually the rendered grid is `patches[1], ..., patches[N-1],
+#    self` (self = last-added).
+#
+#  - `pw1 | pw2`, `pw1 / pw2`, `wrap_plots(...)`: produces a "container"
+#    patchwork with no own ggplot identity (`$layers` is empty). All
+#    constituent plots live in `$patches$plots`; there is no `self` panel.
+#
+# `inspect_composite()` distinguishes the two by inspecting
+# `length(pw$layers)`: > 0 means "+"-built (carries a self panel); 0 means
+# container ("|" / "/" / "wrap_plots" — patches list is everything).
+#
+# Nested patchworks (e.g. `p1 | (p2 / p3)`) are walked recursively: each
+# entry in `$patches$plots` that is itself a patchwork gets full descent and
+# returns its own `panels` sublist with sub-indices.
+#
+# Per-panel `n_layers` is read directly from `length(p$layers)`. Empirically
+# this is reliable for patchwork 1.3 + ggplot2 S7 in practice; earlier
+# concerns about $-access being stripped turned out to be a mis-reading of
+# the patches order (self = last-added, not first). `count_layers_safe()`
+# falls back to `ggplot_build()` when direct access fails.
 inspect_composite <- function(pw) {
   if (is.null(pw)) {
     return(list(summary = "composite object missing (object cache is NULL)."))
   }
   if (!inherits(pw, "patchwork")) {
-    # Fall back to ggplot inspection if a non-patchwork composite slipped in.
     return(inspect_ggplot(pw))
   }
 
-  patches <- tryCatch(pw$patches$plots, error = function(...) list())
-  if (is.null(patches)) patches <- list()
-
-  inspect_panel <- function(p, index) {
+  composite_panel <- function(p, index) {
     panel <- list(index = index, class = paste(class(p), collapse = "/"))
     if (inherits(p, "patchwork")) {
       panel$kind <- "nested_patchwork"
-      panel$nested_panels <- 1L + length(tryCatch(p$patches$plots, error = function(...) list()))
+      nested <- inspect_composite(p)
+      panel$n_panels <- nested$n_panels %||% NA_integer_
+      panel$panels <- nested$panels %||% list()
+      panel$summary <- nested$summary %||% NA_character_
     } else if (inherits(p, "ggplot")) {
-      gg <- safe_call(inspect_ggplot, p)
       panel$kind <- "ggplot"
-      panel$n_layers <- gg$n_layers %||% NA_integer_
-      panel$summary <- gg$summary %||% NA_character_
+      panel$n_layers <- count_layers_safe(p)
+      panel$summary <- paste0("ggplot with ", panel$n_layers, " layer(s)")
     } else if (inherits(p, c("grob", "gTree", "gList"))) {
       panel$kind <- "grob"
+      panel$class_chain <- class(p)
     } else {
       panel$kind <- "other"
     }
     panel
   }
 
-  # Panel 1 is the patchwork's own ggplot identity.
-  self_info <- safe_call(inspect_ggplot, pw)
-  panel_1 <- list(
-    index = 1L,
-    class = paste(class(pw), collapse = "/"),
-    kind = "patchwork_self",
-    n_layers = self_info$n_layers %||% NA_integer_,
-    summary = self_info$summary %||% NA_character_
-  )
-  panels <- c(
-    list(panel_1),
-    lapply(seq_along(patches), function(i) inspect_panel(patches[[i]], index = i + 1L))
-  )
+  patches <- tryCatch(pw$patches$plots, error = function(...) list())
+  if (is.null(patches)) patches <- list()
 
+  # Visual ordering: patches first, then self.
+  patch_panels <- lapply(seq_along(patches), function(i) {
+    composite_panel(patches[[i]], index = i)
+  })
+
+  # Detect container vs +-built: container patchworks (`|`, `/`, wrap_plots)
+  # have an empty `$layers`; their visible panels are exactly the patches.
+  pw_direct_layers <- tryCatch(length(pw$layers), error = function(...) 0L)
+  is_container <- isTRUE(pw_direct_layers == 0L)
+
+  panels <- patch_panels
+  self_inspect <- NULL
+  if (!is_container) {
+    self_n <- count_layers_safe(pw)
+    self_panel <- list(
+      index = length(patches) + 1L,
+      class = paste(class(pw), collapse = "/"),
+      kind = "patchwork_self",
+      n_layers = self_n,
+      summary = paste0("patchwork self (last-added panel) with ",
+                       self_n, " layer(s)")
+    )
+    panels <- c(patch_panels, list(self_panel))
+    self_inspect <- safe_call(inspect_ggplot, pw)
+  }
+
+  total_layers <- sum_leaf_layers(panels)
   n <- length(panels)
-  summary <- paste0("patchwork composite: ", n, " panel(s)")
+  flavor <- if (is_container) "container (|, /, or wrap_plots)" else "+-built (last plot as self)"
+  summary <- paste0("patchwork composite [", flavor, "]: ",
+                    n, " panel(s); ",
+                    total_layers, " total leaf-layer(s) across all panels")
 
   list(
     summary = summary,
-    available = c("n_panels", "panels", "self_inspect"),
+    available = c("n_panels", "panels", "total_leaf_layers", "is_container", "self_inspect"),
     n_panels = n,
     panels = panels,
-    self_inspect = self_info
+    total_leaf_layers = total_layers,
+    is_container = is_container,
+    self_inspect = self_inspect
   )
+}
+
+# Layer count for a single ggplot. Primary: direct $layers access (works
+# for patchwork-stored patches in current patchwork 1.3+). Fallback:
+# ggplot_build()$data for malformed inputs.
+count_layers_safe <- function(p) {
+  if (is.null(p) || !inherits(p, "ggplot")) {
+    return(NA_integer_)
+  }
+  via_dollar <- tryCatch(length(p$layers), error = function(...) NA_integer_)
+  if (!is.na(via_dollar)) return(via_dollar)
+  built <- tryCatch(
+    suppressMessages(suppressWarnings(ggplot2::ggplot_build(p))),
+    error = function(...) NULL
+  )
+  if (!is.null(built) && !is.null(built$data)) {
+    return(length(built$data))
+  }
+  NA_integer_
+}
+
+# Sum leaf-layer counts across the panel tree (recurses into nested).
+sum_leaf_layers <- function(panels) {
+  if (!length(panels)) return(0L)
+  Reduce(`+`, lapply(panels, function(p) {
+    if (identical(p$kind, "nested_patchwork") && length(p$panels)) {
+      sum_leaf_layers(p$panels)
+    } else if (identical(p$kind, "ggplot") || identical(p$kind, "patchwork_self")) {
+      v <- p$n_layers
+      if (is.null(v) || is.na(v)) 0L else as.integer(v)
+    } else {
+      0L
+    }
+  }), 0L)
 }
 
 # Surfaces widget identity, declared dependencies, and sizing policy. Does

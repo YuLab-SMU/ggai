@@ -153,22 +153,77 @@ p1 + p2'
   expect_true(file.exists(a$rendered$png))
 })
 
-test_that("inspect_composite walks patchwork patches", {
+test_that("inspect_composite walks patchwork patches with correct visual ordering", {
   skip_if_not_installed("patchwork")
   out <- local_temp_outdir()
+  # Distinct layer counts so we can verify per-panel ordering: 1, 2, 3.
   code <- 'suppressMessages({library(patchwork); library(ggplot2)})
 p1 <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
-p2 <- ggplot(mtcars, aes(hp)) + geom_histogram(bins = 12)
-p3 <- ggplot(mtcars, aes(qsec, mpg)) + geom_point()
+p2 <- ggplot(mtcars, aes(hp)) + geom_histogram(bins = 10) + geom_vline(xintercept = 150)
+p3 <- ggplot(mtcars, aes(qsec, mpg)) + geom_point() + geom_smooth(method = "lm") + geom_rug()
 p1 + p2 + p3'
   a <- ggai_execute_and_capture(code, output_dir = out)
 
   info <- ggai_inspect_artifact(a)
   expect_identical(info$engine, "composite")
   expect_identical(info$n_panels, 3L)
-  expect_true("panels" %in% info$available)
-  expect_length(info$panels, 3L)
-  expect_identical(info$panels[[1L]]$kind, "patchwork_self")
+  expect_false(info$is_container)
+  # +-built: patches first, self last. Visual order p1 / p2 / p3 → 1 / 2 / 3 layers.
+  expect_identical(info$panels[[1L]]$kind, "ggplot")
+  expect_identical(info$panels[[1L]]$n_layers, 1L)
+  expect_identical(info$panels[[2L]]$kind, "ggplot")
+  expect_identical(info$panels[[2L]]$n_layers, 2L)
+  expect_identical(info$panels[[3L]]$kind, "patchwork_self")
+  expect_identical(info$panels[[3L]]$n_layers, 3L)
+  expect_identical(info$total_leaf_layers, 6L)
+})
+
+test_that("inspect_composite handles container patchworks (patchwork-of-patchworks)", {
+  skip_if_not_installed("patchwork")
+  out <- local_temp_outdir()
+  # A true container is produced when one operand of `|` or `/` is itself
+  # a patchwork. The outer patchwork has no own ggplot identity.
+  # Note: wrap_plots() and bare `p1 | p2` between ggplots are +-built,
+  # not containers.
+  code <- 'suppressMessages({library(patchwork); library(ggplot2)})
+p1 <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
+p2 <- ggplot(mtcars, aes(hp)) + geom_histogram(bins = 10)
+p3 <- ggplot(mtcars, aes(qsec)) + geom_density()
+# Force the container path: outer | takes a ggplot and a patchwork.
+p1 | (p2 + p3)'
+  a <- ggai_execute_and_capture(code, output_dir = out)
+
+  info <- ggai_inspect_artifact(a)
+  expect_identical(info$engine, "composite")
+  expect_true(info$is_container)
+  expect_identical(info$n_panels, 2L)
+  expect_match(info$summary, "container", fixed = TRUE)
+  expect_identical(info$panels[[1L]]$kind, "ggplot")
+  expect_identical(info$panels[[2L]]$kind, "nested_patchwork")
+})
+
+test_that("inspect_composite recurses into nested patchworks", {
+  skip_if_not_installed("patchwork")
+  out <- local_temp_outdir()
+  # p1 | (p2 / p3) — outer is container; inner (p2/p3) is +-built.
+  code <- 'suppressMessages({library(patchwork); library(ggplot2)})
+p1 <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
+p2 <- ggplot(mtcars, aes(hp)) + geom_histogram(bins = 10)
+p3 <- ggplot(mtcars, aes(qsec, mpg)) + geom_point() + geom_smooth(method = "lm")
+p1 | (p2 / p3)'
+  a <- ggai_execute_and_capture(code, output_dir = out)
+
+  info <- ggai_inspect_artifact(a)
+  expect_identical(info$engine, "composite")
+  expect_true(info$is_container)
+  expect_identical(info$n_panels, 2L)
+  expect_identical(info$panels[[1L]]$kind, "ggplot")
+  expect_identical(info$panels[[1L]]$n_layers, 1L)
+  expect_identical(info$panels[[2L]]$kind, "nested_patchwork")
+  expect_identical(info$panels[[2L]]$n_panels, 2L)
+  expect_length(info$panels[[2L]]$panels, 2L)
+  # Total leaf layers should equal p1 (1) + p2 (1) + p3 (2) = 4
+  expect_identical(info$total_leaf_layers, 4L)
 })
 
 # ---- htmlwidget engine ----------------------------------------------------
@@ -179,15 +234,6 @@ test_that("htmlwidget artifact: detect / render-to-html / inspect / validate", {
   out <- local_temp_outdir()
   code <- 'suppressMessages(library(plotly))
 plot_ly(mtcars, x = ~mpg, y = ~wt, type = "scatter", mode = "markers")'
-
-  # When webshot2 is not installed, default png format degrades to html with
-  # a warning. We test both the warning path and the explicit html format.
-  if (!requireNamespace("webshot2", quietly = TRUE)) {
-    a <- suppressWarnings(ggai_execute_and_capture(code, output_dir = out, format = "png"))
-    expect_identical(a$engine, "htmlwidget")
-    expect_true("html" %in% names(a$rendered))
-    expect_true(file.exists(a$rendered$html))
-  }
 
   a2 <- ggai_execute_and_capture(code, output_dir = out, format = "html")
   expect_identical(a2$engine, "htmlwidget")
@@ -201,6 +247,34 @@ plot_ly(mtcars, x = ~mpg, y = ~wt, type = "scatter", mode = "markers")'
   v <- ggai_validate_artifact(a2)
   expect_identical(v$status, "ok")
 })
+
+test_that("htmlwidget PNG path via webshot2 (when installed)", {
+  skip_if_not_installed("plotly")
+  skip_if_not_installed("htmlwidgets")
+  skip_if_not_installed("webshot2")
+  skip_if_not_installed("chromote")
+  # Skip if no Chrome / Chromium available — webshot2 can't render without it.
+  chrome <- tryCatch(chromote::find_chrome(), error = function(e) NULL)
+  skip_if(is.null(chrome), "no Chrome / Chromium found via chromote::find_chrome()")
+
+  out <- local_temp_outdir()
+  code <- 'suppressMessages(library(plotly))
+plot_ly(mtcars, x = ~mpg, y = ~wt, type = "scatter", mode = "markers")'
+
+  a <- ggai_execute_and_capture(code, output_dir = out, format = "png",
+                                width = 800L, height = 600L)
+  expect_identical(a$engine, "htmlwidget")
+  expect_true("png" %in% names(a$rendered))
+  expect_true(file.exists(a$rendered$png))
+  expect_gt(file.info(a$rendered$png)$size, 1000L)
+})
+
+# The webshot2-missing fallback (PNG → HTML with a warning) was extensively
+# exercised in P4.b and P5 against the user's environment before webshot2
+# was installed. A faithful in-process simulation of "webshot2 missing"
+# requires either uninstalling the package or mocking `requireNamespace`,
+# both of which are intrusive enough that the in-line P4.b/P5 evidence
+# is the better record. See dev_logs/2026-05-17-p6b-polish.md.
 
 test_that("circlize artifact: explicit engine_hint, render, inspect, validate", {
   skip_if_not_installed("circlize")
