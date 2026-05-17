@@ -309,3 +309,111 @@ ggai_image_model <- function(model = NULL, resolve = FALSE, registry = NULL) {
   ggai_aisdk("resolve_model")(model = model, registry = registry, type = "image")
 }
 
+# Map providers to the env var that holds their API key. Returns NA for
+# providers that don't take a key (e.g. local Ollama). Used by
+# `ggai_capability_status()`.
+provider_env_key <- function(provider) {
+  if (is.null(provider) || !is.character(provider) || !nzchar(provider)) {
+    return(NA_character_)
+  }
+  switch(
+    provider,
+    openai    = "OPENAI_API_KEY",
+    anthropic = "ANTHROPIC_API_KEY",
+    gemini    = "GEMINI_API_KEY",
+    deepseek  = "DEEPSEEK_API_KEY",
+    bailian   = "DASHSCOPE_API_KEY",
+    aihubmix  = "AIHUBMIX_API_KEY",
+    NA_character_
+  )
+}
+
+env_var_set <- function(env) {
+  if (is.na(env) || !is.character(env) || !nzchar(env)) {
+    return(FALSE)
+  }
+  nzchar(Sys.getenv(env))
+}
+
+#' Report which figure-generation capabilities are configured
+#'
+#' Returns a snapshot the agent (and skills) consult to decide between
+#' **code mode** (write ggplot / grid R via `ggai_execute_r`) and **image-model
+#' mode** (call `ggai_generate_image()` / `polish_figure()`).
+#'
+#' Does NOT make any live API call. Only checks model identifiers resolved by
+#' [`ggai_default_models()`] plus the presence of the provider's API-key env
+#' var. A model is reported `available = TRUE` when both the identifier
+#' resolves and the key env is set.
+#'
+#' Fields:
+#' \itemize{
+#'   \item `language_model`, `language_provider`, `language_available`
+#'   \item `image_model`, `image_provider`, `image_available`
+#'   \item `summary` — short human-readable text snippet suitable for the agent to log or reason over.
+#' }
+#'
+#' Edge cases: providers that do not require an API key (e.g. local Ollama)
+#' currently report `available = FALSE`. This is a known limitation; the agent
+#' should treat `image_available = FALSE` as "code mode is the only safe
+#' default" rather than "image generation is impossible".
+#'
+#' @return A named list as described above.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' status <- ggai_capability_status()
+#' if (!status$image_available) {
+#'   message("Image model not configured; using code mode only.")
+#' }
+#' }
+ggai_capability_status <- function() {
+  models <- ggai_default_models()
+  lang <- models$language
+  img <- models$image
+
+  lang_provider <- if (is.character(lang) && length(lang) == 1L && nzchar(lang)) {
+    ggai_model_provider(lang)
+  } else {
+    NULL
+  }
+  img_provider <- if (is.character(img) && length(img) == 1L && nzchar(img)) {
+    ggai_model_provider(img)
+  } else {
+    NULL
+  }
+
+  lang_key_env <- provider_env_key(lang_provider)
+  img_key_env <- provider_env_key(img_provider)
+
+  lang_available <- isTRUE(env_var_set(lang_key_env))
+  img_available <- isTRUE(env_var_set(img_key_env))
+
+  describe <- function(label, model, available, key_env) {
+    if (is.null(model) || !nzchar(model)) {
+      return(paste0("- ", label, ": (not configured)"))
+    }
+    status <- if (isTRUE(available)) "configured" else {
+      if (is.na(key_env)) "no key env mapped" else paste0("key env ", key_env, " not set")
+    }
+    paste0("- ", label, ": ", model, " [", status, "]")
+  }
+
+  summary <- paste(
+    describe("language", lang, lang_available, lang_key_env),
+    describe("image",    img,  img_available,  img_key_env),
+    sep = "\n"
+  )
+
+  list(
+    language_model = lang,
+    language_provider = lang_provider,
+    language_available = lang_available,
+    image_model = img,
+    image_provider = img_provider,
+    image_available = img_available,
+    summary = summary
+  )
+}
+

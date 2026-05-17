@@ -220,6 +220,43 @@
 
 ---
 
+### Phase P4.b: Capability-aware skill modes (follow-up to P4)
+
+**Status:** `[x]` — completed 2026-05-17
+
+**Files**
+- Create: `R/ai_bridge.R` — added `ggai_capability_status()` primitive plus `provider_env_key()` / `env_var_set()` internal helpers.
+- Modify: `inst/skills/ggai-direct-figure/SKILL.md` — replaced single-path "Flow" with an explicit **Modes** section (code-path vs image-model-path), decision tree, mode-specific snippets, and a "anchor titles inside the canvas" rule that addresses the P4 title-overflow finding.
+- Modify: `inst/skills/ggai-figure-polish/SKILL.md` — same: explicit **Modes** section, decision tree, mode-specific snippets, removed the now-duplicated "Reference snippets" block.
+- Modify: `NAMESPACE` — export `ggai_capability_status`.
+- Test: `tests/testthat/test-capability-status.R` (4 tests, 13 assertions).
+
+**Intent**
+- Make the mode choice (code vs image-model) explicit and capability-aware in the two skills the P4 smoke surfaced as ambiguous.
+- Give the agent a 1-line primitive to consult when the choice is borderline, without adding another tool.
+- Honor the three signals the user called out: explicit user intent → task fit → capability availability.
+
+**Checklist**
+- [x] `ggai_capability_status()` returns `{language_model, language_provider, language_available, image_model, image_provider, image_available, summary}`. Config-only check (no live API call). Provider→key env mapping covers openai / anthropic / gemini / deepseek / bailian / aihubmix.
+- [x] `ggai-direct-figure` decision tree: capability check → explicit intent → task fit → default-to-code. Includes "anchor titles inside the canvas" guidance and a code-mode snippet that demonstrates the rule.
+- [x] `ggai-figure-polish` decision tree: capability check → explicit intent → task fit → default-to-code-polish. Includes "polish_figure does not edit data" anti-pattern.
+- [x] Test suite green: `test-capability-status.R` adds 13 assertions; full suite remains 0 FAIL / 1 SKIP.
+- [x] Re-smoke against three intent variants confirms behavior:
+  - **A. Ambiguous illustration** ("Draw a clean scientific illustration of a CRISPR-Cas9 knockout..."): agent stayed in code mode (matches default-to-code branch).
+  - **B1. Explicit image-model intent** ("Use the image model..."): agent **attempted** `ggai_generate_image()` first, the configured endpoint returned 404 (user's custom OpenAI-compatible proxy does not serve the `/v1/images/generations` route), agent **gracefully fell back** to a `grid` reproducer and disclosed the fallback in the final reply.
+  - **B2. Explicit code intent** ("In R using grid graphics, draw a reproducible vector schematic..."): agent stayed in code mode without attempting the image model.
+
+**Verification**
+- The decision tree's three branches all fired correctly in re-smokes A / B1 / B2.
+- The B1 failure mode (404 from custom endpoint) revealed a gap between `capability_status` (config-level) and actual endpoint reachability — see TODO follow-up.
+- The agent's fallback behavior on B1 was clean: no retry storm, no silent code-mode swap, explicit disclosure in the final reply.
+
+**Follow-ups (filed in TODO)**
+- The `ggai_capability_status()` check is config-only, not live. Cannot distinguish "configured but endpoint missing" (like the user's `jarodfund.xyz` proxy with no images route) from "configured and working". A future enhancement could add an optional `probe = TRUE` argument that makes a lightweight HEAD or 1×1 ping call.
+- Providers without API keys (local Ollama, sandbox endpoints) currently report `available = FALSE`. Acceptable as a defensive default; revisit when local-inference becomes a real use case.
+
+---
+
 ### Phase P5: ComplexHeatmap + circlize adapters
 
 **Status:** `[ ]`

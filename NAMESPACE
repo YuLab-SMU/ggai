@@ -37,6 +37,7 @@ export(ggai_load_env)
 export(ggai_generate_image)
 export(ggai_edit_image)
 export(evaluate_figure_candidate)
+export(ggai_capability_status)
 
 # ---- Figure polish (whole-image redraw with reference) -------------------
 export(polish_figure)

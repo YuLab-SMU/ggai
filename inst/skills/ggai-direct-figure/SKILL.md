@@ -19,41 +19,99 @@ Your job: turn a description into a polished illustration via direct image gener
 
 ## What you have access to
 
+- `ggai_capability_status()` — reports whether the image model is configured. Call this first to decide the mode.
 - `ggai_generate_image(model, prompt, output_dir, width, height, transparent_background, ...)` — calls an image model and returns one or more rendered images.
-- `evaluate_figure_candidate(path, prompt_spec?)` — scores a rendered image on sharpness, clutter, blankness, and visual complexity. Useful for picking the best of N candidates.
+- `evaluate_figure_candidate(path, prompt_spec?)` — scores a rendered image on sharpness, clutter, blankness, visual complexity. Useful for multi-candidate picks.
 - `ggai_image_model()` — returns the configured image model identifier.
-- `ggai_figure_resolution()` — returns the default (width, height) for figure-class outputs.
+- `ggai_figure_resolution()` — returns the default `(width, height)` for figure-class outputs.
 
-## Flow
+## Modes: code path vs image-model path
 
-1. **Read the user's intent.** Identify: subject(s), relationships, composition (left/right/center, lanes), medium (cartoon vs realistic vs schematic vs marker-and-paper feel), background.
-2. **Compose a structured prompt** with these sections, in order:
-   - One-paragraph **scene summary** in clear declarative language.
-   - **Objects**: named items to depict ("activated T cell with engaged TCR", "MHC-I complex with peptide", ...).
-   - **Relations**: spatial or causal ("T cell on the left engages tumor cell on the right via TCR-MHC contact").
-   - **Visual style**: e.g. "clean scientific illustration with crisp edges, BioRender-style flat shading, high legibility".
-   - **Composition**: "balanced horizontal composition with large readable labels, strong separation between objects, low text density".
-   - **Negative prompt**: things to avoid (watermarks, tiny text, dense annotation, photo-realism unless asked).
-3. **Call `ggai_generate_image`** through `ggai_execute_r`. Use `candidate_count = 1` (cheap) unless the user asks for alternatives or the request is high-stakes (cover, publication), in which case `candidate_count = 3` and pick the best via `evaluate_figure_candidate`.
-4. **Inspect the rendered path.** If it exists and the file size is reasonable (> 50 KB), you're done.
-5. **Save with `ggai_save_artifact`.** Note: the artifact's `engine` will be `unknown` (image-model output isn't a code-produced figure); the code field will be the R reproducer that calls `ggai_generate_image` with the same prompt, so future re-execution is meaningful.
-6. **In your final reply**, state the saved path and a one-sentence description of the figure. Optionally include the prompt summary so the user can iterate.
+Direct figures can be produced two ways. Pick based on three signals — **user intent**, **task fit**, **capability**.
 
-## Reference snippets
+| Signal | **Code mode** — write R via `ggai_execute_r` (grid / ggplot) | **Image-model mode** — call `ggai_generate_image()` |
+|--------|------|------|
+| User words | "in R", "reproducible code", "ggplot", "grid", "vector", "SVG", "PDF figure", "I want to edit it later" | "BioRender style", "realistic", "photorealistic", "anatomically detailed", "tissue section", "cover figure", "watercolor", "3D render" |
+| Task fit | Geometric primitives, schematic flows, labeled boxes / arrows, panel layouts, anything the user will tweak | Naturalistic illustration, soft shading, texture, integrated typography that survives raster, single-shot artwork |
+| Capability | Always available | Requires `image_available = TRUE` from `ggai_capability_status()` |
+| Cost | Cheap, deterministic, vector output | Slower (often 30–60 s per candidate), raster output, harder to iterate on |
 
-Single-candidate generation:
+**Decision tree** (apply in order):
+
+1. **Capability check.** Call `ggai_capability_status()`. If `image_available` is `FALSE`, code mode is the only option. Note this briefly in your final reply.
+2. **Explicit user intent wins.** If the goal says "in R" / "ggplot" / "vector" / "reproducible code" → code mode. If the goal says "BioRender" / "realistic" / "cover figure" / names a visual texture → image-model mode. Honor it.
+3. **No explicit cue — judge by task fit.** Default to code mode for editable, schematic, or labeled-diagram outputs. Choose image-model only when the user clearly wants naturalistic illustration or a surface texture R cannot draw.
+4. **When unsure, prefer code mode.** It is cheaper, deterministic, vector-friendly, and the user can always ask for an image-model pass on top.
+
+State the chosen mode (one sentence) in your final reply so the user understands the trade-off.
+
+## Flow — code mode (grid / ggplot)
+
+1. Decide composition. Sketch coordinates in your head: which objects go where, how labels attach, what the canvas margins need to be.
+2. Use `grid` for free-form schematic / illustration work, `ggplot` for any data-driven layer. `ggplotify::as.grob()` bridges them when you want to embed a ggplot in a grid composition.
+3. Anchor titles inside the canvas, not at `y = 0.94` or higher — grid clips at the viewport edge and long titles overflow. Use `y = 0.90` with reasonable margins, or wrap long titles via `\n`.
+4. Write code whose **last value is the figure object** (a `grob` / `gTree` / ggplot). Engine detection then picks `grid` (or `ggplot`) correctly.
+5. Call `ggai_execute_r(code, engine_hint = "grid")` (or `"ggplot"`). Validate. Save.
+
+### Code-mode snippet
+
+```r
+library(grid)
+
+fig <- grobTree(
+  rectGrob(gp = gpar(fill = "white", col = NA)),
+  # left: stylized protein blob
+  roundrectGrob(x = unit(0.22, "npc"), y = unit(0.50, "npc"),
+                width = unit(0.22, "npc"), height = unit(0.22, "npc"),
+                r = unit(0.04, "npc"),
+                gp = gpar(fill = "#8B5CF6", col = "#5B21B6", lwd = 2.5)),
+  # right: target / outcome
+  rectGrob(x = unit(0.74, "npc"), y = unit(0.50, "npc"),
+           width = unit(0.20, "npc"), height = unit(0.20, "npc"),
+           gp = gpar(fill = "#3B82F6", col = "#1E3A8A", lwd = 2)),
+  # connecting arrow
+  segmentsGrob(x0 = unit(0.36, "npc"), y0 = unit(0.50, "npc"),
+               x1 = unit(0.62, "npc"), y1 = unit(0.50, "npc"),
+               arrow = arrow(type = "closed", length = unit(0.025, "npc")),
+               gp = gpar(col = "#111827", lwd = 3)),
+  # labels — anchor inside the canvas
+  textGrob("Cas9", x = unit(0.22, "npc"), y = unit(0.68, "npc"),
+           gp = gpar(fontsize = 16, fontface = "bold")),
+  textGrob("target DNA", x = unit(0.74, "npc"), y = unit(0.68, "npc"),
+           gp = gpar(fontsize = 16, fontface = "bold", col = "#1E3A8A")),
+  # title anchored inside, not at top edge
+  textGrob("CRISPR-Cas9 knockout (schematic)",
+           x = unit(0.50, "npc"), y = unit(0.90, "npc"),
+           gp = gpar(fontsize = 18, fontface = "bold"))
+)
+fig
+```
+
+## Flow — image-model mode (`ggai_generate_image`)
+
+1. **Compose a structured prompt** with six sections, in order:
+   - **Scene summary** (one paragraph, declarative).
+   - **Objects** (named items: "activated CD8+ T cell with extended TCR", "MHC-I complex with peptide").
+   - **Relations** (spatial / causal: "T cell on the left engages tumor cell on the right via TCR-MHC contact").
+   - **Visual style** ("clean scientific illustration with crisp edges, BioRender-like flat shading, high legibility").
+   - **Composition** ("balanced horizontal composition with large readable labels, strong separation between objects").
+   - **Negative prompt** ("watermarks, tiny illegible text, dense annotation, photo-realism unless asked, checkerboard transparency").
+2. Call `ggai_generate_image` via `ggai_execute_r`. Default `n = 1`. Use `n = 3` only for high-stakes outputs (cover, publication) and pick the best via `evaluate_figure_candidate`.
+3. Validate the returned path exists with reasonable file size (`> 50 KB`).
+4. Save with `ggai_save_artifact`. The artifact's `engine` will be `unknown` (image-model outputs aren't engine-tagged); the saved code is a reproducer that re-runs `ggai_generate_image` with the same prompt.
+
+### Image-model snippet
 
 ```r
 result <- ggai_generate_image(
   model = ggai_image_model(),
   prompt = paste(
-    "Clean scientific illustration of a CRISPR-Cas9 knockout workflow.",
-    "Three guide RNAs targeting a single locus on a chromosome.",
-    "Left panel: Cas9 protein loaded with a guide RNA approaching DNA.",
-    "Middle panel: double-strand break.",
-    "Right panel: edited DNA with indel.",
-    "Style: flat scientific illustration, BioRender-like, clean palette, large readable labels, white background.",
-    "Avoid: watermarks, tiny text, photo-realism."
+    "Clean scientific illustration of CRISPR-Cas9 cutting a DNA target.",
+    "Cas9 protein on the left, guide RNA threading into the active site,",
+    "DNA double helix on the right with the cut site clearly indicated.",
+    "Style: flat BioRender-like illustration, restrained palette, large readable labels, white background.",
+    "Composition: balanced horizontal layout, strong separation between objects, low text density.",
+    "Avoid: watermarks, tiny text, photo-realism, checkerboard transparency."
   ),
   output_dir = tempdir(),
   width = 1600, height = 900,
@@ -65,10 +123,9 @@ result$images[[1]]$path
 Multi-candidate with scoring:
 
 ```r
-prompt <- "..."  # built as above
 imgs <- ggai_generate_image(
   model = ggai_image_model(),
-  prompt = prompt,
+  prompt = "...",
   output_dir = tempdir(),
   n = 3,
   width = 1600, height = 900
