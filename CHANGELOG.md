@@ -21,14 +21,17 @@ Internal refactors, dev-only changes, and doc reshuffles do not need entries her
 
 ### Added
 
-- `ggai_generate_image()` now auto-falls-back to the OpenAI Responses API
-  (`POST /v1/responses` with the `image_generation` tool) when the classic
-  `/v1/images/generations` endpoint returns 404. Common for OpenAI-compatible
-  proxies that only serve the newer Responses API. Real OpenAI users see no
-  change.
-- `ggai_capability_status(probe = TRUE)` mirrors the fallback: when classic
-  image route is unreachable, the probe also tries `/v1/responses` and reports
-  `reachable (via responses_api)` if that works.
+- `ggai_capability_status(probe = TRUE)` mirrors aisdk's image-gen fallback:
+  when the classic `/v1/images/generations` route is unreachable, the probe
+  also tries `/v1/responses` and reports `reachable (via responses_api)` if
+  that works.
+
+### Changed
+
+- `ggai_generate_image()` is now a thin wrapper around `aisdk::generate_image()`.
+  The OpenAI provider in aisdk handles classic-vs-Responses-API routing
+  internally (see aisdk commit `ad45b1d`). ggai no longer holds OpenAI URL
+  knowledge.
 
 ## [0.0.0] — initial snapshot (2026-05-17)
 

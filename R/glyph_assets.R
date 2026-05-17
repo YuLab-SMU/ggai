@@ -124,137 +124,21 @@ copy_image_to_cache <- function(source_path, cache_path) {
   cache_path
 }
 
-#' Generate an image through the configured image backend
+#' Generate an image through the configured `aisdk` image backend
 #'
-#' Tries `aisdk::generate_image()` (the classic `POST /v1/images/generations`
-#' OpenAI shape) first. If that fails with a 404 / "invalid_api_path" /
-#' "not available" response — common when the configured `OPENAI_BASE_URL`
-#' points at a proxy that serves only the newer **Responses API** — falls
-#' back to `POST /v1/responses` with the `image_generation` tool and decodes
-#' the returned base64 PNG into an aisdk-shaped result.
+#' Thin ggai wrapper around `aisdk::generate_image()`. The OpenAI provider
+#' inside aisdk handles classic-vs-Responses-API routing automatically:
+#' when the classic `/v1/images/generations` endpoint is unreachable (e.g.
+#' an OpenAI-compatible proxy that only serves the newer Responses API),
+#' aisdk falls back to `POST /v1/responses` with the `image_generation`
+#' tool. ggai doesn't need to know about either route.
 #'
-#' @param ... Passed through to `aisdk::generate_image()` (which accepts at
-#'   least `model`, `prompt`, `output_dir`, `width`, `height`, and other
-#'   provider-specific options).
+#' @param ... Passed through to `aisdk::generate_image()`.
 #'
-#' @return A result with the same shape `aisdk::generate_image()` returns —
-#'   `list(images = list(list(path, media_type, revised_prompt?)), raw_response, via)`.
-#'   `via` is `"classic"` or `"responses_api"` depending on the path that
-#'   succeeded.
+#' @return An `aisdk` image generation result.
 #' @export
 ggai_generate_image <- function(...) {
-  args <- list(...)
-  classic <- tryCatch(
-    ggai_aisdk("generate_image")(...),
-    error = function(e) e
-  )
-  if (!inherits(classic, "error")) {
-    classic$via <- classic$via %||% "classic"
-    return(classic)
-  }
-
-  msg <- conditionMessage(classic)
-  endpoint_404 <- grepl("404", msg) &&
-    (grepl("invalid_api_path", msg, fixed = TRUE) ||
-     grepl("not available", msg, fixed = TRUE) ||
-     grepl("images/generations", msg, fixed = TRUE))
-
-  provider <- ggai_model_provider(args$model %||% ggai_image_model()) %||% "openai"
-
-  if (isTRUE(endpoint_404) && identical(provider, "openai")) {
-    message(
-      "ggai_generate_image: classic /v1/images/generations is unreachable on this endpoint. ",
-      "Falling back to /v1/responses with `image_generation` tool."
-    )
-    return(do.call(responses_image_call, args))
-  }
-
-  stop(classic)
-}
-
-# Fallback path: call POST /v1/responses with an `image_generation` tool and
-# decode the base64-encoded image bytes into files alongside an aisdk-shaped
-# result.
-responses_image_call <- function(model = NULL,
-                                 prompt,
-                                 output_dir = tempdir(),
-                                 prefix = "image",
-                                 width = 1024L,
-                                 height = 1024L,
-                                 timeout_seconds = 240L,
-                                 ...) {
-  if (!requireNamespace("httr2", quietly = TRUE)) {
-    rlang::abort("`httr2` is required for the Responses API fallback. Install with install.packages('httr2').")
-  }
-  if (!requireNamespace("base64enc", quietly = TRUE)) {
-    rlang::abort("`base64enc` is required for the Responses API fallback. Install with install.packages('base64enc').")
-  }
-
-  base <- Sys.getenv("OPENAI_BASE_URL", unset = "https://api.openai.com/v1")
-  if (!nzchar(base)) base <- "https://api.openai.com/v1"
-  base <- sub("/+$", "", base)
-  key <- Sys.getenv("OPENAI_API_KEY")
-  if (!nzchar(key)) {
-    rlang::abort("OPENAI_API_KEY is not set; cannot call /v1/responses for image generation.")
-  }
-
-  model_id <- sub("^openai:", "", model %||% ggai_image_model() %||% "gpt-image-2")
-
-  if (!dir.exists(output_dir)) {
-    dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-  }
-
-  req <- httr2::request(paste0(base, "/responses"))
-  req <- httr2::req_headers(req,
-    Authorization = paste("Bearer", key),
-    `Content-Type` = "application/json",
-    `Accept-Encoding` = "identity"
-  )
-  payload <- list(
-    model = model_id,
-    input = prompt,
-    tools = list(list(type = "image_generation"))
-  )
-  req <- httr2::req_body_raw(req, charToRaw(jsonlite::toJSON(payload, auto_unbox = TRUE)))
-  req <- httr2::req_method(req, "POST")
-  req <- httr2::req_timeout(req, as.integer(timeout_seconds %||% 240L))
-  req <- httr2::req_retry(req, max_tries = 2L, backoff = function(n) 1)
-  req <- httr2::req_error(req, is_error = function(resp) FALSE)
-
-  resp <- httr2::req_perform(req)
-  status <- httr2::resp_status(resp)
-  body_str <- tryCatch(httr2::resp_body_string(resp), error = function(...) "")
-  if (status >= 400L) {
-    rlang::abort(c(
-      paste0("Responses API image generation failed: HTTP ", status),
-      i = substr(body_str, 1L, 600L)
-    ))
-  }
-
-  body <- jsonlite::fromJSON(body_str, simplifyVector = FALSE)
-  images <- list()
-  for (item in body$output) {
-    if (identical(item$type %||% "", "image_generation_call") && !is.null(item$result)) {
-      file_path <- file.path(output_dir, paste0(prefix, "_", item$id, ".png"))
-      raw_bytes <- base64enc::base64decode(item$result)
-      writeBin(raw_bytes, file_path)
-      images[[length(images) + 1L]] <- list(
-        path = file_path,
-        media_type = "image/png",
-        revised_prompt = item$revised_prompt %||% NULL
-      )
-    }
-  }
-
-  if (!length(images)) {
-    rlang::abort("Responses API returned no `image_generation_call` output.")
-  }
-
-  list(
-    images = images,
-    raw_response = body,
-    via = "responses_api"
-  )
+  ggai_aisdk("generate_image")(...)
 }
 
 #' Edit or extend an image through the configured `aisdk` image backend
