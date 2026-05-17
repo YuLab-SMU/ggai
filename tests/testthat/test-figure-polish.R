@@ -172,49 +172,10 @@ test_that("polish_figure forwards timeout controls to the image editor", {
   expect_equal(captured$idle_timeout_seconds, 15)
 })
 
-test_that("polish_figure records artifact history when source is a session", {
-  outdir <- tempfile("ggai_polish_session_")
-  dir.create(outdir, recursive = TRUE)
-
-  candidate <- tempfile(tmpdir = outdir, fileext = ".png")
-  png::writePNG(array(0.6, dim = c(10, 10, 4)), target = candidate)
-
-  local_mocked_bindings(
-    ggai_edit_image = function(...) {
-      list(
-        images = list(list(path = candidate, media_type = "image/png")),
-        raw_response = list(id = "stub")
-      )
-    },
-    evaluate_figure_candidate = function(path, prompt_spec = NULL) {
-      list(score = 5)
-    },
-    .package = "ggai"
-  )
-
-  s <- start_ggai_session(
-    ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
-      ggplot2::geom_point() +
-      ggplot2::labs(title = "Base plot")
-  )
-
-  res <- polish_figure(
-    s,
-    instruction = "make this look like a cover figure",
-    output_dir = outdir,
-    prefix = "session_polish_test",
-    width = 512,
-    height = 384
-  )
-
-  expect_s3_class(res$session, "ggai_session")
-  hist <- spec_history(res$session)
-  expect_true(any(hist$kind == "polish"))
-  expect_true(any(hist$edit_mode == "whole_image_redraw"))
-  expect_true(any(hist$artifact_path == res$best$path))
-  ctx <- session_context(res$session)
-  expect_true(length(ctx$recent_artifacts) >= 1)
-})
+# Session-source polish test removed in P2: ggai_session retired in favour of
+# aisdk::ChatSession + ggai_artifact. polish_figure() now accepts a ggplot or
+# a ggplot-engine ggai_artifact; artifact-history bookkeeping moved into the
+# agent's verb tools (ggai_save_artifact) and skill-level orchestration.
 
 test_that("print.ggai_polished_figure_result shows a concise summary", {
   result <- structure(

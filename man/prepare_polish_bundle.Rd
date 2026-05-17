@@ -15,7 +15,7 @@ prepare_polish_bundle(
 )
 }
 \arguments{
-\item{x}{A \code{ggplot} object or \code{ggai_session}.}
+\item{x}{A \code{ggplot} object or a ggplot-engine \code{ggai_artifact}.}
 
 \item{instruction}{Optional polish direction for the final redraw.}
 

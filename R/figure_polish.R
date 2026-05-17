@@ -1,42 +1,42 @@
 coerce_polish_plot <- function(x) {
-  if (inherits(x, "ggai_session")) {
-    return(session_current_plot(x))
-  }
   if (inherits(x, "ggplot")) {
     return(x)
   }
-  rlang::abort("`x` must be a ggplot object or ggai_session.")
+  if (is_ggai_artifact(x)) {
+    if (!identical(x$engine, "ggplot") && !identical(x$engine, "composite")) {
+      rlang::abort(paste0(
+        "Polish currently requires a ggplot-engine artifact; got engine `",
+        x$engine, "`."
+      ))
+    }
+    if (inherits(x$object, "ggplot")) {
+      return(x$object)
+    }
+    rlang::abort("Artifact has no cached ggplot object; re-render via `ggai_render_artifact(artifact, force_reexecute = TRUE)` first.")
+  }
+  rlang::abort("`x` must be a ggplot object or a ggplot-engine `ggai_artifact`.")
 }
 
 coerce_polish_source_meta <- function(x) {
-  if (inherits(x, "ggai_session")) {
+  if (is_ggai_artifact(x)) {
     return(list(
       input_class = class(x),
-      source_kind = "ggai_session",
-      session_context = session_context_snapshot(x),
-      spec_history = spec_history.ggai_session(x),
-      current_spec = tryCatch(inspect_spec.ggai_session(x, raw = FALSE), error = function(...) NULL)
+      source_kind = "ggai_artifact",
+      artifact_id = x$id,
+      engine = x$engine,
+      code = x$code,
+      provenance = x$provenance
     ))
   }
-
   if (inherits(x, "ggplot")) {
-    compiled <- latest_compiled_spec(x)
-    history <- tryCatch(spec_history(x), error = function(...) data.frame())
     return(list(
       input_class = class(x),
-      source_kind = "ggplot",
-      session_context = NULL,
-      spec_history = history,
-      current_spec = if (is.null(compiled)) NULL else inspect_spec(compiled, raw = FALSE)
+      source_kind = "ggplot"
     ))
   }
-
   list(
     input_class = class(x),
-    source_kind = "unknown",
-    session_context = NULL,
-    spec_history = data.frame(),
-    current_spec = NULL
+    source_kind = "unknown"
   )
 }
 
@@ -540,36 +540,10 @@ attach_polish_result_to_session <- function(result,
                                             source,
                                             instruction = NULL,
                                             image_model = NULL) {
-  if (!inherits(source, "ggai_session")) {
-    return(result)
-  }
-
-  session <- source
-  artifact <- polish_artifact_record(
-    result = result,
-    instruction = instruction,
-    image_model = image_model
-  )
-  artifact$turn <- ggai_session_state(session)$current_turn %||% (session$history_index %||% 0L)
-
-  session <- session_record_turn_note(
-    session,
-    type = "polish",
-    value = artifact
-  )
-  session <- session_record_tool_result(
-    session,
-    list(
-      type = "polish_result",
-      turn = artifact$turn,
-      best_path = artifact$artifact_path,
-      candidate_manifest_path = artifact$candidate_manifest_path
-    )
-  )
-  session <- session_record_artifact(session, artifact)
-  session <- session_touch_state(session, instruction = instruction)
-
-  result$session <- session
+  # Session-side bookkeeping retired with the agent layer. Callers that need
+  # to attach polish metadata to an aisdk ChatSession can read
+  # `polish_artifact_record(result, instruction, image_model)` and stash it
+  # themselves.
   result
 }
 
@@ -611,7 +585,7 @@ figure_render_dimensions <- function(width = NULL, height = NULL) {
 #' Writes the factual base plot, geometry overlay, layout overlay, and a
 #' structured manifest that can be sent to an image model for whole-image redraw.
 #'
-#' @param x A `ggplot` object or `ggai_session`.
+#' @param x A `ggplot` object or a ggplot-engine `ggai_artifact`.
 #' @param instruction Optional polish direction for the final redraw.
 #' @param output_dir Output directory for intermediate artifacts.
 #' @param prefix Filename prefix for bundle artifacts.
@@ -697,7 +671,7 @@ prepare_polish_bundle <- function(x,
 #' Uses the ggplot render, geometry overlay, and layout overlay as joint
 #' reference images for a whole-image redraw with an image model.
 #'
-#' @param x A `ggplot` object or `ggai_session`.
+#' @param x A `ggplot` object or a ggplot-engine `ggai_artifact`.
 #' @param instruction Optional polish direction for the final redraw.
 #' @param image_model Optional image model identifier.
 #' @param registry Optional provider registry passed to `aisdk`.

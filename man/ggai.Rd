@@ -2,50 +2,61 @@
 % Please edit documentation in R/ggai_entry.R
 \name{ggai}
 \alias{ggai}
-\title{Unified ggai entrypoint}
+\title{Drive the ggai agent on a figure goal}
 \usage{
 ggai(
-  x,
-  instruction = NULL,
-  mode = c("session", "polish", "auto"),
-  image_model = NULL,
+  goal,
   model = NULL,
-  registry = NULL,
-  acquisition_tools = NULL,
-  polish_instruction = NULL,
+  session = NULL,
+  skills = NULL,
+  max_steps = 10L,
+  extra_tools = NULL,
   ...
 )
 }
 \arguments{
-\item{x}{A natural-language goal string, file path, ggplot object, or ggai
-session. Data frames should be referenced from the goal string with
-compact \code{@} mentions, for example \code{ggai("@my_data make a scatter plot")}.}
+\item{goal}{Character scalar. The user's figure task.}
 
-\item{instruction}{Optional natural-language instruction.}
+\item{model}{Optional language model identifier. Defaults to
+\code{ggai_default_models()$language}.}
 
-\item{mode}{Either \code{"session"} for the editable ggplot workflow, \code{"polish"}
-to enter the whole-image redraw path, or \code{"auto"} for the local agentic
-runtime vertical slice.}
+\item{session}{Optional \code{aisdk::ChatSession}. When omitted, the agent
+creates a temporary session internally.}
 
-\item{image_model}{Optional image model override used when \code{mode = "polish"}.}
+\item{skills}{Optional override for the skill search path. Defaults to
+\code{system.file("skills", package = "ggai")}.}
 
-\item{model}{Optional language model override used for agentic session
-initialization and edits.}
+\item{max_steps}{Maximum ReAct loop iterations. Default \code{10}.}
 
-\item{registry}{Optional aisdk provider registry.}
+\item{extra_tools}{Optional list of additional \code{aisdk::Tool} objects.}
 
-\item{acquisition_tools}{Optional list of controlled acquisition tools used
-when \code{x} is a natural-language data request rather than a file path.}
-
-\item{polish_instruction}{Optional polish direction for the final redraw. For
-\code{ggplot} and \code{ggai_session} inputs this defaults to \code{instruction} when
-omitted.}
-
-\item{...}{Passed through to \code{\link[=polish_figure]{polish_figure()}} when \code{mode = "polish"}.}
+\item{...}{Passed through to \code{agent$run()}.}
 }
 \value{
-Either a \code{ggai_session} or a \code{ggai_polished_figure_result}.
+A list with \code{result} (the aisdk result), \code{artifact} (the most-recent
+\code{ggai_artifact} produced — may be \code{NULL} if the agent produced none) and
+\code{artifacts} (every artifact produced this run, keyed by id).
 }
 \description{
-Unified ggai entrypoint
+Builds (or reuses) an aisdk Agent configured with ggai's verb tools and the
+Skills shipped under \verb{inst/skills/}, then runs the agent on \code{goal}.
+}
+\details{
+The agent decides how to fulfill the goal — pick an engine, write code,
+validate, optionally loop, persist — by loading the relevant Skill on
+demand. There is no \code{mode} argument: routing is the agent's job.
+
+Data objects in the caller frame are reachable by \code{@}-mention syntax in the
+goal string, e.g. \code{ggai("@mtcars show mpg vs wt, color by cyl")}. Mentions
+are resolved by ggai before the agent runs and surfaced to the agent as
+structured context appended to the goal.
+}
+\examples{
+\dontrun{
+ggai("draw a CRISPR knockout diagram with three guide RNAs")
+
+# Reference a local data frame via @mention:
+my_data <- mtcars
+ggai("@my_data show mpg vs wt, color by cyl")
+}
 }

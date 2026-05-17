@@ -5,6 +5,7 @@
 (^|/)DeepScientist(/|$)
 (^|/)demo_outputs(/|$)
 (^|/)[.]baoyu-skills(/|$)
+(^|/)[.]aisdk(/|$)
 (^|/)[.]env($|[.])
 (^|/)[.]Renviron$
 (^|/)[.]Rhistory$
@@ -15,6 +16,13 @@
 ^ggai[.]Rcheck$
 ^[.][.]Rcheck$
 ^todo[.]md$
+^TODO[.]md$
+^CHANGELOG[.]md$
+^AGENTS[.]md$
+(^|/)dev_docs(/|$)
+(^|/)dev_logs(/|$)
+(^|/)plan(/|$)
+(^|/)idea(/|$)
 ^How_.*\\.md$
 ^[.]env[.]gemini$
 ^.*\.Rproj$

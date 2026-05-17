@@ -1,12 +1,16 @@
-test_that("package check reports installed base packages and records trace", {
-  s <- start_ggai_session(ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)))
+# Package and help inspection. Session-state recording was removed in P2;
+# the helpers are now pure functions.
 
-  result <- ggai_check_package("stats", session = s)
-
+test_that("ggai_check_package reports installed base packages", {
+  result <- ggai_check_package("stats")
   expect_true(result$installed)
   expect_equal(result$status, "available")
-  ctx <- session_context(result$session)
-  expect_equal(ctx$recent_agent_traces[[1]]$task_id, "package:stats")
+})
+
+test_that("ggai_check_package reports missing packages", {
+  result <- ggai_check_package("definitely_missing_pkg_ggai")
+  expect_false(result$installed)
+  expect_equal(result$status, "missing")
 })
 
 test_that("install policy blocks or asks before installing", {

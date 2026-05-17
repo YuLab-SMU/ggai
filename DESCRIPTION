@@ -18,7 +18,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Imports:
     aisdk (>= 1.1.2),
-    cli,
     digest,
     ggplotify,
     ggplot2,
@@ -32,6 +31,8 @@ Suggests:
     pkgdown,
     pkgload,
     png,
+    ragg,
+    svglite,
     testthat (>= 3.0.0),
     vdiffr,
     withr

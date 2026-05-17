@@ -1,3 +1,9 @@
+# Pure ggplot-side validation helpers. Pre-P2 this file also defined
+# session-coupled validate/repair loops; those moved out with the agent layer.
+# Callers that need looped repair should drive it through the new agent
+# (which has `ggai_validate_artifact` as a tool) rather than re-introducing
+# a session-state mutator here.
+
 ggai_validation_issue <- function(type, status, message, details = list()) {
   list(type = type, status = status, message = message, details = details)
 }
@@ -97,45 +103,6 @@ ggai_validate_source_evidence_coverage <- function(goal = NULL, visual = NULL) {
   ggai_validation_issue("source_evidence_coverage", "pass", "Source URL evidence is covered.")
 }
 
-ggai_validate_reproducible_code <- function(session) {
-  code <- tryCatch(as_code(session), error = function(e) e)
-  if (inherits(code, "error")) {
-    return(ggai_validation_issue("reproducible_code", "warn", conditionMessage(code)))
-  }
-  if (!is.character(code) || !length(code) || !nzchar(code[[1]])) {
-    return(ggai_validation_issue("reproducible_code", "fail", "Generated code is empty."))
-  }
-  ggai_validation_issue("reproducible_code", "pass", "Reproducible code is available.", list(code = code))
-}
-
-#' Validate a ggai session artifact
-#'
-#' @param session A `ggai_session`.
-#' @param analysis Optional `analysis_brief`.
-#' @param visual Optional `visual_brief`.
-#' @param goal Optional user goal.
-#'
-#' @return A validation report.
-#' @export
-ggai_validate_session_artifact <- function(session, analysis = NULL, visual = NULL, goal = NULL) {
-  if (!inherits(session, "ggai_session")) {
-    rlang::abort("`session` must be a ggai_session.")
-  }
-  plot <- session_current_plot(session)
-  issues <- list(
-    ggai_validate_plot_build(plot),
-    ggai_validate_referenced_variables(plot),
-    ggai_validate_stat_annotation_consistency(analysis = analysis, visual = visual),
-    ggai_validate_source_evidence_coverage(goal = goal, visual = visual),
-    ggai_validate_reproducible_code(session)
-  )
-  statuses <- vapply(issues, function(issue) issue$status %||% "fail", character(1))
-  list(
-    status = if (any(statuses == "fail")) "fail" else if (any(statuses == "warn")) "warn" else "pass",
-    issues = issues
-  )
-}
-
 ggai_repair_missing_variable_plot <- function(plot, issue) {
   data <- plot$data %||% NULL
   available <- issue$details$available %||% names(data)
@@ -145,69 +112,4 @@ ggai_repair_missing_variable_plot <- function(plot, issue) {
   x <- available[[1]]
   y <- available[[min(2L, length(available))]]
   ggplot2::ggplot(data, ggplot2::aes(x = !!rlang::sym(x), y = !!rlang::sym(y))) + ggplot2::geom_point()
-}
-
-ggai_repair_session_once <- function(session, report) {
-  failures <- Filter(function(issue) identical(issue$status, "fail"), report$issues %||% list())
-  for (issue in failures) {
-    if (identical(issue$type, "referenced_variables")) {
-      repaired <- ggai_repair_missing_variable_plot(session_current_plot(session), issue)
-      if (inherits(repaired, "ggplot")) {
-        session$base_plot <- repaired
-        session$history <- list()
-        session$history_index <- 0L
-        session <- session_touch_state(session, instruction = session$state$active_instruction %||% NULL)
-        return(list(session = session, repaired = TRUE, action = "replace_missing_variable_mapping"))
-      }
-    }
-  }
-  list(session = session, repaired = FALSE, action = "none")
-}
-
-#' Run a bounded validation and repair loop
-#'
-#' @param session A `ggai_session`.
-#' @param analysis Optional `analysis_brief`.
-#' @param visual Optional `visual_brief`.
-#' @param goal Optional user goal.
-#' @param max_attempts Maximum repair attempts.
-#'
-#' @return A list with `session`, `initial`, `final`, and `repairs`.
-#' @export
-ggai_validate_and_repair <- function(session, analysis = NULL, visual = NULL, goal = NULL, max_attempts = 1L) {
-  initial <- ggai_validate_session_artifact(session, analysis = analysis, visual = visual, goal = goal)
-  repairs <- list()
-  current <- session
-  final <- initial
-
-  attempts <- max(0L, as.integer(max_attempts %||% 0L))
-  if (identical(initial$status, "fail") && attempts > 0L) {
-    for (i in seq_len(attempts)) {
-      repaired <- ggai_repair_session_once(current, final)
-      repairs[[length(repairs) + 1L]] <- list(attempt = i, action = repaired$action, repaired = repaired$repaired)
-      current <- repaired$session
-      final <- ggai_validate_session_artifact(current, analysis = analysis, visual = visual, goal = goal)
-      if (!identical(final$status, "fail") || !isTRUE(repaired$repaired)) {
-        break
-      }
-    }
-  }
-
-  trace <- new_ggai_agent_trace(
-    task_id = "validation_repair",
-    status = final$status,
-    steps = list(
-      ggai_agent_trace_step("validate_artifact", status = initial$status, details = initial),
-      ggai_agent_trace_step("repair_artifact", status = if (length(repairs)) "attempted" else "skipped", details = list(repairs = repairs)),
-      ggai_agent_trace_step("validate_final_artifact", status = final$status, details = final)
-    ),
-    observations = list(
-      list(type = "initial_validation", value = initial),
-      list(type = "repair_attempts", value = repairs),
-      list(type = "final_validation", value = final)
-    ),
-    completed_at = ggai_contract_timestamp()
-  )
-  current <- session_record_agent_trace(current, trace)
-  list(session = current, initial = initial, final = final, repairs = repairs)
 }

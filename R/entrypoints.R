@@ -1,38 +1,7 @@
-#' Create an AI-driven ggplot layer request
-#'
-#' Returns a lazy request object that is compiled when added to a ggplot.
-#'
-#' @param instruction A natural-language visualization instruction.
-#' @param model Optional language model identifier.
-#' @param image_model Optional image model identifier reserved for future use.
-#' @param data Optional data override used for the compiled layers.
-#' @param cache Reserved for future use.
-#' @param mode Compilation mode. Currently only `"layer"` is supported.
-#'
-#' @export
-geom_ai <- function(instruction,
-                    model = NULL,
-                    image_model = NULL,
-                    data = NULL,
-                    cache = TRUE,
-                    mode = c("layer", "diagram")) {
-  mode <- match.arg(mode)
-  if (!is.character(instruction) || length(instruction) != 1L || !nzchar(instruction)) {
-    rlang::abort("`instruction` must be a single non-empty string.")
-  }
-
-  structure(
-    list(
-      instruction = instruction,
-      target = mode,
-      model = model,
-      image_model = image_model,
-      data = data,
-      cache = cache
-    ),
-    class = c("ggai_layer_request", "ggplot_add")
-  )
-}
+# geom_ai() was removed in the P2 agentic refactor: its dispatcher
+# (ggplot_add.ggai_layer_request) lived in the deleted agentic_edit / geom_ai_add
+# stack. The equivalent ergonomic — adding an AI-generated layer to a ggplot —
+# will return as a Skill-driven helper in P3+.
 
 #' Create a diagram canvas
 #'

@@ -9,7 +9,6 @@ ggai_install_cran_package(
   policy = NULL,
   lib = NULL,
   repos = getOption("repos"),
-  session = NULL,
   installer = utils::install.packages
 )
 }
@@ -21,8 +20,6 @@ ggai_install_cran_package(
 \item{lib}{Optional library path passed to \code{install.packages()}.}
 
 \item{repos}{CRAN repository URL.}
-
-\item{session}{Optional \code{ggai_session} that receives a trace record.}
 
 \item{installer}{Installer function, primarily for tests.}
 }

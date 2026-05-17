@@ -4,12 +4,10 @@
 \alias{ggai_check_package}
 \title{Check whether an R package is available}
 \usage{
-ggai_check_package(package, session = NULL)
+ggai_check_package(package)
 }
 \arguments{
 \item{package}{Package name.}
-
-\item{session}{Optional \code{ggai_session} that receives a trace record.}
 }
 \value{
 A package availability record.

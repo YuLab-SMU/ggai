@@ -65,6 +65,7 @@ ggai.Rcheck/
 paperbanana/
 .baoyu-skills/
 tests/testthat/Rplots.pdf
+Rplots.pdf
 
 # Build artifacts and archives
 *.tar

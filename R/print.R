@@ -42,9 +42,6 @@ print.ggai_polished_figure_result <- function(x, ...) {
   if (nzchar(x$candidate_manifest_path %||% "")) {
     cat("Candidate manifest: ", x$candidate_manifest_path, "\n", sep = "")
   }
-  if (inherits(x$session, "ggai_session")) {
-    cat("Session: updated with polish artifact\n")
-  }
-  cat("Use plot(x), x$best$path, artifacts(x$session), or latest_artifact(x$session).\n")
+  cat("Use plot(x) or x$best$path to access the rendered image.\n")
   invisible(x)
 }
