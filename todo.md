@@ -20,6 +20,12 @@ _(none — see `plan/2026-05-17-agentic-refactor-overview.md` for active phase w
 - [x] **Grid title overflow** — addressed in P4.b by updating the code-mode snippet to anchor titles at `y = 0.90` with explicit margin allowances. Further hardening (viewport-level margin) deferred.
 - [ ] **`ggai_system_prompt()` — mention `list_available_skills`** as the canonical discovery entry-point. Currently lists only 4 of the 7 aisdk skill tools. Soft mismatch; LLM figures it out, but tightening the prompt would shorten the first ReAct step on cold goals.
 
+### Composite + htmlwidget polish (from P6, 2026-05-17)
+
+- [ ] **Patchwork S7 `$layers` quirk.** Per-panel `n_layers` in `inspect_composite` may understate complex constituent plots because patchwork's S7-based storage doesn't expose layers via the standard `$layers` accessor. Revisit when patchwork stabilizes on S7. Panel count and render are correct; only the per-panel layer count is fuzzy.
+- [ ] **Nested patchwork recursion.** `inspect_composite` reports a nested patchwork (e.g. `p1 | (p2 / p3)`) as `kind = "nested_patchwork"` with `nested_panels = N` but doesn't recurse into it. Add full recursive walk if downstream skills need it.
+- [ ] **Webshot2 integration test.** Once `webshot2` + `chromote` + headless Chrome are available, exercise the PNG path end-to-end. Code is already there; only env is missing.
+
 ### Capability probe enhancements (from P4.b, 2026-05-17)
 
 - [x] **Optional live reachability probe** — completed in P5.b. `ggai_capability_status(probe = TRUE)` sends POST `{}` against the route; correctly diagnoses the user's `jarodfund.xyz` proxy (language reachable / image 404). 60s in-process cache.
@@ -32,8 +38,8 @@ _(none — see `plan/2026-05-17-agentic-refactor-overview.md` for active phase w
 - [x] `ggai-circlize-genome` — chromosome coordinates, multi-track design — completed in P5.
 - [ ] `ggai-base-graphics` — `par()` / `layout()` / `recordPlot` patterns.
 - [ ] `ggai-grid-composition` — direct grob manipulation; glyph placement on canvas.
-- [ ] `ggai-patchwork-layout` — multi-panel composition (`patchwork` / `cowplot` / `aplot`).
-- [ ] `ggai-htmlwidget` — `plotly` / `leaflet` static export via `webshot2`.
+- [x] `ggai-patchwork-layout` — multi-panel composition — completed in P6.
+- [x] `ggai-htmlwidget` — interactive widgets with optional webshot2 PNG export — completed in P6.
 - [ ] `ggai-single-cell` — UMAP / DotPlot / VlnPlot conventions.
 - [ ] `ggai-pathway-diagram` — pathway illustration style.
 - [ ] `ggai-clinical-figure` — survival curves, forest plots.

@@ -41,11 +41,12 @@ ggai_inspect_artifact <- function(artifact) {
   engine_info <- switch(
     artifact$engine,
     ggplot          = inspect_ggplot(artifact$object),
-    composite       = inspect_ggplot(artifact$object),
+    composite       = inspect_composite(artifact$object),
     grid            = inspect_grob_tree(artifact$object),
     base            = inspect_recorded(artifact$object),
     complex_heatmap = inspect_ch(artifact$object),
     circlize        = inspect_circlize(artifact$object),
+    htmlwidget      = inspect_htmlwidget(artifact$object),
     list(summary = paste0(
       "No structured inspection available for engine `",
       artifact$engine, "`."
@@ -201,6 +202,108 @@ inspect_ch <- function(ht) {
     available = c("n_heatmaps", "heatmaps"),
     n_heatmaps = n,
     heatmaps = per
+  )
+}
+
+# A patchwork composite object is itself a ggplot, plus a `$patches$plots`
+# list of the additional panels added via `+` or `wrap_plots()`. The total
+# panel count is `1 + length($patches$plots)` because the patchwork carries
+# the first panel as its own ggplot identity.
+#
+# This inspector returns one entry per panel under `panels`, each entry
+# carrying the per-panel ggplot inspection (via `inspect_ggplot`). Nested
+# patchworks (a patchwork inside another) are detected and reported by class
+# rather than fully recursed; deep recursion is filed for later if needed.
+inspect_composite <- function(pw) {
+  if (is.null(pw)) {
+    return(list(summary = "composite object missing (object cache is NULL)."))
+  }
+  if (!inherits(pw, "patchwork")) {
+    # Fall back to ggplot inspection if a non-patchwork composite slipped in.
+    return(inspect_ggplot(pw))
+  }
+
+  patches <- tryCatch(pw$patches$plots, error = function(...) list())
+  if (is.null(patches)) patches <- list()
+
+  inspect_panel <- function(p, index) {
+    panel <- list(index = index, class = paste(class(p), collapse = "/"))
+    if (inherits(p, "patchwork")) {
+      panel$kind <- "nested_patchwork"
+      panel$nested_panels <- 1L + length(tryCatch(p$patches$plots, error = function(...) list()))
+    } else if (inherits(p, "ggplot")) {
+      gg <- safe_call(inspect_ggplot, p)
+      panel$kind <- "ggplot"
+      panel$n_layers <- gg$n_layers %||% NA_integer_
+      panel$summary <- gg$summary %||% NA_character_
+    } else if (inherits(p, c("grob", "gTree", "gList"))) {
+      panel$kind <- "grob"
+    } else {
+      panel$kind <- "other"
+    }
+    panel
+  }
+
+  # Panel 1 is the patchwork's own ggplot identity.
+  self_info <- safe_call(inspect_ggplot, pw)
+  panel_1 <- list(
+    index = 1L,
+    class = paste(class(pw), collapse = "/"),
+    kind = "patchwork_self",
+    n_layers = self_info$n_layers %||% NA_integer_,
+    summary = self_info$summary %||% NA_character_
+  )
+  panels <- c(
+    list(panel_1),
+    lapply(seq_along(patches), function(i) inspect_panel(patches[[i]], index = i + 1L))
+  )
+
+  n <- length(panels)
+  summary <- paste0("patchwork composite: ", n, " panel(s)")
+
+  list(
+    summary = summary,
+    available = c("n_panels", "panels", "self_inspect"),
+    n_panels = n,
+    panels = panels,
+    self_inspect = self_info
+  )
+}
+
+# Surfaces widget identity, declared dependencies, and sizing policy. Does
+# NOT serialise the widget — that's the render step's job.
+inspect_htmlwidget <- function(widget) {
+  if (is.null(widget)) {
+    return(list(summary = "htmlwidget missing (object cache is NULL)."))
+  }
+  if (!inherits(widget, "htmlwidget")) {
+    return(list(summary = paste0(
+      "Expected htmlwidget, got ", paste(class(widget), collapse = "/")
+    )))
+  }
+
+  widget_name <- setdiff(class(widget), c("htmlwidget", "list"))
+  widget_name <- if (length(widget_name)) widget_name[[1L]] else "htmlwidget"
+
+  deps <- tryCatch(widget$dependencies, error = function(...) NULL)
+  dep_names <- if (length(deps)) {
+    vapply(deps, function(d) d$name %||% NA_character_, character(1))
+  } else {
+    character()
+  }
+
+  policy <- tryCatch(widget$sizingPolicy, error = function(...) NULL)
+  has_x <- !is.null(widget$x)
+
+  list(
+    summary = paste0("htmlwidget: ", widget_name,
+                     "; ", length(dep_names), " declared dependencies",
+                     if (has_x) "; data payload attached" else "; no data payload"),
+    available = c("widget_name", "dependencies", "sizing_policy", "has_data_payload"),
+    widget_name = widget_name,
+    dependencies = dep_names,
+    sizing_policy = policy,
+    has_data_payload = has_x
   )
 }
 

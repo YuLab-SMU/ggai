@@ -40,6 +40,7 @@ ggai_validate_artifact <- function(artifact) {
     base            = validate_recorded(artifact$object),
     complex_heatmap = validate_ch(artifact$object),
     circlize        = validate_recorded(artifact$object),
+    htmlwidget      = validate_htmlwidget(artifact$object),
     list(
       status = "warning",
       messages = paste0("No validator implemented for engine `", artifact$engine, "`."),
@@ -204,6 +205,57 @@ validate_ch <- function(ht) {
     ))
   }
 
+  list(
+    status = if (length(warnings)) "warning" else "ok",
+    warnings = warnings
+  )
+}
+
+validate_htmlwidget <- function(widget) {
+  if (is.null(widget)) {
+    return(list(
+      status = "error",
+      error = "htmlwidget cache is NULL; cannot validate."
+    ))
+  }
+  if (!inherits(widget, "htmlwidget")) {
+    return(list(
+      status = "error",
+      error = paste0("Expected htmlwidget, got ",
+                     paste(class(widget), collapse = "/"))
+    ))
+  }
+  if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
+    return(list(
+      status = "warning",
+      messages = "htmlwidgets package not available; cannot dry-run saveWidget."
+    ))
+  }
+  # Dry-run: save to a tempfile and check the result, then clean up. This
+  # catches misconfigured widgets without leaving an artifact behind.
+  tmp <- tempfile(fileext = ".html")
+  on.exit(unlink(tmp), add = TRUE)
+  warnings <- character()
+  res <- tryCatch(
+    withCallingHandlers(
+      {
+        htmlwidgets::saveWidget(widget, tmp, selfcontained = TRUE)
+        TRUE
+      },
+      warning = function(w) {
+        warnings <<- c(warnings, conditionMessage(w))
+        invokeRestart("muffleWarning")
+      }
+    ),
+    error = function(e) e
+  )
+  if (inherits(res, "error")) {
+    return(list(
+      status = "error",
+      error = conditionMessage(res),
+      warnings = warnings
+    ))
+  }
   list(
     status = if (length(warnings)) "warning" else "ok",
     warnings = warnings

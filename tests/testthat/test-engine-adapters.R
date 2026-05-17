@@ -137,6 +137,71 @@ Heatmap(m1, name = "A") + Heatmap(m2, name = "B")'
 
 # ---- circlize engine ------------------------------------------------------
 
+# ---- composite (patchwork) engine ----------------------------------------
+
+test_that("patchwork composite is detected and rendered as composite engine", {
+  skip_if_not_installed("patchwork")
+  out <- local_temp_outdir()
+  code <- 'suppressMessages({library(patchwork); library(ggplot2)})
+p1 <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
+p2 <- ggplot(mtcars, aes(hp)) + geom_histogram(bins = 12)
+p1 + p2'
+  a <- ggai_execute_and_capture(code, output_dir = out)
+
+  expect_identical(a$engine, "composite")
+  expect_true("png" %in% names(a$rendered))
+  expect_true(file.exists(a$rendered$png))
+})
+
+test_that("inspect_composite walks patchwork patches", {
+  skip_if_not_installed("patchwork")
+  out <- local_temp_outdir()
+  code <- 'suppressMessages({library(patchwork); library(ggplot2)})
+p1 <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
+p2 <- ggplot(mtcars, aes(hp)) + geom_histogram(bins = 12)
+p3 <- ggplot(mtcars, aes(qsec, mpg)) + geom_point()
+p1 + p2 + p3'
+  a <- ggai_execute_and_capture(code, output_dir = out)
+
+  info <- ggai_inspect_artifact(a)
+  expect_identical(info$engine, "composite")
+  expect_identical(info$n_panels, 3L)
+  expect_true("panels" %in% info$available)
+  expect_length(info$panels, 3L)
+  expect_identical(info$panels[[1L]]$kind, "patchwork_self")
+})
+
+# ---- htmlwidget engine ----------------------------------------------------
+
+test_that("htmlwidget artifact: detect / render-to-html / inspect / validate", {
+  skip_if_not_installed("plotly")
+  skip_if_not_installed("htmlwidgets")
+  out <- local_temp_outdir()
+  code <- 'suppressMessages(library(plotly))
+plot_ly(mtcars, x = ~mpg, y = ~wt, type = "scatter", mode = "markers")'
+
+  # When webshot2 is not installed, default png format degrades to html with
+  # a warning. We test both the warning path and the explicit html format.
+  if (!requireNamespace("webshot2", quietly = TRUE)) {
+    a <- suppressWarnings(ggai_execute_and_capture(code, output_dir = out, format = "png"))
+    expect_identical(a$engine, "htmlwidget")
+    expect_true("html" %in% names(a$rendered))
+    expect_true(file.exists(a$rendered$html))
+  }
+
+  a2 <- ggai_execute_and_capture(code, output_dir = out, format = "html")
+  expect_identical(a2$engine, "htmlwidget")
+  expect_true("html" %in% names(a2$rendered))
+
+  info <- ggai_inspect_artifact(a2)
+  expect_identical(info$engine, "htmlwidget")
+  expect_identical(info$widget_name, "plotly")
+  expect_true(info$has_data_payload)
+
+  v <- ggai_validate_artifact(a2)
+  expect_identical(v$status, "ok")
+})
+
 test_that("circlize artifact: explicit engine_hint, render, inspect, validate", {
   skip_if_not_installed("circlize")
   out <- local_temp_outdir()

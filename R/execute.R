@@ -25,7 +25,12 @@
 #' @param code Character scalar of R code.
 #' @param env Optional environment in which to evaluate `code`. Defaults to a
 #'   fresh child of `parent.frame()`.
-#' @param format Output format, one of `"png"` or `"svg"`.
+#' @param format Output format. One of `"png"` or `"svg"` for the graphics
+#'   engines (`ggplot`, `grid`, `base`, `composite`, `complex_heatmap`,
+#'   `circlize`). For `htmlwidget`, `"html"` is always supported; `"png"`
+#'   additionally requires the optional `webshot2` package. When `"png"` is
+#'   requested without webshot2, the artifact is saved as HTML instead
+#'   (with a warning) and `rendered` will hold the HTML path.
 #' @param engine_hint Optional engine override. Use when auto-detection is
 #'   known to fail (e.g. `grid::grid.draw(grob)` that returns `NULL`).
 #' @param output_dir Output directory. Defaults to `tempdir()`.
@@ -39,7 +44,7 @@
 #' @export
 ggai_execute_and_capture <- function(code,
                                      env = NULL,
-                                     format = c("png", "svg"),
+                                     format = c("png", "svg", "html"),
                                      engine_hint = NULL,
                                      output_dir = tempdir(),
                                      prefix = "artifact",
@@ -130,36 +135,36 @@ ggai_execute_and_capture <- function(code,
     composite       = last_value,
     grid            = last_value,
     complex_heatmap = last_value,
+    htmlwidget      = last_value,
     base            = recorded,
     circlize        = recorded,
     last_value
   )
 
   rendered <- list()
-  render_ok <- tryCatch(
-    {
-      render_to_file(
-        object = rendered_object,
-        engine = engine,
-        path = file_path,
-        format = format,
-        width = width,
-        height = height,
-        dpi = dpi
-      )
-      TRUE
-    },
+  actual_path <- tryCatch(
+    render_to_file(
+      object = rendered_object,
+      engine = engine,
+      path = file_path,
+      format = format,
+      width = width,
+      height = height,
+      dpi = dpi
+    ),
     error = function(e) {
       warning(
         "Rendering failed for engine `", engine, "`: ",
         conditionMessage(e),
         call. = FALSE
       )
-      FALSE
+      NULL
     }
   )
-  if (isTRUE(render_ok) && file.exists(file_path)) {
-    rendered <- stats::setNames(list(file_path), format)
+  if (!is.null(actual_path) && is.character(actual_path) && file.exists(actual_path)) {
+    actual_format <- tolower(tools::file_ext(actual_path))
+    if (!nzchar(actual_format)) actual_format <- format
+    rendered <- stats::setNames(list(actual_path), actual_format)
   }
 
   pkgs_used <- setdiff(loadedNamespaces(), pkgs_before)

@@ -26,8 +26,8 @@ ggai supports multiple R graphics engines through one `ggai_artifact` type. Your
 | Network / graph / phylogeny with ggplot-style aesthetics | `ggplot` via `ggraph` or `ggtree` | Same artifact engine as ggplot. |
 | Phylogenetic tree, dendrogram via classic Bioc APIs | `base` (via `recordPlot`) | `plot.phylo`, `plot.hclust` produce base output; capture via the recording device. |
 | Custom grobs, manual layout, glyph composition over a chart | `grid` | Direct grob manipulation; viewport math. |
-| Multi-panel composite from several existing artifacts | `composite` | `patchwork` / `cowplot` / `aplot`. Recursive. |
-| Interactive viz (zoomable scatter, choropleth, dashboard) | `htmlwidget` | `plotly` / `leaflet` / `networkD3`. Needs `webshot2` for static PNG export. |
+| Multi-panel composite from several existing artifacts | `composite` | `patchwork` / `cowplot` / `aplot`. Auto-detected from class. Load `ggai-patchwork-layout` for editorial style. |
+| Interactive viz (zoomable scatter, choropleth, dashboard) | `htmlwidget` | `plotly` / `leaflet` / `networkD3`. Saves self-contained HTML by default; PNG export needs `webshot2`. Load `ggai-htmlwidget` for editorial style. |
 
 ## How the agent uses this
 

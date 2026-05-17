@@ -95,9 +95,10 @@ render_to_file <- function(object, engine, path, format,
     base            = render_base(object, path, format, width, height, dpi),
     complex_heatmap = render_complex_heatmap(object, path, format, width, height, dpi),
     circlize        = render_base(object, path, format, width, height, dpi),
+    htmlwidget      = render_htmlwidget(object, path, format, width, height, dpi),
     rlang::abort(paste0(
       "Rendering not implemented for engine `", engine, "`. ",
-      "Supported: ggplot, composite, grid, base, complex_heatmap, circlize."
+      "Supported: ggplot, composite, grid, base, complex_heatmap, circlize, htmlwidget."
     ))
   )
 }
@@ -127,6 +128,65 @@ render_base <- function(recorded, path, format, width, height, dpi) {
   on.exit(grDevices::dev.off(), add = TRUE)
   grDevices::replayPlot(recorded)
   invisible(path)
+}
+
+# htmlwidgets need either a self-contained HTML file (always works) or a
+# rasterized PNG (requires webshot2 + a headless Chrome via chromote).
+#
+# When format = "png" and webshot2 is available, this writes the PNG at
+# `path`. When format = "png" and webshot2 is missing, it writes a
+# self-contained HTML alongside `path` (extension swapped) and emits a
+# warning so the caller knows what happened. The function always returns the
+# actual path it wrote, so `ggai_execute_and_capture()` can record the right
+# format in `artifact$rendered`.
+render_htmlwidget <- function(widget, path, format, width, height, dpi) {
+  if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
+    rlang::abort(c(
+      "htmlwidgets package required for engine = 'htmlwidget'.",
+      i = "Install with install.packages('htmlwidgets')."
+    ))
+  }
+
+  format <- tolower(format)
+
+  if (identical(format, "html")) {
+    htmlwidgets::saveWidget(widget, path, selfcontained = TRUE)
+    return(invisible(path))
+  }
+
+  if (identical(format, "png")) {
+    if (!requireNamespace("webshot2", quietly = TRUE)) {
+      html_path <- sub("\\.png$", ".html", path, ignore.case = TRUE)
+      if (identical(html_path, path)) {
+        html_path <- paste0(path, ".html")
+      }
+      htmlwidgets::saveWidget(widget, html_path, selfcontained = TRUE)
+      warning(
+        "Rendering an htmlwidget to PNG requires the `webshot2` package. ",
+        "Wrote a self-contained HTML to `", html_path, "` instead. ",
+        "Install webshot2 (and ensure chromote / Chrome are available) to enable PNG export.",
+        call. = FALSE
+      )
+      return(invisible(html_path))
+    }
+
+    html_tmp <- tempfile(fileext = ".html")
+    on.exit(unlink(html_tmp), add = TRUE)
+    htmlwidgets::saveWidget(widget, html_tmp, selfcontained = TRUE)
+    webshot2::webshot(
+      url = html_tmp,
+      file = path,
+      vwidth = width %||% 1200L,
+      vheight = height %||% 900L,
+      delay = 0.5
+    )
+    return(invisible(path))
+  }
+
+  rlang::abort(paste0(
+    "htmlwidget render does not support format `", format,
+    "`. Use `format = \"html\"` (always) or `format = \"png\"` (with webshot2)."
+  ))
 }
 
 # ComplexHeatmap requires its own `draw()` to render. The Heatmap / HeatmapList

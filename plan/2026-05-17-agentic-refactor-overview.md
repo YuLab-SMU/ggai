@@ -37,7 +37,7 @@
 - [x] Phase P3: Author the first 5 skills (`orchestration`, `engine-selection`, `data-plot`, `figure-polish`, `direct-figure`) — completed 2026-05-17
 - [x] Phase P4: Smoke test via existing demos — completed 2026-05-17
 - [x] Phase P5: ComplexHeatmap + circlize adapters — completed 2026-05-17
-- [ ] Phase P6: Composite / htmlwidget adapters
+- [x] Phase P6: Composite / htmlwidget adapters — completed 2026-05-17
 
 ---
 
@@ -338,15 +338,48 @@ One less wasted network call, cleaner reply text. The Modes decision tree now op
 
 ### Phase P6: Composite / htmlwidget adapters
 
-**Status:** `[ ]`
+**Status:** `[x]` — completed 2026-05-17
 
 **Files**
-- Modify: `R/render.R`, `R/inspect.R` — add `render_composite` (patchwork/cowplot/aplot; recursive inspect), `render_htmlwidget` (via `webshot2`).
-- Create: `inst/skills/ggai-patchwork-layout/SKILL.md`, `inst/skills/ggai-htmlwidget/SKILL.md`.
-- Modify: `DESCRIPTION` — add `webshot2` as Suggests.
+- Modify: `R/inspect.R` — split composite off from ggplot: new `inspect_composite()` walks `patchwork$patches$plots`, returning per-panel info (`kind`, `n_layers`, `summary`); also added `inspect_htmlwidget()` surfacing widget name, declared dependencies, sizing policy, data-payload presence.
+- Modify: `R/render.R` — added `render_htmlwidget()` (saves self-contained HTML via `htmlwidgets::saveWidget`; rasterizes to PNG via `webshot2::webshot` when available, else writes HTML with a warning); dispatcher extended.
+- Modify: `R/validate.R` — added `validate_htmlwidget()` (dry-runs `saveWidget` to a tempfile).
+- Modify: `R/execute.R` — `format` argument now accepts `"html"` in addition to `"png"` / `"svg"`; the rendered-format detection reads back from the actual path written, so htmlwidget's PNG→HTML fallback is recorded correctly in `artifact$rendered`.
+- Create: `inst/skills/ggai-patchwork-layout/SKILL.md` — library-choice table (patchwork / cowplot / aplot), composition flow, anti-patterns including the critical `engine_hint` rule (see below), three reference snippets.
+- Create: `inst/skills/ggai-htmlwidget/SKILL.md` — when-to-use, format-decision table (html always works; png needs webshot2), three snippets (plotly / leaflet / DT), anti-patterns.
+- Modify: `inst/skills/ggai-engine-selection/SKILL.md` — cross-links to both new skills.
+- Modify: `DESCRIPTION` — `cowplot`, `aplot`, `htmlwidgets`, `patchwork`, `plotly`, `webshot2` added to Suggests.
+- Test: `tests/testthat/test-engine-adapters.R` extended with composite + htmlwidget tests; `test-skills.R` required set updated.
 
 **Intent**
-- Cover composition (multi-panel) and interactive viz static export.
+- Cover composition (multi-panel) and interactive viz static export, completing the engine matrix to **8 engines**: ggplot / composite / grid / base / complex_heatmap / circlize / htmlwidget / unknown.
+
+**Checklist**
+- [x] Composite auto-detects from `patchwork` class; render uses the existing ggplot path (print to device); inspect walks patches.
+- [x] htmlwidget auto-detects from class; render is HTML by default with optional PNG via webshot2; PNG-without-webshot2 falls back to HTML cleanly with a single warning. `ggai_execute_and_capture()` records the actual rendered format from the file extension, so `artifact$rendered$html` vs `artifact$rendered$png` reflects reality.
+- [x] Engine matrix is 8 engines, all with adapters and at least one ggai-side test.
+- [x] Tests cover composite detection, panel walk, htmlwidget detection, HTML render, inspect surface. Full suite green: **0 FAIL / 1 SKIP / 380 PASS** (+22 from new tests).
+- [x] Skill content sharpened from first-smoke feedback (see "Iteration after smoke" below).
+- [x] End-to-end LLM smoke for composite path produced a clean 3-panel labeled figure.
+
+**Iteration after smoke**
+
+First composite smoke (`comp2`) revealed that the agent passed `engine_hint = "ggplot"` despite producing a patchwork. The artifact rendered correctly (patchwork inherits ggplot, so render_ggplot works), but it was mis-tagged as `engine = "ggplot"` and `inspect_composite`'s per-panel walk was disabled. The user's request for A/B/C panel labels was also lost — the agent had silently overridden `plot.tag` to transparent.
+
+Edited `ggai-patchwork-layout` to:
+1. Add a sharp rule under the Flow section: *"omit `engine_hint` — do NOT pass `engine_hint = "ggplot"` even though patchwork inherits ggplot; passing it forces the wrong engine label and disables `inspect_composite`'s per-panel walk."*
+2. Add an anti-pattern: *"Don't override `plot.tag` to invisible in the global theme after `plot_annotation(tag_levels = "A")` — that strips the very labels you just asked for."*
+
+Re-smoke (`comp3`): agent now passes `engine_hint = "composite"`, artifact is correctly tagged, A/B/C labels visible in the output. Confirms the smoke→iterate→re-smoke loop established in P4.b is reliable.
+
+**Notes**
+- Patchwork stores N–1 panels in `$patches$plots`; the patchwork object itself carries the first panel's ggplot identity. Total panel count is `1 + length($patches$plots)`. Nested patchworks (`p1 | (p2 / p3)`) report as `kind = "nested_patchwork"` without full recursion — top-level counting only for now. Filed for later if multi-level inspection becomes useful.
+- Patchwork in `ggplot2 4.0+` (S7 prototype) does not propagate `$layers` reliably on stored patches. Per-panel `n_layers` may understate complex constituent plots; this is a patchwork/S7 quirk, not a ggai bug. Filed as TODO.
+- htmlwidget rendering without webshot2 cleanly degrades to HTML output. The "PNG requested → HTML written" path emits a single `warning()` and the manifest reflects the actual format. Skills are written to set user expectations honestly.
+
+**Smoke outputs (preserved under `demo_outputs/`, gitignored)**
+- `p6_comp/comp2.{R,png,json}` — patchwork composite without engine_hint sharpening (mis-tagged as ggplot, missing A/B/C labels).
+- `p6_comp2/comp3.{R,png,json}` — patchwork composite after skill sharpening (correctly tagged as composite, A/B/C labels visible, clean Dark2 palette across panels).
 
 ---
 

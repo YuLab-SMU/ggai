@@ -28,6 +28,12 @@ Imports:
 Suggests:
     ComplexHeatmap,
     circlize,
+    cowplot,
+    aplot,
+    htmlwidgets,
+    patchwork,
+    plotly,
+    webshot2,
     ggh4x,
     jpeg,
     pkgdown,
