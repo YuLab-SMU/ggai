@@ -20,7 +20,7 @@ Your job: turn a description into a polished illustration via direct image gener
 ## What you have access to
 
 - `ggai_capability_status()` — reports whether the image model is configured. Call this first to decide the mode.
-- `ggai_generate_image(model, prompt, output_dir, width, height, transparent_background, ...)` — calls an image model and returns one or more rendered images.
+- `ggai_generate_image(model, prompt, output_dir, width, height, quality, ...)` — calls an image model and returns one or more rendered images. With `gpt-image-2`, `transparent_background = TRUE` is silently ignored; use the chroma-key workflow + `ggai_remove_background()` for true alpha.
 - `evaluate_figure_candidate(path, prompt_spec?)` — scores a rendered image on sharpness, clutter, blankness, visual complexity. Useful for multi-candidate picks.
 - `ggai_image_model()` — returns the configured image model identifier.
 - `ggai_figure_resolution()` — returns the default `(width, height)` for figure-class outputs.
@@ -114,11 +114,44 @@ result <- ggai_generate_image(
     "Avoid: watermarks, tiny text, photo-realism, checkerboard transparency."
   ),
   output_dir = tempdir(),
-  width = 1600, height = 900,
-  transparent_background = FALSE
+  width = 1536, height = 1024,   # gpt-image-2 landscape (see size constraints below)
+  quality = "high"
 )
 result$images[[1]]$path
 ```
+
+### gpt-image-2 size and quality constraints
+
+The default image model is `gpt-image-2`. Pick `width`/`height` that satisfy all of:
+
+- Max edge ≤ `3840px`
+- Both edges multiples of `16px`
+- Long-to-short ratio ≤ `3:1`
+- **Total pixels in `[655,360, 8,294,400]`**
+
+Safe sizes:
+
+| Aspect | Size | When |
+|--------|------|------|
+| Square | `1024 × 1024` | Fast default |
+| Landscape | `1536 × 1024` | Scientific figures, talks |
+| Portrait | `1024 × 1536` | Posters |
+| 2K square | `2048 × 2048` | Print-quality square |
+| 4K landscape | `3840 × 2160` | Cover figures, posters |
+
+`quality` is `"low"` (fast drafts), `"medium"`, `"high"`, or `"auto"`. Use `"low"` for iteration, `"high"` for final assets and dense text/labels.
+
+### Transparent backgrounds with gpt-image-2
+
+`gpt-image-2` does **not** honour the API's `background = "transparent"` parameter — it silently returns an opaque image. If the user wants a transparent cutout:
+
+1. Prompt for a perfectly flat solid `#00ff00` chroma-key background.
+2. Generate as usual.
+3. Run `ggai_remove_background(path, key_color = "#00ff00")` to convert the key colour to alpha.
+
+For single biomedical entity cutouts intended for compositing, prefer the `ggai-biomedical-entities` skill which packages this workflow.
+
+Only switch to a true-transparency model (e.g. `gpt-image-1.5`) when the subject is too complex for chroma-key removal (hair, fur, smoke, glass, soft shadows) — and ask the user first.
 
 Multi-candidate with scoring:
 
@@ -128,7 +161,8 @@ imgs <- ggai_generate_image(
   prompt = "...",
   output_dir = tempdir(),
   n = 3,
-  width = 1600, height = 900
+  width = 1536, height = 1024,
+  quality = "high"
 )
 scored <- lapply(imgs$images, function(im) {
   list(path = im$path, score = evaluate_figure_candidate(im$path)$score)

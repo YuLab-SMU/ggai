@@ -57,7 +57,7 @@ geom_point_ai <- function(mapping = NULL,
                           model = NULL,
                           cache = TRUE,
                           inherit.aes = TRUE) {
-  asset <- glyph_ai(
+  asset <- generate_glyph_for_geom(
     prompt = prompt,
     style = style,
     model = model,
@@ -73,4 +73,80 @@ geom_point_ai <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(asset = asset, ...)
   )
+}
+
+CHROMA_KEY_PROMPT_FRAGMENT <- paste(
+  "perfectly flat solid #00ff00 chroma-key background for background removal",
+  "background must be one uniform color with no shadows, gradients, texture, reflections, floor plane, or lighting variation",
+  "keep the subject fully separated from the background with crisp edges and generous padding",
+  "do not use #00ff00 anywhere in the subject",
+  "no cast shadow, no contact shadow, no reflection, no watermark, no text",
+  sep = ", "
+)
+
+generate_glyph_for_geom <- function(prompt,
+                                    style = NULL,
+                                    model = NULL,
+                                    cache = TRUE,
+                                    width = 1024L,
+                                    height = 1024L,
+                                    transparent_background = TRUE) {
+  resolved_model <- model %||% ggai_default_models()$image
+  key <- ggai_asset_cache_key(
+    caller = "geom_point_ai",
+    prompt = prompt,
+    style = style,
+    width = width,
+    height = height,
+    model = resolved_model,
+    transparent_background = transparent_background
+  )
+
+  if (cache) {
+    hit <- ggai_asset_cache_get(key)
+    if (!is.null(hit)) return(hit)
+  }
+
+  if (isTRUE(transparent_background)) {
+    final_prompt <- paste(Filter(nzchar, c(prompt, style, CHROMA_KEY_PROMPT_FRAGMENT)), collapse = ", ")
+  } else {
+    final_prompt <- paste(Filter(nzchar, c(prompt, style)), collapse = ", ")
+  }
+
+  output <- ggai_generate_image(
+    model = ggai_image_model(model),
+    prompt = final_prompt,
+    output_dir = tempdir(),
+    width = width,
+    height = height
+  )
+
+  image <- output$images[[1]]
+  if (is.null(image$path) || !file.exists(image$path)) {
+    rlang::abort("Image generation did not return a materialized file path.")
+  }
+
+  final_path <- image$path
+  if (isTRUE(transparent_background)) {
+    cleaned <- ggai_remove_background(image$path, key_color = "#00ff00")
+    final_path <- cleaned %||% image$path
+  }
+
+  metadata <- list(
+    prompt = prompt,
+    style = style,
+    width = width,
+    height = height,
+    media_type = image$media_type,
+    source_path = image$path,
+    chroma_keyed = isTRUE(transparent_background)
+  )
+
+  if (cache) {
+    return(ggai_asset_cache_put(final_path, key, metadata = metadata))
+  }
+
+  asset <- c(list(path = final_path, key = key), metadata)
+  class(asset) <- c("ggai_image_asset", "list")
+  asset
 }

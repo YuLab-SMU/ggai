@@ -13,7 +13,10 @@ ggai_generate_image(...)
 An \code{aisdk} image generation result.
 }
 \description{
-Thin ggai wrapper around \code{aisdk::generate_image()}. This is useful for
-examples that create final communication graphics directly from a prompt
-while still using ggai model resolution helpers.
+Thin ggai wrapper around \code{aisdk::generate_image()}. The OpenAI provider
+inside aisdk handles classic-vs-Responses-API routing automatically:
+when the classic \verb{/v1/images/generations} endpoint is unreachable (e.g.
+an OpenAI-compatible proxy that only serves the newer Responses API),
+aisdk falls back to \code{POST /v1/responses} with the \code{image_generation}
+tool. ggai doesn't need to know about either route.
 }

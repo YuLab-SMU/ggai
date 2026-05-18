@@ -26,11 +26,6 @@ ggai_diagram_theme <- function() {
   getOption("ggai.diagram_theme", Sys.getenv("GGAI_DIAGRAM_THEME", "paper"))
 }
 
-ggai_bio_asset_attempts <- function() {
-  raw <- getOption("ggai.bio_asset_attempts", Sys.getenv("GGAI_BIO_ASSET_ATTEMPTS", "1"))
-  max(1L, as.integer(raw))
-}
-
 ggai_figure_resolution <- function() {
   raw <- getOption("ggai.figure_resolution", Sys.getenv("GGAI_FIGURE_RESOLUTION", "2048x1365"))
   parts <- strsplit(raw, "x", fixed = TRUE)[[1]]

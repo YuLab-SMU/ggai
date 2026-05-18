@@ -36,24 +36,13 @@ export(ggai_load_env)
 # ---- Image generation (provider thin-wrappers) ---------------------------
 export(ggai_generate_image)
 export(ggai_edit_image)
+export(ggai_remove_background)
 export(evaluate_figure_candidate)
 export(ggai_capability_status)
 
 # ---- Figure polish (whole-image redraw with reference) -------------------
 export(polish_figure)
 export(prepare_polish_bundle)
-
-# ---- Diagram authoring ---------------------------------------------------
-export(ggdiagram)
-export(add_diagram_spec)
-export(prepare_hybrid_diagram_spec)
-
-# ---- Glyph asset generation ----------------------------------------------
-export(glyph_ai)
-
-# ---- Bio asset generation ------------------------------------------------
-export(bio_asset_spec)
-export(generate_bio_asset)
 
 # ---- Layout / composition ------------------------------------------------
 export(compose_plots)

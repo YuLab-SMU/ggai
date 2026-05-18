@@ -19,6 +19,6 @@ Returns the three tools that ggai contributes to the agent surface,
 wrapping the Layer 2 primitives \code{ggai_execute_and_capture()},
 \code{ggai_validate_artifact()}, and \code{ggai_save_artifact()}. All three share a
 state environment so the agent can chain
-\code{execute_r} → \code{validate_artifact} → \code{save_artifact} without passing the
+\code{execute_r} -> \code{validate_artifact} -> \code{save_artifact} without passing the
 artifact around by id.
 }

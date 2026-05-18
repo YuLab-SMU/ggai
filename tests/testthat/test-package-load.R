@@ -16,13 +16,12 @@ test_that("ggai exports the post-P2 prototype entry points", {
   expect_true(exists("ggai_create_verb_tools", envir = ns, inherits = FALSE))
 
   # Surviving public utilities
-  expect_true(exists("ggdiagram", envir = ns, inherits = FALSE))
-  expect_true(exists("glyph_ai", envir = ns, inherits = FALSE))
   expect_true(exists("prepare_polish_bundle", envir = ns, inherits = FALSE))
   expect_true(exists("polish_figure", envir = ns, inherits = FALSE))
+  expect_true(exists("ggai_remove_background", envir = ns, inherits = FALSE))
 })
 
-test_that("doomed-in-P2 entry points are gone", {
+test_that("removed pre-agent entry points are gone", {
   ns <- asNamespace("ggai")
   expect_false(exists("geom_ai", envir = ns, inherits = FALSE))
   expect_false(exists("gg_edit", envir = ns, inherits = FALSE))
@@ -31,4 +30,12 @@ test_that("doomed-in-P2 entry points are gone", {
   expect_false(exists("ggai_agent_run", envir = ns, inherits = FALSE))
   expect_false(exists("compile_figure_prompt", envir = ns, inherits = FALSE))
   expect_false(exists("generate_final_figure", envir = ns, inherits = FALSE))
+  # Pre-agent specialised entry points removed entirely (not just unexported)
+  expect_false(exists("ggdiagram", envir = ns, inherits = FALSE))
+  expect_false(exists("glyph_ai", envir = ns, inherits = FALSE))
+  expect_false(exists("bio_asset_spec", envir = ns, inherits = FALSE))
+  expect_false(exists("generate_bio_asset", envir = ns, inherits = FALSE))
+  expect_false(exists("add_diagram_spec", envir = ns, inherits = FALSE))
+  expect_false(exists("prepare_hybrid_diagram_spec", envir = ns, inherits = FALSE))
+  expect_false(exists("bio_asset_presets", envir = ns, inherits = FALSE))
 })

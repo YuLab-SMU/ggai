@@ -4,47 +4,50 @@ ggai_cache_dir <- function() {
   dir
 }
 
-glyph_cache_key <- function(prompt,
-                            style = NULL,
-                            width = 256,
-                            height = 256,
-                            model = NULL,
-                            transparent_background = TRUE) {
-  digest::digest(list(
-    prompt = prompt,
-    style = style,
-    width = width,
-    height = height,
-    model = model %||% ggai_default_models()$image,
-    transparent_background = transparent_background
-  ))
+file_ext_or <- function(path, default = "png") {
+  ext <- tools::file_ext(path %||% "")
+  if (!nzchar(ext)) default else ext
 }
 
-glyph_cache_path <- function(key, ext = "png") {
+# Hash arbitrary named inputs into a stable cache key. Callers decide what
+# goes into the key; the cache layer is agnostic to prompt/style/etc.
+ggai_asset_cache_key <- function(...) {
+  digest::digest(list(...))
+}
+
+ggai_asset_cache_path <- function(key, ext = "png") {
   file.path(ggai_cache_dir(), paste0(key, ".", ext))
 }
 
-glyph_metadata_path <- function(key) {
+ggai_asset_metadata_path <- function(key) {
   file.path(ggai_cache_dir(), paste0(key, ".json"))
 }
 
-read_cached_glyph <- function(key) {
-  meta_path <- glyph_metadata_path(key)
-  if (!file.exists(meta_path)) {
-    return(NULL)
-  }
+ggai_asset_cache_get <- function(key) {
+  meta_path <- ggai_asset_metadata_path(key)
+  if (!file.exists(meta_path)) return(NULL)
 
   meta <- jsonlite::fromJSON(meta_path, simplifyVector = FALSE)
-  if (!is.null(meta$path) && file.exists(meta$path)) {
-    class(meta) <- c("ggai_glyph_asset", "list")
-    return(meta)
-  }
+  if (is.null(meta$path) || !file.exists(meta$path)) return(NULL)
 
-  NULL
+  class(meta) <- c("ggai_image_asset", "list")
+  meta
 }
 
-write_cached_glyph <- function(key, asset) {
-  jsonlite::write_json(asset, glyph_metadata_path(key), auto_unbox = TRUE, pretty = TRUE)
-  class(asset) <- c("ggai_glyph_asset", "list")
+ggai_asset_cache_put <- function(source_path, key, metadata = list()) {
+  if (is.null(source_path) || !file.exists(source_path)) {
+    rlang::abort("ggai_asset_cache_put: source path does not exist.")
+  }
+
+  ext <- file_ext_or(source_path, default = "png")
+  cache_path <- ggai_asset_cache_path(key, ext = ext)
+  dir.create(dirname(cache_path), recursive = TRUE, showWarnings = FALSE)
+  if (!file.copy(source_path, cache_path, overwrite = TRUE)) {
+    rlang::abort(paste0("Failed to copy asset into cache: ", cache_path))
+  }
+
+  asset <- c(list(path = cache_path, key = key), metadata)
+  jsonlite::write_json(asset, ggai_asset_metadata_path(key), auto_unbox = TRUE, pretty = TRUE)
+  class(asset) <- c("ggai_image_asset", "list")
   asset
 }

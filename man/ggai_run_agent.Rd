@@ -22,9 +22,9 @@ ggai_run_agent(agent, goal, session = NULL, model = NULL, max_steps = 10L, ...)
 \value{
 A list with the aisdk result and the produced artifact:
 \itemize{
-\item \code{result} — the value returned by \code{agent$run()}.
-\item \code{artifact} — the most-recent \code{ggai_artifact} from the shared state, or \code{NULL} if the agent didn't produce one.
-\item \code{artifacts} — all artifacts produced this run, indexed by id.
+\item \code{result} -- the value returned by \code{agent$run()}.
+\item \code{artifact} -- the most-recent \code{ggai_artifact} from the shared state, or \code{NULL} if the agent didn't produce one.
+\item \code{artifacts} -- all artifacts produced this run, indexed by id.
 }
 }
 \description{

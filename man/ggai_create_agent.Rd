@@ -17,7 +17,7 @@ default returned by \code{ggai_default_models()$language}.}
 
 \item{skills}{Optional override for the skill search path. Defaults to
 \code{system.file("skills", package = "ggai")} (no skills are loaded when the
-directory does not exist yet — agent runs with verb tools only).}
+directory does not exist yet -- agent runs with verb tools only).}
 
 \item{extra_tools}{Optional list of additional \code{Tool} objects to append.}
 

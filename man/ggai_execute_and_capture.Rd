@@ -7,7 +7,7 @@
 ggai_execute_and_capture(
   code,
   env = NULL,
-  format = c("png", "svg"),
+  format = c("png", "svg", "html"),
   engine_hint = NULL,
   output_dir = tempdir(),
   prefix = "artifact",
@@ -24,7 +24,12 @@ ggai_execute_and_capture(
 \item{env}{Optional environment in which to evaluate \code{code}. Defaults to a
 fresh child of \code{parent.frame()}.}
 
-\item{format}{Output format, one of \code{"png"} or \code{"svg"}.}
+\item{format}{Output format. One of \code{"png"} or \code{"svg"} for the graphics
+engines (\code{ggplot}, \code{grid}, \code{base}, \code{composite}, \code{complex_heatmap},
+\code{circlize}). For \code{htmlwidget}, \code{"html"} is always supported; \code{"png"}
+additionally requires the optional \code{webshot2} package. When \code{"png"} is
+requested without webshot2, the artifact is saved as HTML instead
+(with a warning) and \code{rendered} will hold the HTML path.}
 
 \item{engine_hint}{Optional engine override. Use when auto-detection is
 known to fail (e.g. \code{grid::grid.draw(grob)} that returns \code{NULL}).}
