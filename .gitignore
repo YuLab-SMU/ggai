@@ -60,12 +60,21 @@ token.*
 # Generated outputs and nested repo
 demo/
 demo_outputs/
+outputs/
 ggai.Rcheck/
 ..Rcheck/
 paperbanana/
 .baoyu-skills/
 tests/testthat/Rplots.pdf
 Rplots.pdf
+
+# Quarto rendered products (keep .qmd source only)
+dev_docs/*.html
+dev_docs/*.pdf
+dev_docs/*_files/
+
+# Presentation binaries
+*.pptx
 
 # Build artifacts and archives
 *.tar
