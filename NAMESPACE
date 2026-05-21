@@ -4,9 +4,7 @@
 # ---- S3 methods ----------------------------------------------------------
 S3method(plot,ggai_polished_figure_result)
 S3method(print,ggai_polished_figure_result)
-S3method(print,ggai_layout_spec)
 S3method(print,ggai_artifact)
-S3method(render_layout,ggai_layout_spec)
 
 # ---- Layer 2: artifact core (engine-agnostic) ----------------------------
 export(ggai_artifact)
@@ -44,10 +42,7 @@ export(ggai_capability_status)
 export(polish_figure)
 export(prepare_polish_bundle)
 
-# ---- Layout / composition ------------------------------------------------
-export(compose_plots)
-export(save_fixed_plot)
-export(render_layout)
+# ---- ggplot extension ----------------------------------------------------
 export(geom_point_ai)
 
 # ---- Local R inspection helpers ------------------------------------------
