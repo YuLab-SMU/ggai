@@ -1,0 +1,29 @@
+{
+  "p_adjust_gradient": {
+    "low": "#F22A1F",
+    "high": "#4C57B8"
+  },
+  "panel_background": "#FFFFFF",
+  "gridline_style": {
+    "major": {
+      "color": "#E5E5E5",
+      "type": "solid",
+      "size": "thin"
+    },
+    "minor": {
+      "color": "#F2F2F2",
+      "type": "solid",
+      "size": "very thin"
+    }
+  },
+  "axis_text_font_family_hint": "sans-serif / Arial-like ggplot default",
+  "facet_strip_styling": {
+    "fill": "#D9D9D9",
+    "border_color": "#666666",
+    "text_color": "#111111",
+    "text_style": "plain, centered"
+  },
+  "legend_placement": "right side, outside the panels; count legend above the p.adjust colorbar",
+  "overall_aesthetic_notes": "Clean publication-style ggplot2 theme_bw look: white panels, subtle grey gridlines, thin dark panel borders, compact facets, restrained typography, and a minimalist Nature-style layout.",
+  "y_axis": ""
+}

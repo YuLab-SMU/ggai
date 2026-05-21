@@ -1,0 +1,260 @@
+---
+title: "ggai Case D · 跨论文 schematic 合成"
+subtitle: "把 5 篇 Nature Aging Figure 1 抽象成一张元层级综述图"
+author: "Young Sherlock"
+date: 2026-05-18
+date-format: "YYYY-MM-DD"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    theme: cosmo
+    fig-align: center
+    fig-cap-location: bottom
+    embed-resources: true
+  pdf:
+    documentclass: article
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    pdf-engine: xelatex
+    CJKmainfont: "PingFang SC"
+    mainfont: "Helvetica Neue"
+    monofont: "Menlo"
+    fontsize: 11pt
+    geometry:
+      - margin=2.2cm
+      - top=2.5cm
+    fig-align: center
+    fig-cap-location: bottom
+execute:
+  echo: true
+  eval: false
+---
+
+# 这份文档为什么存在 {#sec-why}
+
+姐妹文档 [`ggai-advanced-cases`](./ggai-advanced-cases.pdf) 收录的 Case A/B/C
+都是**单图工作流**——以一篇论文、一张参考图为锚，让 ggai 做风格迁移、教学注解或
+演讲精简。这些场景虽然实用，但**信息密度还停留在「一图一图改」**。
+
+**Case D 把 ggai 推到下一层**：从 5 篇 Nature Aging 文章中**抽取共同的因果骨架**，
+合成一张**元层级**示意图——这种图通常是综述作者半个月的工作，要么自己读 50 篇文章
+归纳，要么委托 BioRender designer 重新绘制。
+
+::: {.callout-important}
+## 与 Case A/B/C 的区别
+
+| Case A/B/C | Case D（本文档） |
+|---|---|
+| 输入：**一张**参考图 | 输入：**5 篇** abstract |
+| ggai 做：风格 / 注释 / 简化 | ggai 做：**跨论文抽象 + 概念合成** |
+| 调用：`ggai_edit_image()`（有 reference image） | 调用：`ggai_generate_image()`（纯文本 prompt） |
+| 输出：单张迁移图 | 输出：**meta-schematic + paper×stage matrix** |
+| 革命：把 designer 1-2 小时压成 5 秒 | 革命：把综述作者**半个月**压成 5 分钟 |
+
+:::
+
+---
+
+# 5 篇论文：因果骨架的抽取 {#sec-papers}
+
+我们选了 5 篇 *Nature Aging*（含 1 篇 *Journal of Translational Medicine*）
+关于「衰老 → 组织退化」的文章。乍看每篇研究的器官、技术、分子都不同；细读 abstract
+会发现**它们都在讲同一个故事**：
+
+> **某种 aging stressor**，触发某个**上游分子失衡**，激活**下游通路**，最终
+> 导致**系统性疾病/功能丧失**。
+
+我们把这条因果链画成 4 列表格，每行对应一篇论文：
+
+| 论文 | Aging stressor | Molecular trigger | Pathway | Phenotype |
+|---|---|---|---|---|
+| **#14 MASLD** (Du et al. 2024 *Nat Aging*) | 衰老 + 代谢应激 | 铁离子过载 + 脂质过氧化 | **铁死亡**（GPX4/ACSL4/HMOX1） | MASLD + 肝纤维化 |
+| **#16 Sarcopenia** (Zuo et al. 2025 *Nat Aging*) | 骨骼肌随龄退化 | BCAA 累积（PPM1K loss） | **mTOR 失调** + BCAA 分解代谢 | 肌少症 + 衰弱 |
+| **#20 Parkinson** (Gan et al. 2025 *Nat Aging*) | 15 年前驱期 + 老化 | 血浆蛋白漂移（ITGAV/BAG3/HPGDS） | **整合素 / 脂质 / 免疫**信号 | 帕金森病发病 |
+| **#21 Blood / HSC** (Zeng et al. 2024 *Nat Aging*) | 造血干细胞自我更新衰退 | 尿苷缺失 + 谷氨酸偏移 | **FoxO 信号** + 慢性炎症 | 髓系倾斜 + HSC 耗竭 |
+| **#37 Mouse brain** (Qin et al. 2025 *J Transl Med*) | 区域特异性脑衰老轨迹 | 时空免疫漂移 | **PRC2 / H3K27me3** + inflammaging | 认知衰退 + 神经退行 |
+
+**抽象出的公分母**：5 篇都在反复证明一件事——`代谢失衡 + 免疫激活 + 细胞死亡`
+是衰老促退化的**核心轴**。这就是 meta-schematic 底部那条橙色横条要传达的信息。
+
+---
+
+# ggai 一次调用 {#sec-ggai}
+
+## 生成代码
+
+整个 meta-schematic 用一次 `ggai_generate_image()` 调用产出（**不是 `_edit_image()`**——
+我们没有单张参考图，只有 5 个 abstract 抽出的概念结构）。
+
+```r
+suppressMessages(devtools::load_all(quiet = TRUE))
+ggai_load_env()
+
+out <- ggai_generate_image(
+  model      = ggai_image_model(),
+  prompt     = "
+    A clean, publication-ready BioRender-style scientific schematic for a
+    Nature Aging-style review paper. Title at the top:
+    'Aging stressor --> molecular trigger --> tissue dysfunction'.
+
+    Five parallel vertical lanes (A-E), one per paper. Each lane has FOUR rows:
+      ROW 1: tissue icon (liver / muscle / brain / blood cells / mouse brain)
+      ROW 2: upstream trigger (Fe2+ + ROS / BCAA molecules / alpha-synuclein /
+             uridine deficit / spatiotemporal clock)
+      ROW 3: pathway pill (Ferroptosis / mTOR / Integrin signalling /
+             FoxO signalling / PRC2 inflammaging)
+      ROW 4: phenotype (MASLD / sarcopenia / Parkinson / HSC exhaustion /
+             cognitive decline)
+
+    Above each lane: paper tag (#14 MASLD, #16 Sarcopenia, #20 Parkinson,
+    #21 Blood/HSC, #37 Mouse brain).
+
+    Bottom: a single orange horizontal banner stripe across all five lanes:
+    'Common theme: metabolic-immune-cell-death axis'.
+
+    BioRender palette, white background, clean serif headings, no shadows.
+  ",
+  output_dir = tempdir(),
+  width      = 1536,
+  height     = 1024,
+  quality    = "high"
+)
+
+file.copy(
+  out$images[[1]]$path,
+  "dev_docs/figures/case-D/meta-aging-schematic.png",
+  overwrite = TRUE
+)
+```
+
+完整可复现脚本：[`dev_docs/scripts/build-case-D-meta-schematic.R`](scripts/build-case-D-meta-schematic.R)
+（含 `tryCatch` 5xx 重试逻辑）。
+
+## 调用统计
+
+| 指标 | 数值 |
+|---|---|
+| API 调用次数 | **1**（首次即成功，无重试） |
+| 单次耗时 | ~79 s |
+| 单次成本 | ~\$0.10（gpt-image-2 1536×1024 high） |
+
+---
+
+# 产出 {#sec-output}
+
+## 主图：meta-aging schematic（ggai 生成）
+
+![**Meta-schematic**（ggai 一次 `ggai_generate_image()` 产出）：5 条平行 lane
+分别代表 5 篇论文，每条 lane 从上到下：tissue icon → upstream trigger →
+downstream pathway → phenotype。顶部统一标题 `Aging stressor → molecular
+trigger → tissue dysfunction`，底部橙色横条 `Common theme:
+metabolic-immune-cell-death axis`。BioRender 风格，白底，清爽配色。](figures/case-D/meta-aging-schematic.png){#fig-d-meta width=100%}
+
+## 辅图：paper × stage mapping matrix（ggplot 生成）
+
+![**Paper × stage 映射矩阵**（纯 ggplot2 / 无 AI）：5 行论文 × 4 列阶段。
+每个 cell 写明该论文在该阶段的具体内容。这张表是 meta-schematic 的**结构骨架**——
+schematic 描绘"长什么样"，矩阵描绘"具体是什么"，两者互补。](figures/case-D/paper-mapping-matrix.png){#fig-d-matrix width=100%}
+
+完整 R 代码：[`dev_docs/scripts/build-case-D-mapping-matrix.R`](scripts/build-case-D-mapping-matrix.R)。
+
+---
+
+# 为什么这算革命？ {#sec-revolution}
+
+## 传统做法
+
+要做这种**综述 lead figure**，作者通常的工作量：
+
+1. **读论文**：50 篇起步，挑出真正能撑起"aging multi-omics"框架的 5-10 篇
+   ——大约 1 周
+2. **抽取共同骨架**：在 OneNote / 白板上反复重组，找到"stressor-trigger-pathway-
+   phenotype"这条共同结构 —— 1-2 天
+3. **画图**：
+   - 自己用 Illustrator / OmniGraffle，1 天
+   - 或者委托 BioRender designer：3-5 天 + $300-800
+
+**总时长：约 2 周**，**成本数百到上千美金**。
+
+## ggai 做法
+
+| 步骤 | 时长 |
+|---|---|
+| 用户读 5 篇 abstract，整理成表格（@sec-papers） | 30 min |
+| 把表格 + 期望布局喂进 `ggai_generate_image()` prompt | 5 min |
+| API 调用 | 79 s |
+| 读图验证（Read PNG） | 30 s |
+| 失败时改 prompt 重试 | 0-2 次 |
+
+**总时长：约 35 min**，**成本 ~$0.10**。
+
+## 革命性差异
+
+| 工具 | 能做这件事吗？ |
+|---|---|
+| 单纯 ChatGPT 网页（文本输出） | ⚠️ 能给文字描述，**给不出像样的图** |
+| 单纯 DALL-E / Midjourney | ⚠️ 风格好看，**抽不出论文的因果骨架**——它不知道 ferroptosis ≠ apoptosis |
+| BioRender 模板 | ✗ 没有"跨论文合成"模板，每个 element 都要手摆 |
+| 委托 designer | ✓ 但 **3-5 天 + $500** |
+| **ggai** | **✓ 35 min + $0.10**，**~700× 加速** |
+
+::: {.callout-tip}
+## 关键能力：自然语言 → 结构化 schematic
+
+`ggai_generate_image()` 配合 `gpt-image-2`，做到了一件 BioRender 做不到的事：
+**把"5 lanes × 4 rows + 顶部标题 + 底部横条"这种结构化布局指令，直接翻译成
+publication-quality 图像**。这不是单纯"画一张图"，而是**把研究者大脑里的概念图谱
+外显化**。
+:::
+
+---
+
+# 应用场景 {#sec-applications}
+
+这个工作流的真正威力，在它的**可扩展性**：
+
+- **综述论文 lead figure**：5 篇 → 50 篇都行，prompt 改一下 paper list 即可
+- **基金本子里的总览图**：把申请人 5 年内的代表作做成一张 schematic 讲故事
+- **课程导论 slide**：把一个研究方向的 N 篇关键论文画成"全景图"
+- **学位论文 introduction**：5 章每章对应一篇核心文献，画成 chapter overview
+- **学术博客 / Twitter thread**：用一张图引爆一个 thread，附 link 到 5 篇 paper
+
+## 进一步扩展（路线图）
+
+| 扩展 | 实现思路 |
+|---|---|
+| **自动读 abstract**：给路径，agent 自动提取 stressor/trigger/pathway/phenotype | 加 `extract_paper_skeleton()` 工具调用 |
+| **支持 N>5 篇**：自适应 lane 宽度 | prompt 模板化 + post-processing crop |
+| **不同综述风格**：Nature / Cell / Science / 中文综述 | 改 prompt 里的 style anchor |
+| **多语言**：中文 / 英文 / 日文 schematic | gpt-image-2 已支持 multi-lingual text |
+
+---
+
+# 结语 {#sec-coda}
+
+Case D 把 ggai 的能力边界推到了一个新的层次：**它不只是一个"画图工具"，更是一个
+"概念合成器"**。当研究者把脑中抽象的因果骨架用自然语言描述清楚时，ggai 能在 80 秒
+内把它变成 publication-ready 的 schematic。
+
+> 这意味着：**综述作者的瓶颈不再是绘图，而是抽象本身**。
+
+而抽象本身，是研究者必须自己做的事——ggai 帮你跑完后面 99% 的路。
+
+::: {.callout-note}
+## 复现
+
+```bash
+# 1. meta-schematic（需要 OPENAI_API_KEY）
+Rscript dev_docs/scripts/build-case-D-meta-schematic.R
+
+# 2. paper × stage matrix（纯 ggplot2）
+Rscript dev_docs/scripts/build-case-D-mapping-matrix.R
+
+# 3. 渲染
+quarto render dev_docs/ggai-case-D-cross-paper-synthesis.qmd
+```
+:::

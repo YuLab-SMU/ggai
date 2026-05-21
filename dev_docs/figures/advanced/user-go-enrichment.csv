@@ -1,0 +1,15 @@
+"Description","Count","GeneRatio","p.adjust"
+"Oxidative phosphorylation",48,0.19,6.30957344480194e-12
+"Fatty acid metabolism",41,0.16,3.16227766016838e-10
+"Glutathione metabolism",22,0.09,1.58489319246111e-05
+"Ferroptosis",30,0.12,1.99526231496888e-07
+"Steroid biosynthesis",19,0.08,7.94328234724282e-05
+"Cytokine signaling",55,0.22,5.01187233627271e-14
+"Cell cycle G2/M transition",33,0.13,6.30957344480193e-08
+"Antigen processing",28,0.11,3.16227766016838e-06
+"Extracellular matrix organization",44,0.18,5.01187233627271e-09
+"TGF-beta signaling",24,0.1,7.94328234724282e-06
+"MAPK signaling pathway",62,0.25,3.98107170553499e-17
+"PI3K-Akt signaling",39,0.16,1e-09
+"Carbohydrate metabolism",27,0.11,1.25892541179417e-06
+"Drug metabolism CYP450",18,0.07,0.000199526231496888

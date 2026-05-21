@@ -1,0 +1,351 @@
+{
+  "version": 1,
+  "mode": "whole_image_redraw",
+  "layer_mode": "ggplot_layered_redraw",
+  "instruction": "Redraw as a publication-ready scientific scatter plot with a light pastel palette, larger axis labels, subtle gridlines, and a clean white background. Preserve all data positions, axis ranges, point shapes by species, and the title.",
+  "source": {
+    "input_class": ["ggplot2::ggplot", "ggplot", "ggplot2::gg", "S7_object", "gg"],
+    "source_kind": "ggplot"
+  },
+  "render": {
+    "width_px": 1536,
+    "height_px": 1024,
+    "dpi": 300
+  },
+  "references": {
+    "base_plot": "dev_docs/figures/demo-polish_base_plot.png",
+    "geometry_overlay": "dev_docs/figures/demo-polish_geometry_overlay.png",
+    "layout_overlay": "dev_docs/figures/demo-polish_layout_overlay.png"
+  },
+  "layer_manifest": {
+    "version": 1,
+    "ordering": "bottom_to_top",
+    "canvas": {
+      "width": 1536,
+      "height": 1024,
+      "composite_background": "#ffffff"
+    },
+    "ggplot_reference_layers": [
+      {
+        "order": 1,
+        "name": "Base ggplot render",
+        "role": "ggplot_composite",
+        "file": "dev_docs/figures/demo-polish_base_plot.png",
+        "fit": "cover",
+        "opacity": 1,
+        "locked": true,
+        "ggplot_role": "final plot composition",
+        "guidance": "Use as the factual composite reference for data, labels, scales, guide placement, theme, and chart text."
+      },
+      {
+        "order": 2,
+        "name": "Data geometry overlay",
+        "role": "ggplot_data_layer_anchor",
+        "file": "dev_docs/figures/demo-polish_geometry_overlay.png",
+        "fit": "cover",
+        "opacity": 1,
+        "locked": true,
+        "ggplot_role": "geom/stat position anchor",
+        "guidance": "Use as an alignment layer for geoms and stats. Preserve mark positions, point-cloud shape, trajectories, bars, and relative spatial relationships."
+      },
+      {
+        "order": 3,
+        "name": "Guide and layout overlay",
+        "role": "ggplot_layout_anchor",
+        "file": "dev_docs/figures/demo-polish_layout_overlay.png",
+        "fit": "cover",
+        "opacity": 1,
+        "locked": true,
+        "ggplot_role": "theme/guide/facet/label layout anchor",
+        "guidance": "Use as a layout guide for title, subtitle, panels, axes, legends, captions, facets, and data zones."
+      }
+    ],
+    "ggplot_output_roles": [
+      {
+        "order": 1,
+        "name": "Theme surface",
+        "role": "theme",
+        "guidance": "Background, grid, margins, spacing, and surface treatment. Do not obscure data."
+      },
+      {
+        "order": 2,
+        "name": "Data layers",
+        "role": "geoms_and_stats",
+        "guidance": "Faithful redrawn geoms and statistical summaries. Preserve relative positions, group identity, ordering, and scale logic."
+      },
+      {
+        "order": 3,
+        "name": "Scales and guides",
+        "role": "scales_guides_axes",
+        "guidance": "Readable axes, ticks, scales, legends, and guide hierarchy with the same chart semantics."
+      },
+      {
+        "order": 4,
+        "name": "Labels and annotations",
+        "role": "labels_annotations",
+        "guidance": "Titles, labels, callouts, and explanatory notes attached to the same chart regions."
+      },
+      {
+        "order": 5,
+        "name": "Communication polish",
+        "role": "visual_hierarchy",
+        "guidance": "Hierarchy, typography, emphasis, and optional explainer details that do not change the data story."
+      }
+    ],
+    "layout_regions": {
+      "title": {
+        "label": "title",
+        "xmin": 0.2968,
+        "xmax": 0.2968,
+        "ymin": 0.5704,
+        "ymax": 0.9005,
+        "x": 0.2968,
+        "y": 0.7354,
+        "width": 0,
+        "height": 0.3301
+      },
+      "subtitle": {
+        "label": "subtitle",
+        "xmin": 0.2968,
+        "xmax": 0.2968,
+        "ymin": 0.5704,
+        "ymax": 0.5704,
+        "x": 0.2968,
+        "y": 0.5704,
+        "width": 0,
+        "height": 0
+      },
+      "caption": {
+        "label": "caption",
+        "xmin": 0.2968,
+        "xmax": 0.2968,
+        "ymin": 0.0995,
+        "ymax": 0.0995,
+        "x": 0.2968,
+        "y": 0.0995,
+        "width": 0,
+        "height": 0
+      },
+      "data_panel": {
+        "label": "data_panel",
+        "xmin": 0.2968,
+        "xmax": 0.2968,
+        "ymin": 0.5704,
+        "ymax": 0.5704,
+        "x": 0.2968,
+        "y": 0.5704,
+        "width": 0,
+        "height": 0
+      },
+      "legend": {
+        "label": "legend",
+        "xmin": 0.0462,
+        "xmax": 0.9538,
+        "ymin": 0.0995,
+        "ymax": 0.5704,
+        "x": 0.5,
+        "y": 0.3349,
+        "width": 0.9077,
+        "height": 0.4708
+      },
+      "x_axis": {
+        "label": "x_axis",
+        "xmin": 0.2968,
+        "xmax": 0.2968,
+        "ymin": 0.0995,
+        "ymax": 0.5704,
+        "x": 0.2968,
+        "y": 0.3349,
+        "width": 0,
+        "height": 0.4708
+      },
+      "y_axis": {
+        "label": "y_axis",
+        "xmin": 0.0462,
+        "xmax": 0.2968,
+        "ymin": 0.5704,
+        "ymax": 0.5704,
+        "x": 0.1715,
+        "y": 0.5704,
+        "width": 0.2506,
+        "height": 0
+      }
+    },
+    "export_note": "This is a ggplot-native layer contract for image redraw. It follows ggplot's own layer, scale, guide, theme, label, and annotation model."
+  },
+  "plot_context": {
+    "mapped_aes": ["x", "y", "colour", "shape"],
+    "mapping": {
+      "x": "Sepal.Length",
+      "y": "Sepal.Width",
+      "colour": "Species",
+      "shape": "Species"
+    },
+    "geoms": "point",
+    "layers": {
+      "geom_point": {
+        "geom": "point",
+        "stat": "identity",
+        "position": "identity",
+        "mapping": []
+      }
+    },
+    "labels": {
+      "colour": "Species",
+      "shape": "Species",
+      "x": "Sepal length (cm)",
+      "y": "Sepal width (cm)",
+      "title": "Iris sepal dimensions by species"
+    },
+    "facet": "FacetNull",
+    "coord": "CoordCartesian"
+  },
+  "data_contract": {
+    "rows": 150,
+    "columns": ["numeric", "numeric", "numeric", "numeric", "factor"],
+    "mappings": {
+      "x": "Sepal.Length",
+      "y": "Sepal.Width",
+      "colour": "Species",
+      "shape": "Species"
+    },
+    "mapped_columns": {
+      "x": {
+        "column": "Sepal.Length",
+        "summary": {
+          "type": "numeric",
+          "n": 150,
+          "min": 4.3,
+          "max": 7.9
+        }
+      },
+      "y": {
+        "column": "Sepal.Width",
+        "summary": {
+          "type": "numeric",
+          "n": 150,
+          "min": 2,
+          "max": 4.4
+        }
+      },
+      "colour": {
+        "column": "Species",
+        "summary": {
+          "type": "factor",
+          "n": 150,
+          "levels": ["setosa", "versicolor", "virginica"]
+        }
+      },
+      "shape": {
+        "column": "Species",
+        "summary": {
+          "type": "factor",
+          "n": 150,
+          "levels": ["setosa", "versicolor", "virginica"]
+        }
+      }
+    }
+  },
+  "layer_summaries": [
+    {
+      "index": 1,
+      "geom": "point",
+      "rows": 150,
+      "columns": ["x", "y", "colour", "shape", "PANEL", "group", "fill", "size", "alpha", "stroke"],
+      "panel_count": 1,
+      "group_count": 3,
+      "spatial_bounds": {
+        "x": {
+          "min": 4.3,
+          "max": 7.9
+        },
+        "y": {
+          "min": 2,
+          "max": 4.4
+        }
+      }
+    }
+  ],
+  "layout_regions": {
+    "title": {
+      "label": "title",
+      "xmin": 0.2968,
+      "xmax": 0.2968,
+      "ymin": 0.5704,
+      "ymax": 0.9005,
+      "x": 0.2968,
+      "y": 0.7354,
+      "width": 0,
+      "height": 0.3301
+    },
+    "subtitle": {
+      "label": "subtitle",
+      "xmin": 0.2968,
+      "xmax": 0.2968,
+      "ymin": 0.5704,
+      "ymax": 0.5704,
+      "x": 0.2968,
+      "y": 0.5704,
+      "width": 0,
+      "height": 0
+    },
+    "caption": {
+      "label": "caption",
+      "xmin": 0.2968,
+      "xmax": 0.2968,
+      "ymin": 0.0995,
+      "ymax": 0.0995,
+      "x": 0.2968,
+      "y": 0.0995,
+      "width": 0,
+      "height": 0
+    },
+    "data_panel": {
+      "label": "data_panel",
+      "xmin": 0.2968,
+      "xmax": 0.2968,
+      "ymin": 0.5704,
+      "ymax": 0.5704,
+      "x": 0.2968,
+      "y": 0.5704,
+      "width": 0,
+      "height": 0
+    },
+    "legend": {
+      "label": "legend",
+      "xmin": 0.0462,
+      "xmax": 0.9538,
+      "ymin": 0.0995,
+      "ymax": 0.5704,
+      "x": 0.5,
+      "y": 0.3349,
+      "width": 0.9077,
+      "height": 0.4708
+    },
+    "x_axis": {
+      "label": "x_axis",
+      "xmin": 0.2968,
+      "xmax": 0.2968,
+      "ymin": 0.0995,
+      "ymax": 0.5704,
+      "x": 0.2968,
+      "y": 0.3349,
+      "width": 0,
+      "height": 0.4708
+    },
+    "y_axis": {
+      "label": "y_axis",
+      "xmin": 0.0462,
+      "xmax": 0.2968,
+      "ymin": 0.5704,
+      "ymax": 0.5704,
+      "x": 0.1715,
+      "y": 0.5704,
+      "width": 0.2506,
+      "height": 0
+    }
+  },
+  "semantic_constraints": ["Preserve axis direction, scale logic, and the relative positions of all major marks.", "Do not invent, remove, or merge visible data groups, categories, clusters, or standout outliers.", "Keep all visible text logically attached to the same chart regions even if the styling is redrawn.", "Preserve point-cloud shape, relative density, and any isolated outlier points.", "Honor this requested polish direction without breaking the data semantics: Redraw as a publication-ready scientific scatter plot with a light pastel palette, larger axis labels, subtle gridlines, and a clean white background. Preserve all data positions, axis ranges, point shapes by species, and the title."],
+  "allow_redraw": ["Redraw the full figure from scratch rather than tracing the original pixels.", "Improve typography, spacing, annotation styling, color treatment, shading, and surface finish.", "Use richer illustration treatment, cleaner composition, and more intentional visual hierarchy.", "You may restyle legends, labels, icons, and decorative surfaces as long as the figure remains semantically faithful."],
+  "prompt_path": "dev_docs/figures/demo-polish_prompt.txt"
+}
