@@ -426,12 +426,37 @@ The agent's plotly PNG includes the plotly modebar icons in the top-right becaus
 
 ---
 
+### Documentation patch: README architecture overview
+
+**Status:** `[x]` — completed 2026-05-18
+
+**Files**
+- Create: `man/figures/ggai-architecture-overview.png`
+- Modify: `README.md`
+- Create: `dev_logs/2026-05-18-readme-architecture-figure.md`
+
+**Intent**
+- Add a package-level architecture visual that makes the refactored system understandable before readers enter setup or usage details.
+
+**Checklist**
+- [x] Select the white-background architecture render that reflects the current `ggai` package structure.
+- [x] Save the figure under `man/figures/` so the README uses the same package-level asset convention as its existing top-of-page artwork.
+- [x] Insert an `Architecture` section near the top of `README.md`, between the product summary and Quick Start.
+- [x] Verify the asset path and README reference with `test -f man/figures/ggai-architecture-overview.png` and `rg -n "ggai-architecture-overview" README.md`.
+
+**Verification**
+- `test -f man/figures/ggai-architecture-overview.png`
+- `rg -n "ggai-architecture-overview" README.md`
+
+---
+
 ## Scope changes
 
 _(append-only; never edit completed tasks above)_
 
 - **2026-05-17** — P1 split: the four "Refactor" file targets (`figure_polish.R`, `figure_generation.R`, `glyph_assets.R`, `compiler.R`) and the "Lift image/glyph/compile primitives" sub-task are moved to P2. Rationale: P1 was framed as "additive only — do not change existing files"; renaming existing exports to the `ggai_*` convention is naturally bundled with P2's broader API consolidation. The five new primitive files (artifact / execute / render / inspect / validate) plus their tests are the actual deliverable of P1, and they land without touching any pre-existing source.
 - **2026-05-17** — P2 scope expansion: also deleted `R/compiler.R` (only contained `compile_diagram_spec` / `compile_glyph_spec`, both spec-committer dependents), `R/spec_inspection.R` (compiled-spec helpers tied to the deleted compile pipeline), `R/acquisition_runtime.R` (1370 lines of agent-runtime data acquisition; only referenced by itself + its test), and `R/geom_ai_add.R` (the `ggplot_add.ggai_layer_request` dispatcher; without it `geom_ai()` is unusable, so `geom_ai()` was removed from `R/entrypoints.R` too). Net deletion: 13 R files (planned 9, expanded to 13). The `compile_*_spec` / `generate_final_figure` / `geom_ai` functions will return as Skill-driven helpers in P3+ if needed.
+- **2026-05-18** — Added a small documentation tail to the active refactor plan so the new README architecture figure is tracked alongside the architecture work it explains.
 
 ## Closing notes
 

@@ -26,4 +26,7 @@ See [`_template.md`](_template.md).
 
 ## Completed plans
 
-_(none yet — completed plans live in `plan/done/`)_
+- [2026-05-18 — ggai lab talk deck](done/2026-05-18-ggai-lab-talk-deck.md)
+- [2026-05-18 — ggai PPT deck](done/2026-05-18-ggai-ppt-deck.md)
+- [2026-05-18 — Introduction report case 1A reframe](done/2026-05-18-intro-report-case1a-reframe.md)
+- [2026-05-18 — Introduction report case 5 repair](done/2026-05-18-intro-report-case5-repair.md)

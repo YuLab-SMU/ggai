@@ -14,6 +14,10 @@ The intended workflow is:
 3.  make structured edits while the figure is still a `ggplot`
 4.  switch into whole-image redraw for final polish
 
+## Architecture
+
+![ggai architecture overview](man/figures/ggai-architecture-overview.png)
+
 ## Quick Start
 
 ![ggai quick start card](man/figures/ggai-quick-start-card.svg)
