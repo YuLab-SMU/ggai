@@ -30,3 +30,4 @@ See [`_template.md`](_template.md).
 - [2026-05-18 — ggai PPT deck](done/2026-05-18-ggai-ppt-deck.md)
 - [2026-05-18 — Introduction report case 1A reframe](done/2026-05-18-intro-report-case1a-reframe.md)
 - [2026-05-18 — Introduction report case 5 repair](done/2026-05-18-intro-report-case5-repair.md)
+- [2026-11-07 — Semantic SVG export, Phase 1](done/2026-11-07-semantic-svg-phase-1-skeleton.md) — superseded before work started; continued as the standalone `semsvg` package (ADR-0004).

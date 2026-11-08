@@ -20,3 +20,4 @@ See [`_template.md`](_template.md).
 | [0001](0001-aisdk-as-agent-runtime.md) | aisdk as the agent runtime | Accepted | 2026-05-17 |
 | [0002](0002-code-first-engine-agnostic-artifact.md) | Code-first engine-agnostic artifact | Accepted | 2026-05-17 |
 | [0003](0003-skills-over-tools-for-domain-knowledge.md) | Domain knowledge lives in Skills, not tool descriptions | Accepted | 2026-05-17 |
+| [0004](0004-semantic-figure-substrate-as-standalone-package.md) | The semantic figure substrate is a standalone package (semsvg) | Accepted | 2026-11-08 |
