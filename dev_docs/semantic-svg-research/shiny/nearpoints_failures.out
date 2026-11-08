@@ -1,0 +1,17 @@
+facet_wrap, click on Mazda RX4                 truth=Mazda RX4            nearPoints-> Mazda RX4
+  payload panelvar1 = 6  mapping = x:wt y:mpg panelvar1:cyl 
+  auto-infer with aes(factor(cyl)): nearPoints: `xvar` ('factor(cyl)')  not in names of input 
+geom_jitter, click on drawn point (row 8), xvar='cyl' truth=Merc 240D            nearPoints-> <none>
+  drawn x=1.342 (jittered) vs data x=1; click mapped to x=1.342
+2nd layer (hp/50, qsec), click on Mazda RX4    truth=Mazda RX4            nearPoints-> <none>
+  coordmap mapping used: wt,mpg 
+coord_polar, click on Cadillac Fleetwood       truth=Cadillac Fleetwood   nearPoints-> <none>
+  click mapped to data x=3.47 y=22.15; true wt=5.25 mpg=10.40
+patchwork, click at (150,200)                  x=0.230 y=0.497 mapping=empty
+  nearPoints(): nearPoints: not able to automatically infer `xvar` from coordinfo 
+base mfrow(1,2)                                panels=1 range.left=359 (image width 600)
+  click in left panel -> NULL (outside only panel) 
+  nearPoints w/o xvar: nearPoints: not able to automatically infer `xvar` from coordinfo 
+legend area click                              panel right edge=524; click at x=580 -> NULL (not in any panel)
+click on geom_smooth line                      rows within 5px: 2 (Hornet Sportabout, Merc 280) -- the line itself has no row
+aes(wt*1000, mpg) brushedPoints():             brushedPoints: `xvar` ('wt * 1000')  not in names of input

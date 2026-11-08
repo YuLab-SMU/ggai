@@ -1,0 +1,43 @@
+{
+  "plotResult_class": "ggplot_build_gtable",
+  "n_panels": 1,
+  "coordmap": {
+    "panels": [
+      {
+        "panel": 1,
+        "row": 1,
+        "col": 1,
+        "panel_vars": {},
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "domain": {
+          "left": 0.4,
+          "right": 3.6,
+          "bottom": -0.7,
+          "top": 14.7,
+          "discrete_limits": {
+            "x": ["4", "6", "8"]
+          }
+        },
+        "mapping": {
+          "y": null,
+          "x": "factor(cyl)"
+        },
+        "range": {
+          "left": 32.931935,
+          "right": 594.520548,
+          "bottom": 368.846473,
+          "top": 5.479452
+        }
+      }
+    ],
+    "dims": {
+      "width": 600,
+      "height": 400
+    }
+  },
+  "coordmap_error": null,
+  "error": null
+}

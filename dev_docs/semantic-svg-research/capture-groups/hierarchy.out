@@ -1,0 +1,17 @@
+figure: Weight vs fuel use 
+ ├─ panel 1  [am=0]
+ │   ├─ background + gridlines: 16 elements
+ │   ├─ layer 1 GeomPoint                     19 elements | built rows 19 | groups 1,2,3
+ │   ├─ layer 2 GeomSmooth                    12 elements | built rows 240 | groups 1,2,3
+ │   ├─ layer 3 GeomText (annotate layer)      1 elements | built rows  1 | groups -1
+ ├─ panel 2  [am=1]
+ │   ├─ background + gridlines: 16 elements
+ │   ├─ layer 1 GeomPoint                     13 elements | built rows 13 | groups 1,2,3
+ │   ├─ layer 2 GeomSmooth                     9 elements | built rows 240 | groups 1,2,3
+ │   ├─ layer 3 GeomText (annotate layer)      1 elements | built rows  1 | groups -1
+ ├─ guide: legend 'colour'  (17 elements)
+ │   ├─ key 1 -> series factor(cyl)=4  (4 elements; colour #F8766D)
+ │   ├─ key 2 -> series factor(cyl)=6  (4 elements; colour #00BA38)
+ │   ├─ key 3 -> series factor(cyl)=8  (4 elements; colour #619CFF)
+ ├─ guides: axes 22 elements, strips 4, axis titles 2
+ └─ open questions for the agent: layer 3 is an annotate() text -> what does it claim, and which layer(s) does it describe?

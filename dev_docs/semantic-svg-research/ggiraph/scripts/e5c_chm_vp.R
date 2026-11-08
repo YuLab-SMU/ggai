@@ -1,0 +1,7 @@
+source("/tmp/ggai_research/ggiraph/scripts/tag_all.R")
+suppressPackageStartupMessages(library(ComplexHeatmap))
+m <- scale(as.matrix(mtcars[1:8, 1:5]))
+hg <- grid.grabExpr(draw(Heatmap(m, name = "z", right_annotation = rowAnnotation(cyl = factor(mtcars$cyl[1:8])))), width = 7, height = 4)
+res <- suppressWarnings(render_tagged(hg, "/tmp/ggai_research/ggiraph/out/e5c_complexheatmap_vp.svg"))
+vp <- xml_attr(res$prim, "data-ggai-vp"); leaf <- sub(".*::", "", vp)
+tab <- table(paste(xml_name(res$prim), leaf)); print(sort(tab, decreasing = TRUE)[1:14])

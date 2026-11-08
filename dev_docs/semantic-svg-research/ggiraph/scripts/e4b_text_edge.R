@@ -1,0 +1,11 @@
+suppressPackageStartupMessages({library(ggplot2); library(ggiraph); library(xml2)})
+dt <- data.frame(x = 1:2, y = 1:2, lab = c("a\nb\nc", "d"), id = c("ID1", "ID2"))
+p <- ggplot(dt, aes(x, y)) + geom_text_interactive(aes(label = lab, data_id = id))
+g <- girafe(ggobj = p)
+doc <- read_xml(g$x$html)
+tx <- xml_find_all(doc, "//*[local-name()='text'][@data-id]")
+print(data.frame(text = xml_text(tx), data_id = xml_attr(tx, "data-id")))
+dt2 <- data.frame(x = 1:3, y = 1:3, lab = c("a\nb", "c", "d"), id = c("ID1", "ID2", "ID3"))
+g2 <- withCallingHandlers(girafe(ggobj = ggplot(dt2, aes(x, y)) + geom_text_interactive(aes(label = lab, data_id = id))),
+  warning = function(w) {cat("WARNING:", conditionMessage(w), "\n"); invokeRestart("muffleWarning")})
+cat("case2 texts with data-id:", length(xml_find_all(read_xml(g2$x$html), "//*[local-name()='text'][@data-id]")), "\n")

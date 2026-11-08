@@ -1,0 +1,16 @@
+points, per-element data-row                  strict=TRUE  OK, elements carrying garnish attr: 0
+points, per-element class                     strict=TRUE  OK, elements carrying garnish attr: 3
+points, group data-row                        strict=TRUE  OK, elements carrying garnish attr: 0
+text, per-element data-row                    strict=TRUE  OK, elements carrying garnish attr: 0
+polyline, per-element data-row                strict=TRUE  OK, elements carrying garnish attr: 0
+points, per-element data-row                  strict=FALSE OK, elements carrying garnish attr: 3
+points, per-element class                     strict=FALSE OK, elements carrying garnish attr: 3
+points, group data-row                        strict=FALSE OK, elements carrying garnish attr: 1
+text, per-element data-row                    strict=FALSE OK, elements carrying garnish attr: 3
+polyline, per-element data-row                strict=FALSE OK, elements carrying garnish attr: 2
+--- vector gp variants (strict=FALSE)
+points vec col, per-element data-row          strict=FALSE OK, elements carrying garnish attr: 3
+points vec col+fontsize, per-element          strict=FALSE OK, elements carrying garnish attr: 3
+ggplot 3 points, per-element                  strict=FALSE OK, elements carrying garnish attr: 3
+ggplot 3 points size=3, per-element           strict=FALSE OK, elements carrying garnish attr: 3
+ggplot 32 points, per-element                 strict=FALSE OK, elements carrying garnish attr: 32

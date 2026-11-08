@@ -1,0 +1,609 @@
+{
+ "init": {
+  "id": 0,
+  "jsonrpc": "2.0",
+  "result": {
+   "capabilities": {
+    "completions": {},
+    "logging": {},
+    "prompts": {
+     "listChanged": false
+    },
+    "resources": {
+     "listChanged": false,
+     "subscribe": false
+    },
+    "tools": {
+     "listChanged": true
+    }
+   },
+   "instructions": "Craft Anything shows how software works, with evidence. Start with core_investigation_show and core_session_show. Open a target with core_target_open (absolute path), then use focused tools; ask for summaries first and page for detail. Only the Essentials toolset is listed at first: call list_toolsets and enable_toolset to add native, Android, web and other tools. Keep the investigation memory current (core_brief_write, core_plan_update, core_hypothesis_record, core_finding_record with evidence ids, core_handoff_write at the end of each turn). Cite evidence ids, separate observations from inferences, and record open questions as unknowns. Tools that run code or change a device need the user's approval. In Clean room (Deep mode off) only the tools that work from outside are listed: nothing inside a target is read, and a refused tool says how to turn Deep mode on.",
+   "protocolVersion": "2025-06-18",
+   "serverInfo": {
+    "name": "craft-anything",
+    "title": "Craft Anything",
+    "version": "0.5.0"
+   }
+  }
+ },
+ "results": [
+  {
+   "call": {
+    "name": "web_site_open",
+    "arguments": {
+     "url": "https://www.canvasxpress.org/docs/license.html",
+     "width": 1400,
+     "height": 1000
+    }
+   },
+   "response": {
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": {
+     "content": [
+      {
+       "text": "{\"authority\":\"our-run\",\"confidence\":\"observed\",\"coverage\":{\"examined\":1,\"status\":\"complete\",\"total\":1},\"environment\":{\"clean_room\":false,\"engine\":\"cdp\",\"engine_version\":\"1.3\",\"host\":\"macos-aarch64\"},\"id\":\"ev_02a623ae6dee7a79f5f5ef21e9ffbf04002d03faad5be92e28b8da97e7d98a14\",\"limitations\":[{\"code\":\"private_profile\",\"message\":\"A fresh private browser: pages behind a login show their signed-out state.\"}],\"links\":[],\"locations\":[{\"kind\":\"url\",\"value\":\"https://www.canvasxpress.org/docs/license.html\"}],\"operation\":\"web_site_open\",\"params\":{\"height\":1000,\"url\":\"https://www.canvasxpress.org/docs/license.html\",\"width\":1400},\"result\":{\"browser\":\"Chrome/156.0.8078.81\",\"facts\":{\"elements\":342,\"forms\":0,\"height\":3641,\"images\":4,\"lang\":\"en\",\"links\":82,\"ready\":\"complete\",\"title\":\"CanvasXpress: License\",\"url\":\"https://www.canvasxpress.org/docs/license.html\",\"width\":1385},\"health\":{\"errors\":[],\"failed_requests\":[{\"error\":\"net::ERR_CONNECTION_CLOSED\",\"type\":\"Ping\",\"url\":\"https://stats.g.doubleclick.net/g/collect\"}]},\"title\":\"CanvasXpress: License\",\"url\":\"https://www.canvasxpress.org/docs/license.html\"},\"subject\":{\"kind\":\"website\",\"name\":\"https://www.canvasxpress.org/docs/license.html\"},\"summary\":\"Opened https://www.canvasxpress.org/docs/license.html: \\\"CanvasXpress: License\\\". While loading: 0 error(s), 1 failed request(s).\"}",
+       "type": "text"
+      }
+     ],
+     "isError": false,
+     "structuredContent": {
+      "authority": "our-run",
+      "confidence": "observed",
+      "coverage": {
+       "examined": 1,
+       "status": "complete",
+       "total": 1
+      },
+      "environment": {
+       "clean_room": false,
+       "engine": "cdp",
+       "engine_version": "1.3",
+       "host": "macos-aarch64"
+      },
+      "id": "ev_02a623ae6dee7a79f5f5ef21e9ffbf04002d03faad5be92e28b8da97e7d98a14",
+      "limitations": [
+       {
+        "code": "private_profile",
+        "message": "A fresh private browser: pages behind a login show their signed-out state."
+       }
+      ],
+      "links": [],
+      "locations": [
+       {
+        "kind": "url",
+        "value": "https://www.canvasxpress.org/docs/license.html"
+       }
+      ],
+      "operation": "web_site_open",
+      "params": {
+       "height": 1000,
+       "url": "https://www.canvasxpress.org/docs/license.html",
+       "width": 1400
+      },
+      "result": {
+       "browser": "Chrome/156.0.8078.81",
+       "facts": {
+        "elements": 342,
+        "forms": 0,
+        "height": 3641,
+        "images": 4,
+        "lang": "en",
+        "links": 82,
+        "ready": "complete",
+        "title": "CanvasXpress: License",
+        "url": "https://www.canvasxpress.org/docs/license.html",
+        "width": 1385
+       },
+       "health": {
+        "errors": [],
+        "failed_requests": [
+         {
+          "error": "net::ERR_CONNECTION_CLOSED",
+          "type": "Ping",
+          "url": "https://stats.g.doubleclick.net/g/collect"
+         }
+        ]
+       },
+       "title": "CanvasXpress: License",
+       "url": "https://www.canvasxpress.org/docs/license.html"
+      },
+      "subject": {
+       "kind": "website",
+       "name": "https://www.canvasxpress.org/docs/license.html"
+      },
+      "summary": "Opened https://www.canvasxpress.org/docs/license.html: \"CanvasXpress: License\". While loading: 0 error(s), 1 failed request(s)."
+     }
+    }
+   }
+  },
+  {
+   "call": {
+    "name": "web_site_capture",
+    "arguments": {
+     "output_directory": "/tmp/ggai_research/translate/craft_license_capture",
+     "widths": [
+      1400
+     ],
+     "include_html": true
+    }
+   },
+   "response": {
+    "id": 2,
+    "jsonrpc": "2.0",
+    "result": {
+     "content": [
+      {
+       "text": "{\"authority\":\"our-run\",\"confidence\":\"observed\",\"coverage\":{\"examined\":1,\"status\":\"complete\",\"total\":1},\"environment\":{\"clean_room\":false,\"engine\":\"cdp\",\"engine_version\":\"1.3\",\"host\":\"macos-aarch64\"},\"id\":\"ev_b0af7e35f4b98d6cc9c7ff19343406c0527db3162e647c2c4edbc7c1af6daeda\",\"limitations\":[{\"code\":\"one_state\",\"message\":\"One state of the page: menus, dialogs and content behind interactions are not opened.\"},{\"code\":\"cross_origin_css\",\"message\":\"CSS custom properties and breakpoints from cross-origin stylesheets can't be read.\"}],\"links\":[],\"locations\":[{\"kind\":\"url\",\"value\":\"https://www.canvasxpress.org/docs/license.html\"},{\"kind\":\"path\",\"value\":\"/tmp/ggai_research/translate/craft_license_capture\"}],\"operation\":\"web_site_capture\",\"params\":{\"include_html\":true,\"max_height\":12000,\"noise_pass\":false,\"visitor_view\":false,\"widths\":[1400]},\"result\":{\"counts\":{\"forms\":0,\"headings\":12,\"images\":4,\"links\":82,\"outline\":98},\"design\":{\"backgrounds\":[{\"count\":6,\"value\":\"#ffffff\"},{\"count\":3,\"value\":\"#0d6efd\"},{\"count\":1,\"value\":\"#f5f5f4\"},{\"count\":1,\"value\":\"#6c757d\"},{\"count\":1,\"value\":\"#2f2f2f\"}],\"css_variables\":{\"--bs-black\":\"#000\",\"--bs-black-rgb\":\"0,0,0\",\"--bs-blue\":\"#0d6efd\",\"--bs-body-bg\":\"#fff\",\"--bs-body-bg-rgb\":\"255,255,255\",\"--bs-body-color\":\"#212529\",\"--bs-body-color-rgb\":\"33,37,41\",\"--bs-body-font-family\":\"var(--bs-font-sans-serif)\",\"--bs-body-font-size\":\"1rem\",\"--bs-body-font-weight\":\"400\",\"--bs-body-line-height\":\"1.5\",\"--bs-border-color\":\"#dee2e6\",\"--bs-border-color-translucent\":\"rgba(0, 0, 0, 0.175)\",\"--bs-border-radius\":\"0.375rem\",\"--bs-border-radius-2xl\":\"var(--bs-border-radius-xxl)\",\"--bs-border-radius-lg\":\"0.5rem\",\"--bs-border-radius-pill\":\"50rem\",\"--bs-border-radius-sm\":\"0.25rem\",\"--bs-border-radius-xl\":\"1rem\",\"--bs-border-radius-xxl\":\"2rem\",\"--bs-border-style\":\"solid\",\"--bs-border-width\":\"1px\",\"--bs-box-shadow\":\"0 0.5rem 1rem rgba(0, 0, 0, 0.15)\",\"--bs-box-shadow-inset\":\"inset 0 1px 2px rgba(0, 0, 0, 0.075)\",\"--bs-box-shadow-lg\":\"0 1rem 3rem rgba(0, 0, 0, 0.175)\",\"--bs-box-shadow-sm\":\"0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)\",\"--bs-breakpoint-lg\":\"992px\",\"--bs-breakpoint-md\":\"768px\",\"--bs-breakpoint-sm\":\"576px\",\"--bs-breakpoint-xl\":\"1200px\",\"--bs-breakpoint-xs\":\"0\",\"--bs-breakpoint-xxl\":\"1400px\",\"--bs-code-color\":\"#d63384\",\"--bs-cyan\":\"#0dcaf0\",\"--bs-danger\":\"#dc3545\",\"--bs-danger-bg-subtle\":\"#f8d7da\",\"--bs-danger-border-subtle\":\"#f1aeb5\",\"--bs-danger-rgb\":\"220,53,69\",\"--bs-danger-text-emphasis\":\"#58151c\",\"--bs-dark\":\"#212529\",\"--bs-dark-bg-subtle\":\"#ced4da\",\"--bs-dark-border-subtle\":\"#adb5bd\",\"--bs-dark-rgb\":\"33,37,41\",\"--bs-dark-text-emphasis\":\"#495057\",\"--bs-emphasis-color\":\"#000\",\"--bs-emphasis-color-rgb\":\"0,0,0\",\"--bs-focus-ring-color\":\"rgba(13, 110, 253, 0.25)\",\"--bs-focus-ring-opacity\":\"0.25\",\"--bs-focus-ring-width\":\"0.25rem\",\"--bs-font-monospace\":\"SFMono-Regular,Menlo,Monaco,Consolas,\\\"Liberation Mono\\\",\\\"Courier New\\\",monospace\",\"--bs-font-sans-serif\":\"system-ui,-apple-system,\\\"Segoe UI\\\",Roboto,\\\"Helvetica Neue\\\",\\\"Noto Sans\\\",\\\"Liberation Sans\\\",Arial,sans-serif,\\\"Apple Color E\",\"--bs-form-invalid-border-color\":\"#dc3545\",\"--bs-form-invalid-color\":\"#dc3545\",\"--bs-form-valid-border-color\":\"#198754\",\"--bs-form-valid-color\":\"#198754\",\"--bs-gradient\":\"linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0))\",\"--bs-gray\":\"#6c757d\",\"--bs-gray-100\":\"#f8f9fa\",\"--bs-gray-200\":\"#e9ecef\",\"--bs-gray-300\":\"#dee2e6\",\"--bs-gray-400\":\"#ced4da\",\"--bs-gray-500\":\"#adb5bd\",\"--bs-gray-600\":\"#6c757d\",\"--bs-gray-700\":\"#495057\",\"--bs-gray-800\":\"#343a40\",\"--bs-gray-900\":\"#212529\",\"--bs-gray-dark\":\"#343a40\",\"--bs-green\":\"#198754\",\"--bs-heading-color\":\"inherit\",\"--bs-highlight-bg\":\"#fff3cd\",\"--bs-highlight-color\":\"#212529\",\"--bs-indigo\":\"#6610f2\",\"--bs-info\":\"#0dcaf0\",\"--bs-info-bg-subtle\":\"#cff4fc\",\"--bs-info-border-subtle\":\"#9eeaf9\",\"--bs-info-rgb\":\"13,202,240\",\"--bs-info-text-emphasis\":\"#055160\",\"--bs-light\":\"#f8f9fa\",\"--bs-light-bg-subtle\":\"#fcfcfd\",\"--bs-light-border-subtle\":\"#e9ecef\",\"--bs-light-rgb\":\"248,249,250\",\"--bs-light-text-emphasis\":\"#495057\",\"--bs-link-color\":\"#0d6efd\",\"--bs-link-color-rgb\":\"13,110,253\",\"--bs-link-decoration\":\"underline\",\"--bs-link-hover-color\":\"#0a58ca\",\"--bs-link-hover-color-rgb\":\"10,88,202\",\"--bs-orange\":\"#fd7e14\",\"--bs-pink\":\"#d63384\",\"--bs-primary\":\"#0d6efd\",\"--bs-primary-bg-subtle\":\"#cfe2ff\",\"--bs-primary-border-subtle\":\"#9ec5fe\",\"--bs-primary-rgb\":\"13,110,253\",\"--bs-primary-text-emphasis\":\"#052c65\",\"--bs-purple\":\"#6f42c1\",\"--bs-red\":\"#dc3545\",\"--bs-secondary\":\"#6c757d\",\"--bs-secondary-bg\":\"#e9ecef\",\"--bs-secondary-bg-rgb\":\"233,236,239\",\"--bs-secondary-bg-subtle\":\"#e2e3e5\",\"--bs-secondary-border-subtle\":\"#c4c8cb\",\"--bs-secondary-color\":\"rgba(33, 37, 41, 0.75)\",\"--bs-secondary-color-rgb\":\"33,37,41\",\"--bs-secondary-rgb\":\"108,117,125\",\"--bs-secondary-text-emphasis\":\"#2b2f32\",\"--bs-success\":\"#198754\",\"--bs-success-bg-subtle\":\"#d1e7dd\",\"--bs-success-border-subtle\":\"#a3cfbb\",\"--bs-success-rgb\":\"25,135,84\",\"--bs-success-text-emphasis\":\"#0a3622\",\"--bs-teal\":\"#20c997\",\"--bs-tertiary-bg\":\"#f8f9fa\",\"--bs-tertiary-bg-rgb\":\"248,249,250\",\"--bs-tertiary-color\":\"rgba(33, 37, 41, 0.5)\",\"--bs-tertiary-color-rgb\":\"33,37,41\",\"--bs-warning\":\"#ffc107\",\"--bs-warning-bg-subtle\":\"#fff3cd\",\"--bs-warning-border-subtle\":\"#ffe69c\",\"--bs-warning-rgb\":\"255,193,7\",\"--bs-warning-text-emphasis\":\"#664d03\",\"--bs-white\":\"#fff\",\"--bs-white-rgb\":\"255,255,255\",\"--bs-yellow\":\"#ffc107\",\"--site-accent\":\"#5369ff\",\"--site-accent-contrast\":\"#ffffff\",\"--site-accent-rgb\":\"83, 105, 255\",\"--site-badge\":\"#ff6f6f\",\"--site-bg\":\"#f5f5f4\",\"--site-body\":\"#495057\",\"--site-border\":\"#e5e7eb\",\"--site-border-hover\":\"#cccccc\",\"--site-border-strong\":\"#dedede\",\"--site-border-translucent\":\"rgba(0, 0, 0, .125)\",\"--site-brand-cream\":\"#fceecf\",\"--site-brand-cream-soft\":\"#fff9ed\",\"--site-brand-yellow\":\"#ffd587\",\"--site-brand-yellow-contrast\":\"#2f2f2f\",\"--site-danger\":\"#ef4444\",\"--site-divider\":\"#e3e3e3\",\"--site-emphasis\":\"#000000\",\"--site-fg\":\"#2f2f2f\",\"--site-font-display\":\"var(--site-font-sans)\",\"--site-font-mono\":\"SFMono-Regular, Menlo, Monaco, Consolas, \\\"Liberation Mono\\\", \\\"Courier New\\\", monospace\",\"--site-font-sans\":\"\\\"Inter UI\\\", -apple-system, BlinkMacSystemFont, \\\"Segoe UI\\\", Roboto, \\\"Helvetica Neue\\\", Arial, sans-serif, \\\"Apple Color Emo\",\"--site-footer-bg\":\"#2f2f2f\",\"--site-footer-fg\":\"#959595\",\"--site-footer-title\":\"#ffffff\",\"--site-heading\":\"#212529\",\"--site-info-text\":\"#0c4a6e\",\"--site-link\":\"var(--site-accent)\",\"--site-link-hover\":\"#3b4fd9\",\"--site-muted\":\"#6c757d\",\"--site-muted-2\":\"#9ca3af\",\"--site-muted-3\":\"#adb5bd\",\"--site-radius\":\"8px\",\"--site-radius-lg\":\"12px\",\"--site-radius-md\":\"10px\",\"--site-radius-pill\":\"55px\",\"--site-radius-sm\":\"3px\",\"--site-shadow\":\"0 5px 20px 0 rgba(0, 0, 0, .25)\",\"--site-shadow-sm\":\"2px 2px 12px -5px #999\",\"--site-success\":\"#10b981\",\"--site-surface\":\"#ffffff\",\"--site-surface-2\":\"#f8f9fa\",\"--site-surface-3\":\"#e9e9e9\",\"--site-surface-alt\":\"#f9f9f9\",\"--site-text-soft\":\"#555555\",\"--site-transition\":\"0.3s ease-in-out\",\"--site-warning\":\"#f59e0b\"},\"font_faces\":[],\"font_sizes\":[{\"count\":65,\"value\":\"16px\"},{\"count\":28,\"value\":\"20px\"},{\"count\":12,\"value\":\"24px\"},{\"count\":6,\"value\":\"17.5px\"},{\"count\":4,\"value\":\"32px\"},{\"count\":2,\"value\":\"14px\"},{\"count\":1,\"value\":\"48px\"}],\"font_weights\":[{\"count\":73,\"value\":\"400\"},{\"count\":22,\"value\":\"300\"},{\"count\":16,\"value\":\"500\"},{\"count\":7,\"value\":\"700\"}],\"fonts\":[{\"count\":110,\"value\":\"\\\"Inter UI\\\", -apple-system, \\\"system-ui\\\", \\\"Segoe UI\\\", Roboto, \\\"Helvetica Neue\\\", Arial, sans-serif, \\\"Apple Color Emoji\\\", \\\"Segoe UI Emoji\\\", \\\"Segoe UI Symbol\\\", \\\"Noto Color Emoji\\\"\"},{\"count\":8,\"value\":\"SFMono-Regular, Menlo, Monaco, Consolas, \\\"Liberation Mono\\\", \\\"Courier New\\\", monospace\"}],\"max_widths\":[{\"count\":7,\"value\":\"1320px\"},{\"count\":3,\"value\":\"250px\"},{\"count\":1,\"value\":\"700px\"},{\"count\":1,\"value\":\"600px\"}],\"radii\":[{\"count\":8,\"value\":\"6px\"},{\"count\":1,\"value\":\"8px\"}],\"shadows\":[{\"count\":5,\"value\":\"rgba(0, 0, 0, 0.075) 0px 2px 4px 0px\"}],\"spacing\":[{\"count\":59,\"value\":\"8px\"},{\"count\":42,\"value\":\"16px\"},{\"count\":38,\"value\":\"12px\"},{\"count\":33,\"value\":\"24px\"},{\"count\":10,\"value\":\"32px\"},{\"count\":6,\"value\":\"6px\"},{\"count\":4,\"value\":\"4px\"},{\"count\":4,\"value\":\"48px\"},{\"count\":2,\"value\":\"5px\"},{\"count\":1,\"value\":\"10px\"}],\"text_colors\":[{\"count\":49,\"value\":\"#6c757d\"},{\"count\":24,\"value\":\"#0d6efd\"},{\"count\":20,\"value\":\"#959595\"},{\"count\":9,\"value\":\"#000000a6\"},{\"count\":8,\"value\":\"#d63384\"},{\"count\":7,\"value\":\"#ffffff\"},{\"count\":1,\"value\":\"#2f2f2f\"}]},\"files\":[\"README.md\",\"capture.json\"],\"html_bytes\":52676,\"output_directory\":\"/tmp/ggai_research/translate/craft_license_capture\",\"screenshots\":[{\"css_width\":1400,\"cut\":false,\"file\":\"screenshot-1400.png\",\"height\":3627,\"sha256\":\"602a91059d61eccd9d32d9f927caf9b414b76cf096701e585266bdeed9189252\",\"width\":1400}],\"title\":\"CanvasXpress: License\",\"url\":\"https://www.canvasxpress.org/docs/license.html\"},\"subject\":{\"kind\":\"website\",\"name\":\"https://www.canvasxpress.org/docs/license.html\"},\"summary\":\"Captured https://www.canvasxpress.org/docs/license.html: 1 screenshot(s), 98 outline items, 12 headings, 4 images, 82 links, 0 forms \u2192 /tmp/ggai_research/translate/craft_license_capture.\"}",
+       "type": "text"
+      }
+     ],
+     "isError": false,
+     "structuredContent": {
+      "authority": "our-run",
+      "confidence": "observed",
+      "coverage": {
+       "examined": 1,
+       "status": "complete",
+       "total": 1
+      },
+      "environment": {
+       "clean_room": false,
+       "engine": "cdp",
+       "engine_version": "1.3",
+       "host": "macos-aarch64"
+      },
+      "id": "ev_b0af7e35f4b98d6cc9c7ff19343406c0527db3162e647c2c4edbc7c1af6daeda",
+      "limitations": [
+       {
+        "code": "one_state",
+        "message": "One state of the page: menus, dialogs and content behind interactions are not opened."
+       },
+       {
+        "code": "cross_origin_css",
+        "message": "CSS custom properties and breakpoints from cross-origin stylesheets can't be read."
+       }
+      ],
+      "links": [],
+      "locations": [
+       {
+        "kind": "url",
+        "value": "https://www.canvasxpress.org/docs/license.html"
+       },
+       {
+        "kind": "path",
+        "value": "/tmp/ggai_research/translate/craft_license_capture"
+       }
+      ],
+      "operation": "web_site_capture",
+      "params": {
+       "include_html": true,
+       "max_height": 12000,
+       "noise_pass": false,
+       "visitor_view": false,
+       "widths": [
+        1400
+       ]
+      },
+      "result": {
+       "counts": {
+        "forms": 0,
+        "headings": 12,
+        "images": 4,
+        "links": 82,
+        "outline": 98
+       },
+       "design": {
+        "backgrounds": [
+         {
+          "count": 6,
+          "value": "#ffffff"
+         },
+         {
+          "count": 3,
+          "value": "#0d6efd"
+         },
+         {
+          "count": 1,
+          "value": "#f5f5f4"
+         },
+         {
+          "count": 1,
+          "value": "#6c757d"
+         },
+         {
+          "count": 1,
+          "value": "#2f2f2f"
+         }
+        ],
+        "css_variables": {
+         "--bs-black": "#000",
+         "--bs-black-rgb": "0,0,0",
+         "--bs-blue": "#0d6efd",
+         "--bs-body-bg": "#fff",
+         "--bs-body-bg-rgb": "255,255,255",
+         "--bs-body-color": "#212529",
+         "--bs-body-color-rgb": "33,37,41",
+         "--bs-body-font-family": "var(--bs-font-sans-serif)",
+         "--bs-body-font-size": "1rem",
+         "--bs-body-font-weight": "400",
+         "--bs-body-line-height": "1.5",
+         "--bs-border-color": "#dee2e6",
+         "--bs-border-color-translucent": "rgba(0, 0, 0, 0.175)",
+         "--bs-border-radius": "0.375rem",
+         "--bs-border-radius-2xl": "var(--bs-border-radius-xxl)",
+         "--bs-border-radius-lg": "0.5rem",
+         "--bs-border-radius-pill": "50rem",
+         "--bs-border-radius-sm": "0.25rem",
+         "--bs-border-radius-xl": "1rem",
+         "--bs-border-radius-xxl": "2rem",
+         "--bs-border-style": "solid",
+         "--bs-border-width": "1px",
+         "--bs-box-shadow": "0 0.5rem 1rem rgba(0, 0, 0, 0.15)",
+         "--bs-box-shadow-inset": "inset 0 1px 2px rgba(0, 0, 0, 0.075)",
+         "--bs-box-shadow-lg": "0 1rem 3rem rgba(0, 0, 0, 0.175)",
+         "--bs-box-shadow-sm": "0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)",
+         "--bs-breakpoint-lg": "992px",
+         "--bs-breakpoint-md": "768px",
+         "--bs-breakpoint-sm": "576px",
+         "--bs-breakpoint-xl": "1200px",
+         "--bs-breakpoint-xs": "0",
+         "--bs-breakpoint-xxl": "1400px",
+         "--bs-code-color": "#d63384",
+         "--bs-cyan": "#0dcaf0",
+         "--bs-danger": "#dc3545",
+         "--bs-danger-bg-subtle": "#f8d7da",
+         "--bs-danger-border-subtle": "#f1aeb5",
+         "--bs-danger-rgb": "220,53,69",
+         "--bs-danger-text-emphasis": "#58151c",
+         "--bs-dark": "#212529",
+         "--bs-dark-bg-subtle": "#ced4da",
+         "--bs-dark-border-subtle": "#adb5bd",
+         "--bs-dark-rgb": "33,37,41",
+         "--bs-dark-text-emphasis": "#495057",
+         "--bs-emphasis-color": "#000",
+         "--bs-emphasis-color-rgb": "0,0,0",
+         "--bs-focus-ring-color": "rgba(13, 110, 253, 0.25)",
+         "--bs-focus-ring-opacity": "0.25",
+         "--bs-focus-ring-width": "0.25rem",
+         "--bs-font-monospace": "SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace",
+         "--bs-font-sans-serif": "system-ui,-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",\"Noto Sans\",\"Liberation Sans\",Arial,sans-serif,\"Apple Color E",
+         "--bs-form-invalid-border-color": "#dc3545",
+         "--bs-form-invalid-color": "#dc3545",
+         "--bs-form-valid-border-color": "#198754",
+         "--bs-form-valid-color": "#198754",
+         "--bs-gradient": "linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0))",
+         "--bs-gray": "#6c757d",
+         "--bs-gray-100": "#f8f9fa",
+         "--bs-gray-200": "#e9ecef",
+         "--bs-gray-300": "#dee2e6",
+         "--bs-gray-400": "#ced4da",
+         "--bs-gray-500": "#adb5bd",
+         "--bs-gray-600": "#6c757d",
+         "--bs-gray-700": "#495057",
+         "--bs-gray-800": "#343a40",
+         "--bs-gray-900": "#212529",
+         "--bs-gray-dark": "#343a40",
+         "--bs-green": "#198754",
+         "--bs-heading-color": "inherit",
+         "--bs-highlight-bg": "#fff3cd",
+         "--bs-highlight-color": "#212529",
+         "--bs-indigo": "#6610f2",
+         "--bs-info": "#0dcaf0",
+         "--bs-info-bg-subtle": "#cff4fc",
+         "--bs-info-border-subtle": "#9eeaf9",
+         "--bs-info-rgb": "13,202,240",
+         "--bs-info-text-emphasis": "#055160",
+         "--bs-light": "#f8f9fa",
+         "--bs-light-bg-subtle": "#fcfcfd",
+         "--bs-light-border-subtle": "#e9ecef",
+         "--bs-light-rgb": "248,249,250",
+         "--bs-light-text-emphasis": "#495057",
+         "--bs-link-color": "#0d6efd",
+         "--bs-link-color-rgb": "13,110,253",
+         "--bs-link-decoration": "underline",
+         "--bs-link-hover-color": "#0a58ca",
+         "--bs-link-hover-color-rgb": "10,88,202",
+         "--bs-orange": "#fd7e14",
+         "--bs-pink": "#d63384",
+         "--bs-primary": "#0d6efd",
+         "--bs-primary-bg-subtle": "#cfe2ff",
+         "--bs-primary-border-subtle": "#9ec5fe",
+         "--bs-primary-rgb": "13,110,253",
+         "--bs-primary-text-emphasis": "#052c65",
+         "--bs-purple": "#6f42c1",
+         "--bs-red": "#dc3545",
+         "--bs-secondary": "#6c757d",
+         "--bs-secondary-bg": "#e9ecef",
+         "--bs-secondary-bg-rgb": "233,236,239",
+         "--bs-secondary-bg-subtle": "#e2e3e5",
+         "--bs-secondary-border-subtle": "#c4c8cb",
+         "--bs-secondary-color": "rgba(33, 37, 41, 0.75)",
+         "--bs-secondary-color-rgb": "33,37,41",
+         "--bs-secondary-rgb": "108,117,125",
+         "--bs-secondary-text-emphasis": "#2b2f32",
+         "--bs-success": "#198754",
+         "--bs-success-bg-subtle": "#d1e7dd",
+         "--bs-success-border-subtle": "#a3cfbb",
+         "--bs-success-rgb": "25,135,84",
+         "--bs-success-text-emphasis": "#0a3622",
+         "--bs-teal": "#20c997",
+         "--bs-tertiary-bg": "#f8f9fa",
+         "--bs-tertiary-bg-rgb": "248,249,250",
+         "--bs-tertiary-color": "rgba(33, 37, 41, 0.5)",
+         "--bs-tertiary-color-rgb": "33,37,41",
+         "--bs-warning": "#ffc107",
+         "--bs-warning-bg-subtle": "#fff3cd",
+         "--bs-warning-border-subtle": "#ffe69c",
+         "--bs-warning-rgb": "255,193,7",
+         "--bs-warning-text-emphasis": "#664d03",
+         "--bs-white": "#fff",
+         "--bs-white-rgb": "255,255,255",
+         "--bs-yellow": "#ffc107",
+         "--site-accent": "#5369ff",
+         "--site-accent-contrast": "#ffffff",
+         "--site-accent-rgb": "83, 105, 255",
+         "--site-badge": "#ff6f6f",
+         "--site-bg": "#f5f5f4",
+         "--site-body": "#495057",
+         "--site-border": "#e5e7eb",
+         "--site-border-hover": "#cccccc",
+         "--site-border-strong": "#dedede",
+         "--site-border-translucent": "rgba(0, 0, 0, .125)",
+         "--site-brand-cream": "#fceecf",
+         "--site-brand-cream-soft": "#fff9ed",
+         "--site-brand-yellow": "#ffd587",
+         "--site-brand-yellow-contrast": "#2f2f2f",
+         "--site-danger": "#ef4444",
+         "--site-divider": "#e3e3e3",
+         "--site-emphasis": "#000000",
+         "--site-fg": "#2f2f2f",
+         "--site-font-display": "var(--site-font-sans)",
+         "--site-font-mono": "SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace",
+         "--site-font-sans": "\"Inter UI\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emo",
+         "--site-footer-bg": "#2f2f2f",
+         "--site-footer-fg": "#959595",
+         "--site-footer-title": "#ffffff",
+         "--site-heading": "#212529",
+         "--site-info-text": "#0c4a6e",
+         "--site-link": "var(--site-accent)",
+         "--site-link-hover": "#3b4fd9",
+         "--site-muted": "#6c757d",
+         "--site-muted-2": "#9ca3af",
+         "--site-muted-3": "#adb5bd",
+         "--site-radius": "8px",
+         "--site-radius-lg": "12px",
+         "--site-radius-md": "10px",
+         "--site-radius-pill": "55px",
+         "--site-radius-sm": "3px",
+         "--site-shadow": "0 5px 20px 0 rgba(0, 0, 0, .25)",
+         "--site-shadow-sm": "2px 2px 12px -5px #999",
+         "--site-success": "#10b981",
+         "--site-surface": "#ffffff",
+         "--site-surface-2": "#f8f9fa",
+         "--site-surface-3": "#e9e9e9",
+         "--site-surface-alt": "#f9f9f9",
+         "--site-text-soft": "#555555",
+         "--site-transition": "0.3s ease-in-out",
+         "--site-warning": "#f59e0b"
+        },
+        "font_faces": [],
+        "font_sizes": [
+         {
+          "count": 65,
+          "value": "16px"
+         },
+         {
+          "count": 28,
+          "value": "20px"
+         },
+         {
+          "count": 12,
+          "value": "24px"
+         },
+         {
+          "count": 6,
+          "value": "17.5px"
+         },
+         {
+          "count": 4,
+          "value": "32px"
+         },
+         {
+          "count": 2,
+          "value": "14px"
+         },
+         {
+          "count": 1,
+          "value": "48px"
+         }
+        ],
+        "font_weights": [
+         {
+          "count": 73,
+          "value": "400"
+         },
+         {
+          "count": 22,
+          "value": "300"
+         },
+         {
+          "count": 16,
+          "value": "500"
+         },
+         {
+          "count": 7,
+          "value": "700"
+         }
+        ],
+        "fonts": [
+         {
+          "count": 110,
+          "value": "\"Inter UI\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+         },
+         {
+          "count": 8,
+          "value": "SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
+         }
+        ],
+        "max_widths": [
+         {
+          "count": 7,
+          "value": "1320px"
+         },
+         {
+          "count": 3,
+          "value": "250px"
+         },
+         {
+          "count": 1,
+          "value": "700px"
+         },
+         {
+          "count": 1,
+          "value": "600px"
+         }
+        ],
+        "radii": [
+         {
+          "count": 8,
+          "value": "6px"
+         },
+         {
+          "count": 1,
+          "value": "8px"
+         }
+        ],
+        "shadows": [
+         {
+          "count": 5,
+          "value": "rgba(0, 0, 0, 0.075) 0px 2px 4px 0px"
+         }
+        ],
+        "spacing": [
+         {
+          "count": 59,
+          "value": "8px"
+         },
+         {
+          "count": 42,
+          "value": "16px"
+         },
+         {
+          "count": 38,
+          "value": "12px"
+         },
+         {
+          "count": 33,
+          "value": "24px"
+         },
+         {
+          "count": 10,
+          "value": "32px"
+         },
+         {
+          "count": 6,
+          "value": "6px"
+         },
+         {
+          "count": 4,
+          "value": "4px"
+         },
+         {
+          "count": 4,
+          "value": "48px"
+         },
+         {
+          "count": 2,
+          "value": "5px"
+         },
+         {
+          "count": 1,
+          "value": "10px"
+         }
+        ],
+        "text_colors": [
+         {
+          "count": 49,
+          "value": "#6c757d"
+         },
+         {
+          "count": 24,
+          "value": "#0d6efd"
+         },
+         {
+          "count": 20,
+          "value": "#959595"
+         },
+         {
+          "count": 9,
+          "value": "#000000a6"
+         },
+         {
+          "count": 8,
+          "value": "#d63384"
+         },
+         {
+          "count": 7,
+          "value": "#ffffff"
+         },
+         {
+          "count": 1,
+          "value": "#2f2f2f"
+         }
+        ]
+       },
+       "files": [
+        "README.md",
+        "capture.json"
+       ],
+       "html_bytes": 52676,
+       "output_directory": "/tmp/ggai_research/translate/craft_license_capture",
+       "screenshots": [
+        {
+         "css_width": 1400,
+         "cut": false,
+         "file": "screenshot-1400.png",
+         "height": 3627,
+         "sha256": "602a91059d61eccd9d32d9f927caf9b414b76cf096701e585266bdeed9189252",
+         "width": 1400
+        }
+       ],
+       "title": "CanvasXpress: License",
+       "url": "https://www.canvasxpress.org/docs/license.html"
+      },
+      "subject": {
+       "kind": "website",
+       "name": "https://www.canvasxpress.org/docs/license.html"
+      },
+      "summary": "Captured https://www.canvasxpress.org/docs/license.html: 1 screenshot(s), 98 outline items, 12 headings, 4 images, 82 links, 0 forms \u2192 /tmp/ggai_research/translate/craft_license_capture."
+     }
+    }
+   }
+  },
+  {
+   "call": {
+    "name": "web_site_close",
+    "arguments": {}
+   },
+   "response": {
+    "id": 3,
+    "jsonrpc": "2.0",
+    "result": {
+     "content": [
+      {
+       "text": "{\"result\":{\"closed\":true}}",
+       "type": "text"
+      }
+     ],
+     "isError": false,
+     "structuredContent": {
+      "result": {
+       "closed": true
+      }
+     }
+    }
+   }
+  }
+ ]
+}

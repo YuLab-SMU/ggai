@@ -1,0 +1,282 @@
+[
+ {
+  "figure": "a_facet",
+  "render": "svglite",
+  "craft_diff_frac": 0.0164,
+  "craft_layout_sim": 1.0,
+  "craft_ssim": 0.971,
+  "rea_changed_ratio": 0.0164,
+  "rea_mean_abs_delta": 1.01,
+  "agree": true
+ },
+ {
+  "figure": "a_facet",
+  "render": "plotly",
+  "craft_diff_frac": 0.0749,
+  "craft_layout_sim": 0.989,
+  "craft_ssim": 0.822,
+  "rea_changed_ratio": 0.0749,
+  "rea_mean_abs_delta": 2.86,
+  "agree": true
+ },
+ {
+  "figure": "a_facet",
+  "render": "cx",
+  "craft_diff_frac": 0.2468,
+  "craft_layout_sim": 0.863,
+  "craft_ssim": 0.574,
+  "rea_changed_ratio": 0.2468,
+  "rea_mean_abs_delta": 8.99,
+  "agree": true
+ },
+ {
+  "figure": "a_facet",
+  "render": "blank",
+  "craft_diff_frac": 0.7025,
+  "craft_layout_sim": 0.833,
+  "craft_ssim": 0.73,
+  "rea_changed_ratio": 0.7025,
+  "rea_mean_abs_delta": 14.34,
+  "agree": true
+ },
+ {
+  "figure": "b_patchwork",
+  "render": "svglite",
+  "craft_diff_frac": 0.022,
+  "craft_layout_sim": 1.0,
+  "craft_ssim": 0.947,
+  "rea_changed_ratio": 0.022,
+  "rea_mean_abs_delta": 1.41,
+  "agree": true
+ },
+ {
+  "figure": "b_patchwork",
+  "render": "plotly",
+  "craft_diff_frac": 0.2658,
+  "craft_layout_sim": 0.86,
+  "craft_ssim": 0.678,
+  "rea_changed_ratio": 0.2658,
+  "rea_mean_abs_delta": 11.65,
+  "agree": true
+ },
+ {
+  "figure": "b_patchwork",
+  "render": "cx",
+  "craft_diff_frac": 0.1888,
+  "craft_layout_sim": 0.933,
+  "craft_ssim": 0.669,
+  "rea_changed_ratio": 0.1888,
+  "rea_mean_abs_delta": 7.17,
+  "agree": true
+ },
+ {
+  "figure": "b_patchwork",
+  "render": "blank",
+  "craft_diff_frac": 0.529,
+  "craft_layout_sim": 0.913,
+  "craft_ssim": 0.777,
+  "rea_changed_ratio": 0.529,
+  "rea_mean_abs_delta": 11.52,
+  "agree": true
+ },
+ {
+  "figure": "c_repel",
+  "render": "svglite",
+  "craft_diff_frac": 0.0479,
+  "craft_layout_sim": 0.994,
+  "craft_ssim": 0.894,
+  "rea_changed_ratio": 0.0479,
+  "rea_mean_abs_delta": 4.01,
+  "agree": true
+ },
+ {
+  "figure": "c_repel",
+  "render": "plotly",
+  "craft_diff_frac": 0.0649,
+  "craft_layout_sim": 0.936,
+  "craft_ssim": 0.763,
+  "rea_changed_ratio": 0.0649,
+  "rea_mean_abs_delta": 4.03,
+  "agree": true
+ },
+ {
+  "figure": "c_repel",
+  "render": "cx",
+  "craft_diff_frac": 0.0861,
+  "craft_layout_sim": 0.938,
+  "craft_ssim": 0.696,
+  "rea_changed_ratio": 0.0861,
+  "rea_mean_abs_delta": 5.13,
+  "agree": true
+ },
+ {
+  "figure": "c_repel",
+  "render": "blank",
+  "craft_diff_frac": 0.7835,
+  "craft_layout_sim": 0.852,
+  "craft_ssim": 0.733,
+  "rea_changed_ratio": 0.7835,
+  "rea_mean_abs_delta": 14.67,
+  "agree": true
+ },
+ {
+  "figure": "e_pointrange",
+  "render": "svglite",
+  "craft_diff_frac": 0.0164,
+  "craft_layout_sim": 1.0,
+  "craft_ssim": 0.963,
+  "rea_changed_ratio": 0.0164,
+  "rea_mean_abs_delta": 1.11,
+  "agree": true
+ },
+ {
+  "figure": "e_pointrange",
+  "render": "plotly",
+  "craft_diff_frac": 0.057,
+  "craft_layout_sim": 0.979,
+  "craft_ssim": 0.835,
+  "rea_changed_ratio": 0.057,
+  "rea_mean_abs_delta": 2.74,
+  "agree": true
+ },
+ {
+  "figure": "e_pointrange",
+  "render": "cx",
+  "craft_diff_frac": 0.3177,
+  "craft_layout_sim": 0.742,
+  "craft_ssim": 0.688,
+  "rea_changed_ratio": 0.3177,
+  "rea_mean_abs_delta": 25.48,
+  "agree": true
+ },
+ {
+  "figure": "e_pointrange",
+  "render": "blank",
+  "craft_diff_frac": 0.7747,
+  "craft_layout_sim": 0.949,
+  "craft_ssim": 0.837,
+  "rea_changed_ratio": 0.7747,
+  "rea_mean_abs_delta": 12.69,
+  "agree": true
+ },
+ {
+  "figure": "d_heatmap",
+  "render": "svglite",
+  "craft_diff_frac": 0.0198,
+  "craft_layout_sim": 1.0,
+  "craft_ssim": 0.983,
+  "rea_changed_ratio": 0.0198,
+  "rea_mean_abs_delta": 0.86,
+  "agree": true
+ },
+ {
+  "figure": "d_heatmap",
+  "render": "plotly_grob",
+  "craft_diff_frac": 0.6572,
+  "craft_layout_sim": 0.366,
+  "craft_ssim": 0.655,
+  "rea_changed_ratio": 0.6572,
+  "rea_mean_abs_delta": 27.06,
+  "agree": true
+ },
+ {
+  "figure": "d_heatmap",
+  "render": "blank",
+  "craft_diff_frac": 0.6572,
+  "craft_layout_sim": 0.366,
+  "craft_ssim": 0.655,
+  "rea_changed_ratio": 0.6572,
+  "rea_mean_abs_delta": 27.06,
+  "agree": true
+ },
+ {
+  "figure": "a1_no_annotate",
+  "render": "plotly",
+  "craft_diff_frac": 0.0701,
+  "craft_layout_sim": 0.992,
+  "craft_ssim": 0.832,
+  "rea_changed_ratio": 0.0701,
+  "rea_mean_abs_delta": 2.34,
+  "agree": true
+ },
+ {
+  "figure": "a1_no_annotate",
+  "render": "cx",
+  "craft_diff_frac": 0.2403,
+  "craft_layout_sim": 0.871,
+  "craft_ssim": 0.584,
+  "rea_changed_ratio": 0.2403,
+  "rea_mean_abs_delta": 8.38,
+  "agree": true
+ },
+ {
+  "figure": "a1_no_annotate",
+  "render": "blank",
+  "craft_diff_frac": 0.7024,
+  "craft_layout_sim": 0.844,
+  "craft_ssim": 0.74,
+  "rea_changed_ratio": 0.7024,
+  "rea_mean_abs_delta": 14.09,
+  "agree": true
+ },
+ {
+  "figure": "a2_no_facet",
+  "render": "plotly",
+  "craft_diff_frac": 0.0931,
+  "craft_layout_sim": 0.987,
+  "craft_ssim": 0.778,
+  "rea_changed_ratio": 0.0931,
+  "rea_mean_abs_delta": 3.0,
+  "agree": true
+ },
+ {
+  "figure": "a2_no_facet",
+  "render": "cx",
+  "craft_diff_frac": 0.1248,
+  "craft_layout_sim": 0.948,
+  "craft_ssim": 0.729,
+  "rea_changed_ratio": 0.1248,
+  "rea_mean_abs_delta": 4.43,
+  "agree": true
+ },
+ {
+  "figure": "a2_no_facet",
+  "render": "blank",
+  "craft_diff_frac": 0.7134,
+  "craft_layout_sim": 0.85,
+  "craft_ssim": 0.778,
+  "rea_changed_ratio": 0.7134,
+  "rea_mean_abs_delta": 14.56,
+  "agree": true
+ },
+ {
+  "figure": "a3_points_facet_annot",
+  "render": "plotly",
+  "craft_diff_frac": 0.0672,
+  "craft_layout_sim": 0.989,
+  "craft_ssim": 0.796,
+  "rea_changed_ratio": 0.0672,
+  "rea_mean_abs_delta": 2.69,
+  "agree": true
+ },
+ {
+  "figure": "a3_points_facet_annot",
+  "render": "cx",
+  "craft_diff_frac": 0.1161,
+  "craft_layout_sim": 0.969,
+  "craft_ssim": 0.695,
+  "rea_changed_ratio": 0.1161,
+  "rea_mean_abs_delta": 4.03,
+  "agree": true
+ },
+ {
+  "figure": "a3_points_facet_annot",
+  "render": "blank",
+  "craft_diff_frac": 0.6818,
+  "craft_layout_sim": 0.928,
+  "craft_ssim": 0.766,
+  "rea_changed_ratio": 0.6818,
+  "rea_mean_abs_delta": 11.75,
+  "agree": true
+ }
+]

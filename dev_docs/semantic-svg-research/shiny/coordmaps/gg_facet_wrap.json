@@ -1,0 +1,104 @@
+{
+  "plotResult_class": "ggplot_build_gtable",
+  "n_panels": 3,
+  "coordmap": {
+    "panels": [
+      {
+        "panel": 1,
+        "row": 1,
+        "col": 1,
+        "panel_vars": {
+          "panelvar1": 4
+        },
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "domain": {
+          "left": 1.31745,
+          "right": 5.61955,
+          "bottom": 9.225,
+          "top": 35.075
+        },
+        "mapping": {
+          "x": "wt",
+          "y": "mpg",
+          "colour": "factor(gear)",
+          "panelvar1": "cyl"
+        },
+        "range": {
+          "left": 32.931935,
+          "right": 190.210902,
+          "bottom": 368.846473,
+          "top": 22.249417
+        }
+      },
+      {
+        "panel": 2,
+        "row": 1,
+        "col": 2,
+        "panel_vars": {
+          "panelvar1": 6
+        },
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "domain": {
+          "left": 1.31745,
+          "right": 5.61955,
+          "bottom": 9.225,
+          "top": 35.075
+        },
+        "mapping": {
+          "x": "wt",
+          "y": "mpg",
+          "colour": "factor(gear)",
+          "panelvar1": "cyl"
+        },
+        "range": {
+          "left": 195.690354,
+          "right": 352.969321,
+          "bottom": 368.846473,
+          "top": 22.249417
+        }
+      },
+      {
+        "panel": 3,
+        "row": 1,
+        "col": 3,
+        "panel_vars": {
+          "panelvar1": 8
+        },
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "domain": {
+          "left": 1.31745,
+          "right": 5.61955,
+          "bottom": 9.225,
+          "top": 35.075
+        },
+        "mapping": {
+          "x": "wt",
+          "y": "mpg",
+          "colour": "factor(gear)",
+          "panelvar1": "cyl"
+        },
+        "range": {
+          "left": 358.448773,
+          "right": 515.72774,
+          "bottom": 368.846473,
+          "top": 22.249417
+        }
+      }
+    ],
+    "dims": {
+      "width": 600,
+      "height": 400
+    }
+  },
+  "coordmap_error": null,
+  "error": null
+}

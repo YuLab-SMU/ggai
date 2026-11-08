@@ -1,0 +1,206 @@
+{
+  "plotResult_class": "ggplot_build_gtable",
+  "n_panels": 6,
+  "coordmap": {
+    "panels": [
+      {
+        "panel": 1,
+        "row": 1,
+        "col": 1,
+        "panel_vars": {
+          "panelvar1": 4,
+          "panelvar2": 0
+        },
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "domain": {
+          "left": 1.31745,
+          "right": 5.61955,
+          "bottom": 9.225,
+          "top": 35.075
+        },
+        "mapping": {
+          "x": "wt",
+          "y": "mpg",
+          "colour": "factor(gear)",
+          "panelvar1": "cyl",
+          "panelvar2": "am"
+        },
+        "range": {
+          "left": 32.931935,
+          "right": 184.620913,
+          "bottom": 192.808219,
+          "top": 22.249417
+        }
+      },
+      {
+        "panel": 2,
+        "row": 1,
+        "col": 2,
+        "panel_vars": {
+          "panelvar1": 6,
+          "panelvar2": 0
+        },
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "domain": {
+          "left": 1.31745,
+          "right": 5.61955,
+          "bottom": 9.225,
+          "top": 35.075
+        },
+        "mapping": {
+          "x": "wt",
+          "y": "mpg",
+          "colour": "factor(gear)",
+          "panelvar1": "cyl",
+          "panelvar2": "am"
+        },
+        "range": {
+          "left": 190.100365,
+          "right": 341.789344,
+          "bottom": 192.808219,
+          "top": 22.249417
+        }
+      },
+      {
+        "panel": 3,
+        "row": 1,
+        "col": 3,
+        "panel_vars": {
+          "panelvar1": 8,
+          "panelvar2": 0
+        },
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "domain": {
+          "left": 1.31745,
+          "right": 5.61955,
+          "bottom": 9.225,
+          "top": 35.075
+        },
+        "mapping": {
+          "x": "wt",
+          "y": "mpg",
+          "colour": "factor(gear)",
+          "panelvar1": "cyl",
+          "panelvar2": "am"
+        },
+        "range": {
+          "left": 347.268796,
+          "right": 498.957775,
+          "bottom": 192.808219,
+          "top": 22.249417
+        }
+      },
+      {
+        "panel": 4,
+        "row": 2,
+        "col": 1,
+        "panel_vars": {
+          "panelvar1": 4,
+          "panelvar2": 1
+        },
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "domain": {
+          "left": 1.31745,
+          "right": 5.61955,
+          "bottom": 9.225,
+          "top": 35.075
+        },
+        "mapping": {
+          "x": "wt",
+          "y": "mpg",
+          "colour": "factor(gear)",
+          "panelvar1": "cyl",
+          "panelvar2": "am"
+        },
+        "range": {
+          "left": 32.931935,
+          "right": 184.620913,
+          "bottom": 368.846473,
+          "top": 198.287671
+        }
+      },
+      {
+        "panel": 5,
+        "row": 2,
+        "col": 2,
+        "panel_vars": {
+          "panelvar1": 6,
+          "panelvar2": 1
+        },
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "domain": {
+          "left": 1.31745,
+          "right": 5.61955,
+          "bottom": 9.225,
+          "top": 35.075
+        },
+        "mapping": {
+          "x": "wt",
+          "y": "mpg",
+          "colour": "factor(gear)",
+          "panelvar1": "cyl",
+          "panelvar2": "am"
+        },
+        "range": {
+          "left": 190.100365,
+          "right": 341.789344,
+          "bottom": 368.846473,
+          "top": 198.287671
+        }
+      },
+      {
+        "panel": 6,
+        "row": 2,
+        "col": 3,
+        "panel_vars": {
+          "panelvar1": 8,
+          "panelvar2": 1
+        },
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "domain": {
+          "left": 1.31745,
+          "right": 5.61955,
+          "bottom": 9.225,
+          "top": 35.075
+        },
+        "mapping": {
+          "x": "wt",
+          "y": "mpg",
+          "colour": "factor(gear)",
+          "panelvar1": "cyl",
+          "panelvar2": "am"
+        },
+        "range": {
+          "left": 347.268796,
+          "right": 498.957775,
+          "bottom": 368.846473,
+          "top": 198.287671
+        }
+      }
+    ],
+    "dims": {
+      "width": 600,
+      "height": 400
+    }
+  },
+  "coordmap_error": null,
+  "error": null
+}

@@ -1,0 +1,63 @@
+--- patchwork (0.86s)
+[patchwork] primitives in rootg: 140; with data-ggai-path: 139; with id: 139
+          tagged
+tag        FALSE TRUE
+  circle       0   38
+  line         0    9
+  polygon      0    3
+  polyline     0   53
+  rect         1    9
+  text         0   27
+[patchwork] leaf grobs drawn: 46; leaves emitting 0 elements: 0; expected!=emitted: 1
+mismatched leaves (first 6):
+                                                           path    class
+8 nel-1.gTree.18/grill.gTree.16/panel.grid.major.x..polyline.12 polyline
+  expected emitted
+8        6       4
+--- base_echo (0.21s)
+[base_echo] primitives in rootg: 64; with data-ggai-path: 63; with id: 63
+          tagged
+tag        FALSE TRUE
+  circle       0   35
+  line         0   11
+  polygon      0    1
+  polyline     0    1
+  rect         1    1
+  text         0   14
+[base_echo] leaf grobs drawn: 14; leaves emitting 0 elements: 0; expected!=emitted: 0
+leaf classes without expected-count rule:
+
+lines 
+    1 
+base circles: 35  leaves:
+
+/GRID.echogrob.131/graphics-plot-1-points-1 
+                                         32 
+/GRID.echogrob.131/graphics-plot-1-points-2 
+                                          3 
+spearman cx vs mtcars$wt for first points leaf: 1 
+--- complexheatmap (0.21s)
+[complexheatmap] primitives in rootg: 228; with data-ggai-path: 227; with id: 227
+      tagged
+tag    FALSE TRUE
+  line     0   52
+  rect     1  151
+  text     0   24
+[complexheatmap] leaf grobs drawn: 16; leaves emitting 0 elements: 0; expected!=emitted: 0
+heatmap body rect leaves (names containing 'heatmap_body' or 'rect'):
+
+GRID.rect.239 GRID.rect.218 GRID.rect.225 GRID.rect.253 GRID.rect.217 
+           99            40             8             3             1 
+example heatmap paths:
+ [1] NA                                                                         
+ [2] "/GRID.rect.217"                                                           
+ [3] "/GRID.rect.218"                                                           
+ [4] "/GRID.gTree.220/GRID.segments.219"                                        
+ [5] "/GRID.gTree.222/GRID.segments.221"                                        
+ [6] "/GRID.text.223"                                                           
+ [7] "/GRID.text.224"                                                           
+ [8] "/GRID.rect.225"                                                           
+ [9] "/GRID.text.226"                                                           
+[10] "/GRID.packed_legends.258/legend_grob_5/GRID.text.245"                     
+[11] "/GRID.packed_legends.258/legend_grob_5/GRID.legend_body.242/GRID.text.238"
+[12] "/GRID.packed_legends.258/legend_grob_5/GRID.legend_body.242/GRID.rect.239"

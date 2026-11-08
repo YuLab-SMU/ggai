@@ -1,0 +1,13 @@
+{
+  "browser": {"mode": "launch", "executable_path": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "headless": true},
+  "start_url": {"url": "http://127.0.0.1:18731/index.html"},
+  "actions": [
+    {"step_id": "wait-svg", "action": "wait_for", "locator": {"kind": "css", "selector": "circle[data-id=\"Valiant\"]"}, "state": "attached", "timeout_ms": 15000},
+    {"step_id": "click-data-circle", "action": "click", "locator": {"kind": "css", "selector": "circle[data-id=\"Valiant\"]"}, "timeout_ms": 10000},
+    {"step_id": "pause1", "action": "wait_for_timeout", "duration_ms": 400},
+    {"step_id": "click-legend-key", "action": "click", "locator": {"kind": "css", "selector": "circle[key-id=\"cyl4\"]"}, "timeout_ms": 10000},
+    {"step_id": "pause2", "action": "wait_for_timeout", "duration_ms": 400}
+  ],
+  "capture": {"after_each_step": ["dom"], "at_end": ["dom", "screenshot"], "events": ["console", "page-errors"]},
+  "command_timeout_ms": 90000
+}

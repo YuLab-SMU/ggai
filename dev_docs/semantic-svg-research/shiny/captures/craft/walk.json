@@ -1,0 +1,45 @@
+{
+ "launch": true,
+ "headless": true,
+ "environment": {
+  "width": 1280,
+  "height": 1500,
+  "device_scale_factor": 1
+ },
+ "capture_network": true,
+ "keep_bodies": {
+  "request_body": true,
+  "response_body": true
+ },
+ "capture": {
+  "events": [
+   "websockets",
+   "console"
+  ],
+  "at_end": [
+   "dom"
+  ]
+ },
+ "actions": [
+  {
+   "step_id": "open",
+   "kind": "goto",
+   "url": "http://127.0.0.1:8765/"
+  },
+  {
+   "step_id": "pause",
+   "kind": "wait",
+   "ms": 4000
+  },
+  {
+   "step_id": "click-facet",
+   "kind": "click",
+   "selector": "#facet img"
+  },
+  {
+   "step_id": "pause2",
+   "kind": "wait",
+   "ms": 2000
+  }
+ ]
+}

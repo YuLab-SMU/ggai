@@ -1,0 +1,41 @@
+{
+  "plotResult_class": "ggplot_build_gtable",
+  "n_panels": 1,
+  "coordmap": {
+    "panels": [
+      {
+        "panel": 1,
+        "row": 1,
+        "col": 1,
+        "panel_vars": {},
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "domain": {
+          "left": 1.9,
+          "right": 4.1,
+          "bottom": 9.225,
+          "top": 35.075
+        },
+        "mapping": {
+          "x": "wt",
+          "y": "mpg",
+          "colour": "factor(gear)"
+        },
+        "range": {
+          "left": 32.931935,
+          "right": 515.72774,
+          "bottom": 368.846473,
+          "top": 5.479452
+        }
+      }
+    ],
+    "dims": {
+      "width": 600,
+      "height": 400
+    }
+  },
+  "coordmap_error": null,
+  "error": null
+}

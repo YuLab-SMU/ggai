@@ -1,0 +1,21 @@
+{
+  "browser": { "mode": "launch", "executable_path": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "headless": true },
+  "start_url": { "url": "http://127.0.0.1:8765/" },
+  "environment": { "viewport": { "width": 1280, "height": 1500, "device_scale_factor": 2 } },
+  "capture": {
+    "events": ["websockets", "console", "page-errors"],
+    "at_end": ["url", "dom", "screenshot"]
+  },
+  "actions": [
+    { "step_id": "wait-facet", "action": "wait_for", "timeout_ms": 20000, "locator": { "kind": "css", "selector": "#facet img" }, "state": "visible" },
+    { "step_id": "settle", "action": "wait_for_timeout", "duration_ms": 3000 },
+    { "step_id": "click-facet-center", "action": "click", "timeout_ms": 10000, "locator": { "kind": "css", "selector": "#facet img" } },
+    { "step_id": "after-click", "action": "wait_for_timeout", "duration_ms": 2000 },
+    { "step_id": "click-base-center", "action": "click", "timeout_ms": 10000, "locator": { "kind": "css", "selector": "#base img" } },
+    { "step_id": "after-base", "action": "wait_for_timeout", "duration_ms": 1500 },
+    { "step_id": "click-pw-center", "action": "click", "timeout_ms": 10000, "locator": { "kind": "css", "selector": "#pw img" } },
+    { "step_id": "after-pw", "action": "wait_for_timeout", "duration_ms": 1500 },
+    { "step_id": "dblclick-facet", "action": "click", "timeout_ms": 10000, "locator": { "kind": "css", "selector": "#facet img" }, "click_count": 2 },
+    { "step_id": "after-dbl", "action": "wait_for_timeout", "duration_ms": 2000 }
+  ]
+}

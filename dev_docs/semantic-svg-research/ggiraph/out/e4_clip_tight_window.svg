@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='ggiraph-svg' role='graphics-document' id='svg_11dda1489ea62350' viewBox='0 0 504 288'>
+ <defs id='svg_11dda1489ea62350_defs'>
+  <clipPath id='svg_11dda1489ea62350_c1'>
+   <rect x='0' y='0' width='504' height='288'/>
+  </clipPath>
+  <clipPath id='svg_11dda1489ea62350_c2'>
+   <rect x='33.27' y='5.48' width='465.25' height='250.79'/>
+  </clipPath>
+ </defs>
+ <g id='svg_11dda1489ea62350_rootg' class='ggiraph-svg-rootg'>
+  <g clip-path='url(#svg_11dda1489ea62350_c1)'>
+   <rect x='0' y='0' width='504' height='288' fill='#FFFFFF' fill-opacity='1' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.75' stroke-linejoin='round' stroke-linecap='round' class='ggiraph-svg-bg'/>
+   <rect x='0' y='0' width='504' height='288' fill='#FFFFFF' fill-opacity='1' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='round'/>
+  </g>
+  <g clip-path='url(#svg_11dda1489ea62350_c2)'>
+   <rect x='33.27' y='5.48' width='465.25' height='250.79' fill='#EBEBEB' fill-opacity='1' stroke='none'/>
+   <polyline points='33.27,231.19 498.52,231.19' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,181.03 498.52,181.03' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,130.87 498.52,130.87' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,80.72 498.52,80.72' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,30.56 498.52,30.56' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='79.79,256.27 79.79,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='172.84,256.27 172.84,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='265.89,256.27 265.89,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='358.94,256.27 358.94,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='452.00,256.27 452.00,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,256.27 498.52,256.27' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,206.11 498.52,206.11' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,155.95 498.52,155.95' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,105.79 498.52,105.79' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,55.64 498.52,55.64' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,5.48 498.52,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,256.27 33.27,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='126.32,256.27 126.32,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='219.37,256.27 219.37,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='312.42,256.27 312.42,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='405.47,256.27 405.47,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='498.52,256.27 498.52,5.48' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <circle id='svg_11dda1489ea62350_e1' cx='-320.32' cy='-44.68' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Mazda RX4'/>
+   <circle id='svg_11dda1489ea62350_e2' cx='-83.05' cy='-44.68' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Mazda RX4 Wag'/>
+   <circle id='svg_11dda1489ea62350_e3' cx='-599.48' cy='-134.96' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Datsun 710'/>
+   <circle id='svg_11dda1489ea62350_e4' cx='233.33' cy='-64.74' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Hornet 4 Drive'/>
+   <circle id='svg_11dda1489ea62350_e5' cx='442.69' cy='70.68' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Hornet Sportabout'/>
+   <circle id='svg_11dda1489ea62350_e6' cx='461.3' cy='100.78' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Valiant'/>
+   <circle id='svg_11dda1489ea62350_e7' cx='563.66' cy='291.38' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Duster 360'/>
+   <circle id='svg_11dda1489ea62350_e8' cx='210.06' cy='-215.21' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Merc 240D'/>
+   <circle id='svg_11dda1489ea62350_e9' cx='172.84' cy='-134.96' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Merc 230'/>
+   <circle id='svg_11dda1489ea62350_e10' cx='442.69' cy='45.61' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Merc 280'/>
+   <circle id='svg_11dda1489ea62350_e11' cx='442.69' cy='115.83' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Merc 280C'/>
+   <circle id='svg_11dda1489ea62350_e12' cx='1028.91' cy='186.05' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Merc 450SE'/>
+   <circle id='svg_11dda1489ea62350_e13' cx='712.54' cy='140.9' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Merc 450SL'/>
+   <circle id='svg_11dda1489ea62350_e14' cx='759.06' cy='246.23' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Merc 450SLC'/>
+   <circle id='svg_11dda1489ea62350_e15' cx='2126.91' cy='486.99' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Cadillac Fleetwood'/>
+   <circle id='svg_11dda1489ea62350_e16' cx='2288.81' cy='486.99' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Lincoln Continental'/>
+   <circle id='svg_11dda1489ea62350_e17' cx='2215.3' cy='271.31' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Chrysler Imperial'/>
+   <circle id='svg_11dda1489ea62350_e18' cx='-711.14' cy='-616.47' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Fiat 128'/>
+   <circle id='svg_11dda1489ea62350_e19' cx='-1255.48' cy='-516.16' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Honda Civic'/>
+   <circle id='svg_11dda1489ea62350_e20' cx='-1050.77' cy='-691.71' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Toyota Corolla'/>
+   <circle id='svg_11dda1489ea62350_e21' cx='-464.55' cy='-69.76' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Toyota Corona'/>
+   <circle id='svg_11dda1489ea62350_e22' cx='517.13' cy='231.19' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Dodge Challenger'/>
+   <circle id='svg_11dda1489ea62350_e23' cx='438.04' cy='246.23' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='AMC Javelin'/>
+   <circle id='svg_11dda1489ea62350_e24' cx='814.89' cy='341.53' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Camaro Z28'/>
+   <circle id='svg_11dda1489ea62350_e25' cx='819.55' cy='45.61' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Pontiac Firebird'/>
+   <circle id='svg_11dda1489ea62350_e26' cx='-957.72' cy='-360.67' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Fiat X1-9'/>
+   <circle id='svg_11dda1489ea62350_e27' cx='-766.97' cy='-295.46' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Porsche 914-2'/>
+   <circle id='svg_11dda1489ea62350_e28' cx='-1350.4' cy='-516.16' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Lotus Europa'/>
+   <circle id='svg_11dda1489ea62350_e29' cx='191.45' cy='216.14' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Ford Pantera L'/>
+   <circle id='svg_11dda1489ea62350_e30' cx='-180.75' cy='20.53' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Ferrari Dino'/>
+   <circle id='svg_11dda1489ea62350_e31' cx='563.66' cy='256.27' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Maserati Bora'/>
+   <circle id='svg_11dda1489ea62350_e32' cx='-171.44' cy='-64.74' r='2.67pt' fill='#000000' fill-opacity='1' stroke='#000000' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' data-id='Volvo 142E'/>
+  </g>
+  <g clip-path='url(#svg_11dda1489ea62350_c1)'>
+   <text x='18.54' y='259.42' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>15</text>
+   <text x='18.54' y='209.26' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>16</text>
+   <text x='18.54' y='159.11' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>17</text>
+   <text x='18.54' y='108.95' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>18</text>
+   <text x='18.54' y='58.79' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>19</text>
+   <text x='18.54' y='8.63' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>20</text>
+   <polyline points='30.53,256.27 33.27,256.27' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='30.53,206.11 33.27,206.11' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='30.53,155.95 33.27,155.95' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='30.53,105.79 33.27,105.79' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='30.53,55.64 33.27,55.64' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='30.53,5.48 33.27,5.48' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='33.27,259.01 33.27,256.27' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='126.32,259.01 126.32,256.27' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='219.37,259.01 219.37,256.27' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='312.42,259.01 312.42,256.27' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='405.47,259.01 405.47,256.27' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <polyline points='498.52,259.01 498.52,256.27' fill='none' stroke='#333333' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>
+   <text x='27.15' y='267.5' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>3.0</text>
+   <text x='120.2' y='267.5' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>3.1</text>
+   <text x='213.25' y='267.5' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>3.2</text>
+   <text x='306.3' y='267.5' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>3.3</text>
+   <text x='399.35' y='267.5' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>3.4</text>
+   <text x='492.4' y='267.5' font-size='6.6pt' font-family='Helvetica' fill='#4D4D4D' fill-opacity='1'>3.5</text>
+   <text x='260.4' y='280.09' font-size='8.25pt' font-family='Helvetica'>wt</text>
+   <text transform='translate(13.37,141.58) rotate(-90.00)' font-size='8.25pt' font-family='Helvetica'>mpg</text>
+  </g>
+ </g>
+</svg>

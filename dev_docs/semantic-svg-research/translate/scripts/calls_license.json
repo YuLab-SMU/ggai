@@ -1,0 +1,5 @@
+[
+ {"name": "web_site_open", "arguments": {"url": "https://www.canvasxpress.org/docs/license.html", "width": 1400, "height": 1000}},
+ {"name": "web_site_capture", "arguments": {"output_directory": "/tmp/ggai_research/translate/craft_license_capture", "widths": [1400], "include_html": true}},
+ {"name": "web_site_close", "arguments": {}}
+]

@@ -1,0 +1,1 @@
+$REA analyze-javascript-application  --analysis-timeout-ms 400000 --detail     13.96s user 2.36s system 105% cpu 15.495 total

@@ -1,0 +1,33 @@
+{
+  "plotResult_class": "NULL",
+  "n_panels": 1,
+  "coordmap": {
+    "panels": [
+      {
+        "domain": {
+          "left": 1.35656,
+          "right": 5.58044,
+          "bottom": 0.996507,
+          "top": 1.550726
+        },
+        "range": {
+          "left": 59.04,
+          "right": 569.76,
+          "bottom": 325.56,
+          "top": 58.04
+        },
+        "log": {
+          "x": null,
+          "y": 10
+        },
+        "mapping": {}
+      }
+    ],
+    "dims": {
+      "width": 600,
+      "height": 400
+    }
+  },
+  "coordmap_error": null,
+  "error": null
+}

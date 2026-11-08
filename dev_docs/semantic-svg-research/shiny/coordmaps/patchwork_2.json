@@ -1,0 +1,33 @@
+{
+  "plotResult_class": ["patchwork", "ggplot2::ggplot", "ggplot", "ggplot2::gg", "S7_object", "gg"],
+  "n_panels": 1,
+  "coordmap": {
+    "panels": [
+      {
+        "domain": {
+          "left": -0.04,
+          "right": 1.04,
+          "bottom": -0.04,
+          "top": 1.04
+        },
+        "range": {
+          "left": 8.696747e-16,
+          "right": 600,
+          "bottom": 399,
+          "top": -1
+        },
+        "log": {
+          "x": null,
+          "y": null
+        },
+        "mapping": {}
+      }
+    ],
+    "dims": {
+      "width": 600,
+      "height": 400
+    }
+  },
+  "coordmap_error": null,
+  "error": null
+}

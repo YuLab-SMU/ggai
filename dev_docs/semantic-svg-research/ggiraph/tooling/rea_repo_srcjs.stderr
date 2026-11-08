@@ -1,0 +1,115 @@
+{"rea_progress":{"phase":"analyze_javascript_application","completed":0,"total":1,"message":"Inventorying and parsing application artifacts","sequence":1}}
+{"rea_progress":{"phase":"read_javascript_artifacts","completed":0,"total":1,"message":"Reading inventoried JavaScript application sources","sequence":2}}
+{"rea_progress":{"phase":"parse_javascript_sources","completed":0,"total":1,"message":"Processing 22 selected application files","sequence":3}}
+{"rea_progress":{"phase":"process_javascript_artifact_metadata","completed":0,"total":1,"message":"Processing metadata for config/entry_points.json (1/22)","sequence":4}}
+{"rea_progress":{"phase":"process_javascript_artifact_metadata","completed":0,"total":1,"message":"Processing metadata for config/externals.json (2/22)","sequence":5}}
+{"rea_progress":{"phase":"process_javascript_artifact_metadata","completed":0,"total":1,"message":"Processing metadata for config/loaders.json (3/22)","sequence":6}}
+{"rea_progress":{"phase":"process_javascript_artifact_metadata","completed":0,"total":1,"message":"Processing metadata for config/misc.json (4/22)","sequence":7}}
+{"rea_progress":{"phase":"process_javascript_artifact_metadata","completed":0,"total":1,"message":"Processing metadata for config/output_path.json (5/22)","sequence":8}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting index.js (6/22)","sequence":9}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: index.js","sequence":10}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: index.js","sequence":11}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: index.js","sequence":12}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: index.js","sequence":13}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: index.js","sequence":14}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/factory.js (7/22)","sequence":15}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/factory.js","sequence":16}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/factory.js","sequence":17}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/factory.js","sequence":18}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/factory.js","sequence":19}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/factory.js","sequence":20}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/fullscreen.js (8/22)","sequence":21}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/fullscreen.js","sequence":22}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/fullscreen.js","sequence":23}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/fullscreen.js","sequence":24}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/fullscreen.js","sequence":25}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/fullscreen.js","sequence":26}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/geom.js (9/22)","sequence":27}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/geom.js","sequence":28}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/geom.js","sequence":29}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/geom.js","sequence":30}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/geom.js","sequence":31}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/geom.js","sequence":32}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/hover.js (10/22)","sequence":33}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/hover.js","sequence":34}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/hover.js","sequence":35}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/hover.js","sequence":36}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/hover.js","sequence":37}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/hover.js","sequence":38}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/lasso.js (11/22)","sequence":39}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/lasso.js","sequence":40}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/lasso.js","sequence":41}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/lasso.js","sequence":42}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/lasso.js","sequence":43}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/lasso.js","sequence":44}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/mouse.js (12/22)","sequence":45}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/mouse.js","sequence":46}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/mouse.js","sequence":47}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/mouse.js","sequence":48}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/mouse.js","sequence":49}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/mouse.js","sequence":50}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/nearest.js (13/22)","sequence":51}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/nearest.js","sequence":52}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/nearest.js","sequence":53}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/nearest.js","sequence":54}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/nearest.js","sequence":55}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/nearest.js","sequence":56}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/png.js (14/22)","sequence":57}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/png.js","sequence":58}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/png.js","sequence":59}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/png.js","sequence":60}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/png.js","sequence":61}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/png.js","sequence":62}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/selection.js (15/22)","sequence":63}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/selection.js","sequence":64}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/selection.js","sequence":65}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/selection.js","sequence":66}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/selection.js","sequence":67}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/selection.js","sequence":68}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/svg.js (16/22)","sequence":69}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/svg.js","sequence":70}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/svg.js","sequence":71}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/svg.js","sequence":72}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/svg.js","sequence":73}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/svg.js","sequence":74}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/toolbar.js (17/22)","sequence":75}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/toolbar.js","sequence":76}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/toolbar.js","sequence":77}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/toolbar.js","sequence":78}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/toolbar.js","sequence":79}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/toolbar.js","sequence":80}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/tooltip.js (18/22)","sequence":81}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/tooltip.js","sequence":82}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/tooltip.js","sequence":83}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/tooltip.js","sequence":84}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/tooltip.js","sequence":85}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/tooltip.js","sequence":86}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/utils.js (19/22)","sequence":87}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/utils.js","sequence":88}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/utils.js","sequence":89}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/utils.js","sequence":90}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/utils.js","sequence":91}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/utils.js","sequence":92}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting modules/zoom.js (20/22)","sequence":93}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: modules/zoom.js","sequence":94}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: modules/zoom.js","sequence":95}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: modules/zoom.js","sequence":96}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: modules/zoom.js","sequence":97}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: modules/zoom.js","sequence":98}}
+{"rea_progress":{"phase":"process_javascript_artifact_metadata","completed":0,"total":1,"message":"Processing metadata for package.json (21/22)","sequence":99}}
+{"rea_progress":{"phase":"parse_javascript_source","completed":0,"total":1,"message":"Parsing and projecting widgets/girafe.js (22/22)","sequence":100}}
+{"rea_progress":{"phase":"javascript_worker_parse","completed":0,"total":1,"message":"JavaScript worker parse: widgets/girafe.js","sequence":101}}
+{"rea_progress":{"phase":"javascript_worker_static","completed":0,"total":1,"message":"JavaScript worker static: widgets/girafe.js","sequence":102}}
+{"rea_progress":{"phase":"javascript_worker_semantic","completed":0,"total":1,"message":"JavaScript worker semantic: widgets/girafe.js","sequence":103}}
+{"rea_progress":{"phase":"javascript_worker_projection","completed":0,"total":1,"message":"JavaScript worker projection: widgets/girafe.js","sequence":104}}
+{"rea_progress":{"phase":"javascript_worker_transfer","completed":0,"total":1,"message":"JavaScript worker transfer: widgets/girafe.js","sequence":105}}
+{"rea_progress":{"phase":"build_javascript_application_graph","completed":0,"total":1,"message":"Constructing application and Electron boundary relationships","sequence":106}}
+{"rea_progress":{"phase":"seal_javascript_application_graph","completed":0,"total":1,"message":"Sealing the validated application graph","sequence":107}}
+{"rea_progress":{"phase":"build_javascript_semantic_graph","completed":0,"total":1,"message":"Binding and validating static semantic relationships","sequence":108}}
+{"rea_progress":{"phase":"seal_javascript_semantic_graph","completed":0,"total":1,"message":"Validating and sealing the semantic graph","sequence":109}}
+{"rea_progress":{"phase":"validate_javascript_application_result","completed":0,"total":1,"message":"Validating result metadata and cross-graph bindings","sequence":110}}
+{"rea_progress":{"phase":"create_javascript_application_evidence","completed":0,"total":1,"message":"Creating and hashing application analysis Evidence","sequence":111}}
+{"rea_progress":{"phase":"seal_javascript_application_result","completed":0,"total":1,"message":"Sealing the complete application analysis result","sequence":112}}
+{"rea_progress":{"phase":"validate_javascript_application_evidence","completed":0,"total":1,"message":"Validating the immutable application Evidence JSON","sequence":113}}
+{"rea_progress":{"phase":"hash_javascript_application_evidence","completed":0,"total":1,"message":"Hashing the complete application analysis Evidence","sequence":114}}
+{"rea_progress":{"phase":"analyze_javascript_application","completed":1,"total":1,"message":"Application graph and Electron boundaries reconstructed","terminal":true,"sequence":115}}

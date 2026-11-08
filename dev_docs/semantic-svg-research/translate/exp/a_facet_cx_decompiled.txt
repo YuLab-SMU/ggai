@@ -1,0 +1,5 @@
+ggplot(dat, aes(x = wt, y = mpg, colour = cyl_f)) +
+  geom_point() +
+  geom_smooth(stat = 'smooth', se = TRUE, method = 'lm', formula = y ~ x) +
+  geom_text(aes(x = x, y = y), label = 'heavier = thirstier', inherit.aes = FALSE) +
+  facet_wrap(...)

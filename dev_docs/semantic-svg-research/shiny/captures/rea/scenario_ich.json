@@ -1,0 +1,12 @@
+{
+  "browser": { "mode": "launch", "executable_path": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "headless": true },
+  "start_url": { "url": "http://127.0.0.1:8766/" },
+  "environment": { "viewport": { "width": 1400, "height": 1000, "device_scale_factor": 1 } },
+  "capture": { "events": ["websockets", "console", "page-errors"], "at_end": ["url", "screenshot"] },
+  "actions": [
+    { "step_id": "wait-ht", "action": "wait_for", "timeout_ms": 30000, "locator": { "kind": "css", "selector": "#ht_heatmap img" }, "state": "visible" },
+    { "step_id": "settle", "action": "wait_for_timeout", "duration_ms": 4000 },
+    { "step_id": "click-ht-center", "action": "click", "timeout_ms": 10000, "locator": { "kind": "css", "selector": "#ht_heatmap img" } },
+    { "step_id": "after", "action": "wait_for_timeout", "duration_ms": 4000 }
+  ]
+}

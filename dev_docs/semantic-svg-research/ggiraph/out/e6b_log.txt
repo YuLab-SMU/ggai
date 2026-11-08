@@ -1,0 +1,39 @@
+before force, geom_point names: 0 
+after force: geom_point.points.13 geom_point.points.15 
+null device 
+          1 
+<use> with data-row: 32 
+                        id row      x
+1 geom_point.points.13.1.1   4 119.42
+2 geom_point.points.13.1.2   5 129.61
+3 geom_point.points.13.1.3   6 130.52
+4 geom_point.points.13.1.4   7  135.5
+
+smooth ids:
+[1] "GRID.polygon.16.1.1"  "GRID.polyline.17.1.1" "GRID.polyline.17.1.2"
+[4] "GRID.polyline.20.1.1" "GRID.polygon.21.1.1"  "GRID.polyline.22.1.1"
+
+text ids + content:
+                      id          txt
+1  GRID.text.50.1.1.text outlier zone
+2  GRID.text.51.1.1.text outlier zone
+3  GRID.text.99.1.1.text            0
+4 GRID.text.102.1.1.text            1
+5  GRID.text.83.1.1.text            2
+6  GRID.text.83.1.2.text            3
+7  GRID.text.83.1.3.text            4
+8  GRID.text.83.1.4.text            5
+
+vp-group ids (strip/legend):
+ [1] "layout::strip-t-1-1.9-7-9-7.1"                      
+ [2] "strip-t-1-1.9-7-9-7.1"                              
+ [3] "layout::strip-t-1-1.9-7-9-7::strip.1"               
+ [4] "strip.1"                                            
+ [5] "layout::strip-t-1-1.9-7-9-7::strip::strip.1-1-1-1.1"
+ [6] "strip.1-1-1-1.1"                                    
+ [7] "strip.gTree.108.1"                                  
+ [8] "strip.background.x..rect.106.1"                     
+ [9] "strip.text.x.top..titleGrob.101.1"                  
+[10] "layout::strip-t-2-1.9-11-9-11.1"                    
+
+all element ids unique? TRUE 

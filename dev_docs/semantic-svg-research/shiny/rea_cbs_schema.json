@@ -1,0 +1,8 @@
+args:
+  type: object
+  properties:
+    inputJson:
+      type: string
+      description: Inline browser scenario JSON or JSON file path
+  required[1]: inputJson
+  additionalProperties: false

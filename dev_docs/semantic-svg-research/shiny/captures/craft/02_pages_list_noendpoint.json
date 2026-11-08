@@ -1,0 +1,1 @@
+{"error":{"category":"engine","code":"engine_missing","message":"no browser is available: no endpoint was given","remediation":"Give a loopback CDP endpoint (start a browser with --remote-debugging-port), or install a Chromium-based browser so one can be launched (set its path in Settings → Engines if it isn't found).","retryable":false}}

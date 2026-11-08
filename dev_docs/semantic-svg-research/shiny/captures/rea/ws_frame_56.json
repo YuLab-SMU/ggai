@@ -1,0 +1,38 @@
+{
+ "method": "update",
+ "data": {
+  "pw_click": {
+   "x": 0.5,
+   "y": 0.49971875000000016,
+   "coords_css": {
+    "x": 300,
+    "y": 149.578125
+   },
+   "coords_img": {
+    "x": 600,
+    "y": 299.15625
+   },
+   "img_css_ratio": {
+    "x": 2,
+    "y": 2
+   },
+   "mapping": {},
+   "domain": {
+    "left": -0.04,
+    "right": 1.04,
+    "bottom": -0.04,
+    "top": 1.04
+   },
+   "range": {
+    "left": 1.739349405246079e-15,
+    "right": 1200,
+    "bottom": 599,
+    "top": -0.9999999999998668
+   },
+   "log": {
+    "x": null,
+    "y": null
+   }
+  }
+ }
+}
