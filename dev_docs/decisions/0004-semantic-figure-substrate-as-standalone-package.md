@@ -3,7 +3,8 @@
 - **Status:** Accepted
 - **Date:** 2026-11-08
 - **Deciders:** Yonghe Xia
-- **Related:** [dev_docs/semsvg-package-design.qmd](../semsvg-package-design.qmd), [plan/done/2026-11-07-semantic-svg-phase-1-skeleton.md](../../plan/done/2026-11-07-semantic-svg-phase-1-skeleton.md), [dev_logs/2026-11-07-semantic-svg-prior-art.md](../../dev_logs/2026-11-07-semantic-svg-prior-art.md), [dev_logs/2026-11-08-semsvg-decisions.md](../../dev_logs/2026-11-08-semsvg-decisions.md)
+- **Note (2026-11-08, after acceptance):** the working name `semsvg` became **`gloss`**. The repository was created the same day and the design doc, research report, research archive and idea docs moved into it; the follow-ups below are done except the M0 plan. The decision itself is unchanged. See [dev_logs/2026-11-08-semsvg-decisions.md](../../dev_logs/2026-11-08-semsvg-decisions.md).
+- **Related:** the design doc (then `dev_docs/semsvg-package-design.qmd`, now `dev_docs/design.qmd` in the gloss repository), [plan/done/2026-11-07-semantic-svg-phase-1-skeleton.md](../../plan/done/2026-11-07-semantic-svg-phase-1-skeleton.md), [dev_logs/2026-11-07-semantic-svg-prior-art.md](../../dev_logs/2026-11-07-semantic-svg-prior-art.md), [dev_logs/2026-11-08-semsvg-decisions.md](../../dev_logs/2026-11-08-semsvg-decisions.md)
 
 ## Context
 

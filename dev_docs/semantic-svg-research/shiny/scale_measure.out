@@ -1,2 +1,0 @@
-n= 10000  svg= 1023.2 KB (0.12s)  png@144dpi= 330.6 KB (0.19s)  per-point index (f32,f32,u32)= 117.2 KB raw
-n=100000  svg=10160.3 KB (0.28s)  png@144dpi= 478.0 KB (0.43s)  per-point index (f32,f32,u32)=1171.9 KB raw

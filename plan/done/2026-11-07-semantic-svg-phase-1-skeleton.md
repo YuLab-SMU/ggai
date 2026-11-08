@@ -3,9 +3,11 @@
 > Status: closed 2026-11-08, superseded before any work started (see Scope changes and Closing notes).
 > Date opened: 2026-11-07. Owner: Yonghe Xia.
 
+> **Moved 2026-11-08.** The package was renamed `gloss` and its material moved to the gloss repository: `dev_docs/semsvg-package-design.qmd` → `dev_docs/design.qmd`, `dev_docs/semantic-svg-research-report.qmd` → `dev_docs/research-report.qmd`, `dev_docs/semantic-svg-research/` → `dev_docs/research/`, `dev_docs/figures/semantic-svg/` → `dev_docs/figures/`, and the two `idea/2026-11-07-*` docs → `idea/`. Paths below are as they were at the time.
+
 **Goal:** Export any `ggai_artifact` from a grid-based engine (ggplot, composite, grid, ComplexHeatmap, and base via gridGraphics) as an SVG in which every primitive has a stable id, S1 structure and, where it can be determined, a verified S2 data binding. Then compile a **hand-written** `semantics.json` into an interactive, ARIA-annotated SVG/HTML, with a verification report.
 
-**Why now:** [idea/2026-11-07-agentic-semantic-svg.md](../../idea/2026-11-07-agentic-semantic-svg.md) and its [prior-art survey](../../idea/2026-11-07-semantic-svg-prior-art.md) showed three things:
+**Why now:** idea/2026-11-07-agentic-semantic-svg.md and its prior-art survey showed three things:
 - Per-grob element capture is feasible: 133/134 primitives tagged, geometry byte-identical.
 - Every existing tool is closed-world.
 - The agent stage, which is the actual contribution, needs a trustworthy deterministic layer under it.
@@ -316,7 +318,7 @@ _(append-only; never edit completed tasks above)_
 The work moved out of ggai before any task started. Two owner decisions on 2026-11-07 and 2026-11-08 caused it:
 
 1. Build it as a **new, standalone R package** (`semsvg`) driven by aisdk, without carrying over ggai's architecture. See [ADR-0004](../../dev_docs/decisions/0004-semantic-figure-substrate-as-standalone-package.md).
-2. Change the design from a one-shot converter (skeleton → compile → verify) to a **semantic substrate**: six capabilities, append-only layered records anchored to elements, and projections as outputs. See [dev_docs/semsvg-package-design.qmd](../../dev_docs/semsvg-package-design.qmd).
+2. Change the design from a one-shot converter (skeleton → compile → verify) to a **semantic substrate**: six capabilities, append-only layered records anchored to elements, and projections as outputs. See dev_docs/semsvg-package-design.qmd.
 
 So the `ggai_svg_*` primitives in `R/` this plan describes will not be built. All tasks are marked `[-]`. Where each one went:
 
@@ -335,3 +337,5 @@ So the `ggai_svg_*` primitives in `R/` this plan describes will not be built. Al
 ## Closing notes
 
 Closed 2026-11-08 as superseded; no code was written under this plan. The research it was based on is kept and committed in `dev_docs/semantic-svg-research/`, together with the report (`dev_docs/semantic-svg-research-report.qmd`) and the package design (`dev_docs/semsvg-package-design.qmd`). Closing log: [dev_logs/2026-11-08-semsvg-decisions.md](../../dev_logs/2026-11-08-semsvg-decisions.md).
+
+**Update 2026-11-08 (later the same day).** The package was renamed `gloss`, and the material listed above moved to the gloss repository (`dev_docs/design.qmd`, `dev_docs/research-report.qmd`, `dev_docs/research/`, `idea/`). It is no longer in ggai; ggai's git history still has it. The capture decision is gloss ADR-0001.

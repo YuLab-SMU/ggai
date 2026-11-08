@@ -5,6 +5,8 @@
 - **Related commits / PRs:** none yet; docs only, uncommitted.
 - **Worked on by:** Yonghe Xia, Claude
 
+> **Moved 2026-11-08.** The package was renamed `gloss` and its material moved to the gloss repository: `dev_docs/semsvg-package-design.qmd` → `dev_docs/design.qmd`, `dev_docs/semantic-svg-research-report.qmd` → `dev_docs/research-report.qmd`, `dev_docs/semantic-svg-research/` → `dev_docs/research/`, `dev_docs/figures/semantic-svg/` → `dev_docs/figures/`, and the two `idea/2026-11-07-*` docs → `idea/`. Paths below are as they were at the time.
+
 ## What happened
 
 The idea: export R figures as SVG carrying semantics, not just geometry, with the agent adding meaning on top of a deterministic element ↔ data binding.
@@ -56,7 +58,7 @@ Changes made:
 
 ## Update (same day): standalone research report
 
-Wrote [dev_docs/semantic-svg-research-report.qmd](../dev_docs/semantic-svg-research-report.qmd), a complete Chinese research report. At the owner's request it ignores ggai's existing architecture, plans and code, and treats the idea as a fresh direction.
+Wrote dev_docs/semantic-svg-research-report.qmd, a complete Chinese research report. At the owner's request it ignores ggai's existing architecture, plans and code, and treats the idea as a fresh direction.
 
 Contents:
 - problem statement and the S0–S4 levels;
@@ -77,7 +79,7 @@ Notes:
 
 ## Update (same day): research artifacts archived in the repo
 
-At the owner's request, the scratch research directory is now archived in [`dev_docs/semantic-svg-research/`](../dev_docs/semantic-svg-research/README.md) (8.6 MB, about 295 files):
+At the owner's request, the scratch research directory is now archived in `dev_docs/semantic-svg-research/` (8.6 MB, about 295 files):
 - the four thread reports;
 - the spike;
 - every experiment script with its logs and outputs;
@@ -96,7 +98,7 @@ A secret scan of the archive found only redaction metadata and jQuery's `passwor
 
 ## Update (same day): proposal review and new-package design
 
-The owner asked for a review of the proposal and a design for implementing it as a **new** R package driven by aisdk, without carrying over ggai's approach. Result: [`dev_docs/semsvg-package-design.qmd`](../dev_docs/semsvg-package-design.qmd), in Chinese.
+The owner asked for a review of the proposal and a design for implementing it as a **new** R package driven by aisdk, without carrying over ggai's approach. Result: `dev_docs/semsvg-package-design.qmd`, in Chinese.
 
 **New capture mechanism (verified).** Wrap every leaf of the `grid.force()`d scene in a `groupGrob()`, with the leaf's `vp` hoisted to an outer gTree, plus a zero-output probe grob.
 - svglite 2.2 emits `<defs><g id="group-k">` and `<use>` per leaf. Inlining the `<use>` elements gives a drawn-primitive sequence **identical** to plain svglite (tag, attributes and text) for all six inputs: ggplot facet (60 leaves, 132 primitives), patchwork (82/184), base via gridGraphics `echoGrob` (14/60), ComplexHeatmap (14/275), ggrepel (51/115), and 10^4 points (13/10034; 3.1 s for three renders).

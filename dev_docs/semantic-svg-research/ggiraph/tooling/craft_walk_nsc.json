@@ -1,7 +1,0 @@
-{"cdp_endpoint": "http://127.0.0.1:19222", "target_id": "7B5A2D56478F58ACC54B8B61FEA508CA",
- "action_timeout_ms": 8000,
- "actions": [
-  {"step_id": "click-data-circle", "kind": "click", "selector": "circle[data-id=\"Valiant\"]"},
-  {"step_id": "click-legend-key", "kind": "click", "selector": "circle[key-id=\"cyl4\"]"}
- ],
- "capture": {"after_each_step": ["dom"], "at_end": ["screenshot"], "events": ["console", "page_errors"]}}

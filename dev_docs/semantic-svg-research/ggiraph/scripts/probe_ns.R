@@ -1,5 +1,0 @@
-library(grid)
-print(grep("^drawDetails[.]", ls(asNamespace("grid"), all.names=TRUE), value=TRUE))
-n <- ls(asNamespace("ggiraph"), all.names = TRUE)
-print(n[grepl("tracer|collect_id|add_attribute|^set_attr", n)])
-print(grep("^interactive_.*_grob$", getNamespaceExports("ggiraph"), value = TRUE))

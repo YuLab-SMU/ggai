@@ -17,5 +17,4 @@ Exploration with no commitment. If a thought might become a plan but hasn't earn
 
 ## Index
 
-- [2026-11-07-agentic-semantic-svg.md](2026-11-07-agentic-semantic-svg.md) — Agentic semantic SVG export: deterministic element/data binding plus agent-authored semantics, so interaction does not depend on pre-written converters. → promoted to [plan/done/2026-11-07-semantic-svg-phase-1-skeleton.md](../plan/done/2026-11-07-semantic-svg-phase-1-skeleton.md) (superseded), now continued as the standalone `semsvg` package: [design](../dev_docs/semsvg-package-design.qmd).
-- [2026-11-07-semantic-svg-prior-art.md](2026-11-07-semantic-svg-prior-art.md) — Prior art and measured evidence for the above: ggiraph/gridSVG/maidr tagging, Shiny/InteractiveComplexHeatmap hit-testing, plotly/canvasXpress translation, literature, and an evaluation of REA and Craft Anything.
+- `2026-11-07-agentic-semantic-svg.md`, `2026-11-07-semantic-svg-prior-art.md` — the semantic SVG idea and its prior-art survey. Promoted to [plan/done/2026-11-07-semantic-svg-phase-1-skeleton.md](../plan/done/2026-11-07-semantic-svg-phase-1-skeleton.md) (superseded), then moved on 2026-11-08 to the standalone **gloss** repository (`idea/`), where the work continues. See ADR-0004.

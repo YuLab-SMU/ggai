@@ -1,7 +1,0 @@
-  text data_id
-1    a     ID1
-2    b     ID1
-3    c     ID2
-4    d     ID2
-WARNING: Failed setting attribute 'data-id', mismatched lengths of ids and values (most often, it occurs because of clipping or because of NAs in data) 
-case2 texts with data-id: 0 

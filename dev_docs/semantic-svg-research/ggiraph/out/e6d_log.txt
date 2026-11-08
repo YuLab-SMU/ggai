@@ -1,2 +1,0 @@
-gridSVG vs svglite: pixels with max channel diff > 25: 6481 of 580608 (1.116%)
-dsvg tagged vs svglite: pixels with max channel diff > 25: 5941 (1.023%)

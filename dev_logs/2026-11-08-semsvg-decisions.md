@@ -2,7 +2,7 @@
 
 - **Related plan:** [plan/done/2026-11-07-semantic-svg-phase-1-skeleton.md](../plan/done/2026-11-07-semantic-svg-phase-1-skeleton.md) (closed as superseded)
 - **Related ADRs:** [ADR-0004](../dev_docs/decisions/0004-semantic-figure-substrate-as-standalone-package.md) (new, accepted)
-- **Related docs:** [dev_docs/semsvg-package-design.qmd](../dev_docs/semsvg-package-design.qmd)
+- **Related docs:** dev_docs/semsvg-package-design.qmd
 - **Previous log:** [2026-11-07-semantic-svg-prior-art.md](2026-11-07-semantic-svg-prior-art.md)
 - **Worked on by:** Yonghe Xia, Claude
 
@@ -43,3 +43,21 @@ The design doc ended the previous session with nine open decisions. The owner an
 
 - Create the semsvg repository, move the design doc and the `capture-groups/` spike scripts there, and open the M0 plan: plugin registry, substrate, row-key inference, context sniffing, bundle read/write.
 - Spike first: context sniffing for code (srcref, knitr chunk, call) and the single-file round trip, since restoring freely depends on both.
+
+## Update (same day): renamed to gloss and moved to its own repository
+
+The owner rejected `semsvg` as not compelling or friendly enough. Candidates were checked first: `gloss`, `inkling`, `semio`, `marginalia`, `legible`, `figsense`, `plotsense`, `glean`, `plotwise`, `scholia` and `figlens` are all free on CRAN and Bioconductor, none ever appeared in the CRAN archive, and only `marginalia` has a same-named R repo on GitHub (0 stars). The owner chose **gloss**: medieval glosses were notes anchored to particular words, added by many readers over time, with the text left untouched, which is the design. Public API: `gloss()` builds the figure, every other function is `gl_*`.
+
+**New repository:** local only for now, at `~/Projects/gloss` (`git init`, no commits, no remote yet). Moved there (path in ggai → path in gloss):
+
+- `dev_docs/semsvg-package-design.qmd` → `dev_docs/design.qmd`
+- `dev_docs/semantic-svg-research-report.qmd` → `dev_docs/research-report.qmd`
+- `dev_docs/semantic-svg-research/` → `dev_docs/research/`
+- `dev_docs/figures/semantic-svg/` → `dev_docs/figures/`
+- `idea/2026-11-07-agentic-semantic-svg.md`, `idea/2026-11-07-semantic-svg-prior-art.md` → `idea/`
+
+In gloss: `semsvg` → `gloss` and `sem_*` → `gl_*` throughout, including the grob names and probe class in the capture spikes. History notes were added where the docs say "ggai" in the sense of the host package at the time. New files: README, AGENTS.md (with the design principles and the prior-art rule), DESCRIPTION, MIT license, NEWS.md, ignore files, doc indexes, and ADR-0001 (capture by group delimiting plus probes, the decision the Phase 1 plan had reserved ADR-0004 for), ADR-0002 (substrate with append-only anchored records) and ADR-0003 (plugin-based core). The migration has its own log there: `dev_logs/2026-11-08-bootstrap-from-ggai.md`.
+
+**Verification in gloss:** no broken relative links (one false positive inside inline code); `probe.R` and `groups.R` re-run after the rename (identical drawn sequence, 134 primitives, no probe output in the SVG); `design.qmd` and `research-report.qmd` render with no unresolved cross-references and all figures embedded.
+
+**In ggai:** the moved files are deleted (git history keeps them). Links to them in this log, the 2026-11-07 log, the closed plan and ADR-0004 are now plain text, and each of those files got a dated note mapping old paths to new ones; their history text keeps the paths of the time. ADR-0004 gets a note on the name change, since accepted ADRs are not rewritten. The idea, plan and ADR indexes are updated.
